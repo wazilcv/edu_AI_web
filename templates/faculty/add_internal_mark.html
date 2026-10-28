@@ -1,0 +1,529 @@
+{#{% extends "faculty/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Login Page</title>#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">#}
+{##}
+{#</head>#}
+{#<body>#}
+{#    <div class="container">#}
+{#        <div class="row justify-content-center">#}
+{#            <div class="col-md-6">#}
+{#                <h2 class="text-center">Login</h2>#}
+{#                <form method="post" action="/fac_add_internal_mark_post/{{ id }}">#}
+{#                    <div class="form-group">#}
+{#                        <label for="username">Student</label>#}
+{#                        <select class="form-control" id="select" name="select" >#}
+{#                            {% for i in data %}#}
+{#                                <option value="{{ i.id }}">{{ i.std_name }} ({{ i.ad_num }})</option>#}
+{#                            {% endfor %}#}
+{#                        </select>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="mark">Internal Mark</label>#}
+{#                        <input type="text" class="form-control" id="mark" name="mark" placeholder="Enter internal mark" required>#}
+{#                    </div>#}
+{#                    <button type="submit" class="btn btn-primary btn-block">Submit</button>#}
+{#                </form>#}
+{#                <div class="text-center mt-3">#}
+{#                    <a href="#">Forgot Password?</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>#}
+{#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<style>
+    :root {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --error-color: #D32F2F;
+        --success-color: #4CAF50;
+        --white: #FFFFFF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+    }
+
+    .form-header {
+        margin-bottom: 30px;
+    }
+
+    .form-icon {
+        width: 70px;
+        height: 70px;
+        background-color: var(--accent-color);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .form-icon i {
+        font-size: 32px;
+        color: var(--dark-text);
+    }
+
+    .form-title {
+        color: var(--dark-text);
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .form-subtitle {
+        color: var(--light-text);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        color: var(--dark-text);
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .input-group-custom {
+        position: relative;
+        box-shadow: 0 4px 10px var(--shadow-light);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .input-group-custom:focus-within {
+        border-color: var(--secondary-color);
+        box-shadow: 0 4px 15px rgba(82, 109, 130, 0.3);
+    }
+
+    .input-group-prepend-custom {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        z-index: 4;
+        pointer-events: none;
+        background-color: var(--light-bg);
+    }
+
+    .input-group-prepend-custom i {
+        color: var(--dark-text);
+        font-size: 16px;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 14px 16px 14px 60px;
+        border: none;
+        background-color: var(--white);
+        color: var(--dark-text);
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control-custom:focus {
+        outline: none;
+    }
+
+    .select-custom {
+        width: 100%;
+        padding: 14px 16px 14px 60px;
+        border: none;
+        background-color: var(--white);
+        color: var(--dark-text);
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2327374D' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 14px;
+        cursor: pointer;
+    }
+
+    .select-custom:focus {
+        outline: none;
+    }
+
+    .btn-submit {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        padding: 16px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(82, 109, 130, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(82, 109, 130, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    .error-message {
+        color: var(--error-color);
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .form-control-custom.error,
+    .select-custom.error {
+        border-color: var(--error-color);
+    }
+
+    .input-group-custom.error {
+        border-color: var(--error-color);
+        box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+    }
+
+    .info-box {
+        background-color: var(--light-bg);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 30px;
+        border: 1px solid var(--accent-color);
+    }
+
+    .info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .info-header i {
+        color: var(--dark-text);
+        font-size: 18px;
+        margin-right: 10px;
+    }
+
+    .info-title {
+        color: var(--dark-text);
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .info-content {
+        color: var(--dark-text);
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .info-content li {
+        margin-bottom: 5px;
+    }
+
+    .form-footer {
+        text-align: center;
+        margin-top: 30px;
+        color: var(--light-text);
+        font-size: 14px;
+    }
+
+    .mark-range-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-size: 12px;
+        color: var(--light-text);
+    }
+
+    .current-mark {
+        font-weight: 600;
+        color: var(--dark-text);
+        background-color: var(--light-bg);
+        padding: 4px 12px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .current-mark.high {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #2E7D32;
+    }
+
+    .current-mark.medium {
+        background-color: rgba(255, 152, 0, 0.2);
+        color: #EF6C00;
+    }
+
+    .current-mark.low {
+        background-color: rgba(244, 67, 54, 0.2);
+        color: #C62828;
+    }
+
+    @media (max-width: 768px) {
+        .form-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .form-icon i {
+            font-size: 28px;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+        }
+
+        .form-control-custom,
+        .select-custom {
+            padding: 12px 16px 12px 55px;
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            padding: 14px 20px;
+            font-size: 15px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="form-header">
+        <div class="form-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h1 class="form-title">Add Internal Marks</h1>
+        <p class="form-subtitle">Enter assessment marks for your students (0-20 scale)</p>
+    </div>
+
+    <form method="post" action="/fac_add_internal_mark_post/{{ id }}" id="marksForm">
+        <div class="form-group">
+            <label class="form-label" for="select">Select Student</label>
+            <div class="input-group-custom">
+                <div class="input-group-prepend-custom">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <select class="select-custom" id="select" name="select" required>
+                    <option value="" disabled selected>Select a student</option>
+                    {% for i in data %}
+                        <option value="{{ i.id }}">{{ i.std_name }} ({{ i.ad_num }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="error-message" id="studentError">Please select a student</div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="mark">Internal Mark (out of 20)</label>
+            <div class="input-group-custom">
+                <div class="input-group-prepend-custom">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <input type="number" class="form-control-custom" id="mark" name="mark"
+                       placeholder="Enter marks (0-20)" min="0" max="20" step="1" required>
+            </div>
+            <div class="mark-range-indicator">
+                <span>Range: 0 to 20</span>
+                <span class="current-mark" id="currentMark">Enter a value</span>
+            </div>
+            <div class="error-message" id="markError">Please enter valid marks (0-20)</div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-paper-plane"></i>
+            <span>Submit Marks</span>
+        </button>
+    </form>
+
+    <div class="info-box">
+        <div class="info-header">
+            <i class="fas fa-info-circle"></i>
+            <h3 class="info-title">Grading Guidelines (0-20 Scale)</h3>
+        </div>
+        <ul class="info-content">
+            <li>Total marks: <strong>20</strong> (Internal Assessment)</li>
+            <li>Enter marks between 0 and 20</li>
+            <li>Use decimal points for precise grading (e.g., 17.5)</li>
+            <li>Half marks are allowed (0.5 increments)</li>
+            <li>Marks will be visible to students immediately</li>
+            <li>Review marks carefully before submission</li>
+        </ul>
+    </div>
+
+    <div class="form-footer">
+        EDU AI Platform • Faculty Assessment System (0-20 Scale)
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Update current mark indicator
+        function updateMarkIndicator(value) {
+            const markIndicator = $('#currentMark');
+
+            if (value === '' || isNaN(value)) {
+                markIndicator.text('Enter a value').removeClass('high medium low');
+                return;
+            }
+
+            const numValue = parseFloat(value);
+            markIndicator.text(numValue.toFixed(1));
+
+            // Color coding based on marks
+            if (numValue >= 16) {
+                markIndicator.removeClass('medium low').addClass('high');
+            } else if (numValue >= 10) {
+                markIndicator.removeClass('high low').addClass('medium');
+            } else {
+                markIndicator.removeClass('high medium').addClass('low');
+            }
+        }
+
+        // Initial mark indicator update
+        updateMarkIndicator($('#mark').val());
+
+        // Update mark indicator on input
+        $('#mark').on('input', function() {
+            const value = $(this).val();
+            updateMarkIndicator(value);
+
+            // Real-time validation
+            const markValue = parseFloat(value);
+            if (!isNaN(markValue) && markValue >= 0 && markValue <= 20) {
+                $(this).parent().removeClass('error');
+                $('#markError').hide();
+            }
+        });
+
+        // Form validation
+        $('#marksForm').submit(function(e) {
+            let isValid = true;
+
+            // Validate student selection
+            const studentSelect = $('#select').val();
+            if (!studentSelect) {
+                $('#studentError').show();
+                $('#select').parent().addClass('error');
+                isValid = false;
+            } else {
+                $('#studentError').hide();
+                $('#select').parent().removeClass('error');
+            }
+
+            // Validate marks (0-20 range)
+            const markInput = $('#mark').val().trim();
+            const markValue = parseFloat(markInput);
+
+            if (markInput === '' || isNaN(markValue) || markValue < 0 || markValue > 20) {
+                $('#markError').show();
+                $('#mark').parent().addClass('error');
+                isValid = false;
+            } else {
+                $('#markError').hide();
+                $('#mark').parent().removeClass('error');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                return false;
+            }
+
+            // If validation passes, add loading state
+            const submitBtn = $(this).find('.btn-submit');
+            const originalText = submitBtn.find('span').text();
+            const originalIcon = submitBtn.find('i').attr('class');
+
+            submitBtn.prop('disabled', true);
+            submitBtn.find('span').text('Submitting...');
+            submitBtn.find('i').attr('class', 'fas fa-spinner fa-spin');
+
+            // The form will submit normally to your backend
+            return true;
+        });
+
+        // Input field focus effects
+        $('.form-control-custom, .select-custom').focus(function() {
+            $(this).parent().addClass('focused');
+        }).blur(function() {
+            $(this).parent().removeClass('focused');
+        });
+
+        // Real-time student selection validation
+        $('#select').change(function() {
+            if ($(this).val()) {
+                $(this).parent().removeClass('error');
+                $('#studentError').hide();
+            }
+        });
+
+        // Add focus style to input groups
+        const style = document.createElement('style');
+        style.textContent = `
+            .input-group-custom.focused {
+                border-color: var(--secondary-color);
+                box-shadow: 0 4px 15px rgba(82, 109, 130, 0.3);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Keyboard shortcuts for mark input
+        $('#mark').on('keydown', function(e) {
+            const value = parseFloat($(this).val());
+            if (!isNaN(value)) {
+                // Arrow up/down to increment/decrement by 0.5
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const newValue = Math.min(20, value + 0.5);
+                    $(this).val(newValue.toFixed(1));
+                    updateMarkIndicator(newValue);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const newValue = Math.max(0, value - 0.5);
+                    $(this).val(newValue.toFixed(1));
+                    updateMarkIndicator(newValue);
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+

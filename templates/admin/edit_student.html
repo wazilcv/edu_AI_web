@@ -1,0 +1,1614 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Edit Form</title>#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{# #}
+{#</head>#}
+{#<body>#}
+{#  <div class="container">#}
+{#    <h2 class="mb-4">Edit Form</h2>#}
+{#    <form method="post" action="/adm_edit_student_post/{{ data2.id }}" enctype="multipart/form-data">#}
+{#      <div class="row mb-3">#}
+{#        <label for="name" class="col-sm-4 ">Student_Name</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="name" name="name" value="{{ data2.std_name }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Course</label>#}
+{#        <div class="col-sm-8">#}
+{#          <select class="form-control" id="select2" name="select2">#}
+{#              {% for i in data %}#}
+{#                <option value="{{ i.id }}" {% if i.id == data2.COURSE_id %} selected {% endif %}>{{ i.course_name }}</option>#}
+{#              {% endfor %}#}
+{#          </select>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Semester</label>#}
+{#        <div class="col-sm-8">#}
+{#          <select class="form-control" id="select" name="select">#}
+{#              <option {% if data2.semester == "1" %} selected {% endif %}>1</option>#}
+{#              <option {% if data2.semester == "2" %} selected {% endif %}>2</option>#}
+{#              <option {% if data2.semester == "3" %} selected {% endif %}>3</option>#}
+{#              <option {% if data2.semester == "4" %} selected {% endif %}>4</option>#}
+{#              <option {% if data2.semester == "5" %} selected {% endif %}>5</option>#}
+{#              <option {% if data2.semester == "6" %} selected {% endif %}>6</option>#}
+{#          </select>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#       <div class="row mb-3">#}
+{#        <label for="phone" class="col-sm-4 ">Admission Number</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text"  class="form-control" id="adm_num" name="adm_num" value="{{ data2.ad_num }}" required>#}
+{#       </div>#}
+{#       </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label class="col-sm-4 ">Gender</label>#}
+{#        <div class="col-sm-8">#}
+{#          <div class="form-check form-check-inline">#}
+{#            <input class="form-check-input" type="radio" name="gender" id="male" {% if data2.gender == "Male" %} checked {% endif %} value="Male" required>#}
+{#            <label class="form-check-label" for="male">Male</label>#}
+{#          </div>#}
+{#          <div class="form-check form-check-inline">#}
+{#            <input class="form-check-input" type="radio" name="gender" id="female" {% if data2.gender == "Female" %} checked {% endif %} value="Female" required>#}
+{#            <label class="form-check-label" for="female">Female</label>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Date of Birth</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="date" class="form-control" id="dob" name="dob" value="{{ data2.dob }}"required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="email" class="col-sm-4 ">Email address</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="email" class="form-control" id="email" name="email" value="{{ data2.email }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="phone" class="col-sm-4 ">Phone Number</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="tel" pattern="[0-9]{10}" class="form-control" id="phone" name="phone" value="{{ data2.phone }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="place" class="col-sm-4 ">Place</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="place" name="place" value="{{ data2.place }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="city" class="col-sm-4 ">City</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="city" name="city" value="{{ data2.city }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="state" class="col-sm-4 ">State</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="state" name="state" value="{{ data2.state }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="pincode" class="col-sm-4 ">Pincode</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" pattern="[0-9]{6}" class="form-control" id="pincode" name="pincode" value="{{ data2.pin }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="photo" class="col-sm-4 ">Upload Photo</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="file" class="form-control" id="photo" name="photo" accept="image/*" >#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <div class="offset-sm-4 col-sm-8">#}
+{#          <button type="submit" class="btn btn-primary">Submit</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </form>#}
+{#  </div>#}
+{#  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "admin/index.html" %}
+
+{% block page_title %}
+    Edit Student
+{% endblock %}
+
+{% block body %}
+<style>
+    /* Additional Styles for Edit Page */
+    .edit-student-page {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --white: #FFFFFF;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --button-color: #9DB2BF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --shadow-dark: rgba(39, 55, 77, 0.15);
+        --success-color: #4CAF50;
+        --error-color: #f44336;
+        --danger-color: #f44336;
+        --warning-color: #ff9800;
+    }
+
+    /* Student Profile Header */
+    .student-profile-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .student-profile-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* Profile Badge */
+    .profile-badge {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: var(--white);
+        padding: 0.4rem 1.2rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(157, 178, 191, 0.3);
+    }
+
+    /* Error Messages Container */
+    #errorMessages {
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-custom-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: var(--danger-color);
+        color: var(--danger-color);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Edit Form Container */
+    .edit-form-container {
+        background-color: var(--white);
+        border-radius: 20px;
+        padding: 2.5rem;
+        border: 1px solid var(--accent-color);
+        box-shadow: 0 10px 30px var(--shadow-medium);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .edit-form-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* Section Headers */
+    .section-header {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--light-bg);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-header i {
+        color: var(--accent-color);
+        font-size: 1.2rem;
+    }
+
+    /* Form Input Groups */
+    .form-input-group {
+        border: 2px solid var(--accent-color);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background-color: var(--white);
+    }
+
+    .form-input-group:focus-within {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .input-group-prepend {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border: none;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        min-width: 55px;
+        justify-content: center;
+    }
+
+    .form-input {
+        border: none;
+        padding: 1rem;
+        color: var(--primary-color);
+        font-weight: 500;
+        background-color: var(--white);
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .form-input:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    /* Gender Selector */
+    .gender-selector {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .gender-option {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        background-color: var(--light-bg);
+        border: 2px solid var(--accent-color);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--primary-color);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .gender-option:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    .gender-option.active {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border-color: var(--secondary-color);
+        font-weight: 600;
+    }
+
+    /* Photo Upload Area */
+    .photo-upload-area {
+        border: 2px dashed var(--accent-color);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        background-color: var(--light-bg);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .photo-upload-area:hover {
+        border-color: var(--secondary-color);
+        background-color: var(--accent-color);
+    }
+
+    .photo-upload-area.dragover {
+        border-color: var(--secondary-color);
+        background-color: var(--light-bg);
+        border-style: solid;
+    }
+
+    .upload-icon {
+        font-size: 3rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--light-bg);
+    }
+
+    .btn-cancel {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border: 2px solid var(--accent-color);
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--shadow-medium);
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+        color: var(--white);
+        border: none;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(39, 55, 77, 0.2);
+    }
+
+    .btn-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Form Labels */
+    .form-label {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-label i {
+        color: var(--secondary-color);
+        font-size: 1rem;
+    }
+
+    .form-label span.required {
+        color: var(--danger-color);
+        margin-left: 4px;
+    }
+
+    /* Help Text */
+    .form-help {
+        color: var(--secondary-color);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Student Avatar */
+    .student-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid var(--accent-color);
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 2rem;
+    }
+
+    .student-avatar-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Validation States */
+    .is-invalid {
+        border-color: var(--error-color) !important;
+    }
+
+    .invalid-feedback {
+        color: var(--error-color);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .is-valid {
+        border-color: var(--success-color) !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .edit-form-container {
+            padding: 2rem;
+        }
+
+        .gender-selector {
+            flex-direction: column;
+        }
+
+        .student-profile-header {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .edit-form-container {
+            padding: 1.5rem;
+        }
+
+        .action-buttons {
+            grid-template-columns: 1fr;
+        }
+
+        .section-header {
+            font-size: 1.2rem;
+        }
+
+        .student-avatar-large {
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+
+        .input-group-prepend {
+            padding: 0.75rem 1rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .edit-form-container {
+            padding: 1rem;
+        }
+
+        .photo-upload-area {
+            padding: 1.5rem;
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+        }
+    }
+
+    /* Loading Spinner */
+    .spinner {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Form Group Spacing */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Select Dropdown Styling */
+    select.form-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2327374D' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        padding-right: 3rem;
+    }
+
+    /* State/District specific styling */
+    .district-info {
+        background-color: var(--light-bg);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--secondary-color);
+        border: 1px solid var(--accent-color);
+    }
+
+    .district-info i {
+        color: var(--secondary-color);
+        margin-right: 0.5rem;
+    }
+</style>
+
+<!-- Kerala districts array for validation -->
+<script>
+    const keralaDistricts = [
+        "Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod",
+        "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad",
+        "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"
+    ];
+</script>
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-1" style="color: var(--primary-color); font-weight: 700;">Edit Student Profile</h4>
+                    <p class="mb-0" style="color: var(--secondary-color);">Update student information and academic details</p>
+                </div>
+                <a href="/adm_view_student" class="btn-cancel">
+                    <i class="fas fa-arrow-left"></i> Back to Students
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Messages Container -->
+    <div id="errorMessages"></div>
+
+    <!-- Student Profile Overview -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="student-profile-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="student-avatar-large">
+                                {% if data2.image %}
+                                    <img src="{{ data2.image }}" alt="{{ data2.std_name }}">
+                                {% else %}
+                                    {{ data2.std_name|first|upper }}
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h3 style="color: var(--white); font-weight: 700; margin-bottom: 0.5rem;">{{ data2.std_name }}</h3>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="profile-badge">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        {% for course in data %}
+                                            {% if course.id == data2.COURSE_id %}
+                                                {{ course.course_name }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="profile-badge">
+                                        <i class="fas fa-calendar-alt"></i> Semester {{ data2.semester }}
+                                    </span>
+                                    <span class="profile-badge">
+                                        <i class="fas fa-id-card"></i> {{ data2.ad_num }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div style="color: rgba(255, 255, 255, 0.9);">
+                            <div class="mb-2">
+                                <i class="fas fa-user-tag me-2"></i>
+                                <strong>Student ID:</strong> STD{{ data2.id|stringformat:"04d" }}
+                            </div>
+                            <div>
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ data2.email }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="edit-form-container">
+                <h4 class="section-header">
+                    <i class="fas fa-user-edit"></i>
+                    Edit Student Details
+                </h4>
+
+                <form method="post" action="/adm_edit_student_post/{{ data2.id }}" enctype="multipart/form-data" id="studentEditForm">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <!-- Left Column - Personal Information -->
+                        <div class="col-md-6">
+                            <h5 class="section-header">
+                                <i class="fas fa-user-circle"></i>
+                                Personal Information
+                            </h5>
+
+                            <!-- Student Name -->
+                            <div class="form-group">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user"></i>
+                                    Student Name <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                    <input type="text" class="form-input" id="name" name="name"
+                                           value="{{ data2.std_name }}" required
+                                           onkeyup="validateName(this.value)">
+                                </div>
+                                <div id="nameError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-venus-mars"></i>
+                                    Gender <span class="required">*</span>
+                                </label>
+                                <div class="gender-selector">
+                                    <div class="form-check">
+                                        <input class="form-check-input d-none" type="radio" name="gender" id="male" value="Male"
+                                               {% if data2.gender == "Male" %} checked {% endif %} required>
+                                        <label class="gender-option {% if data2.gender == 'Male' %}active{% endif %}" for="male">
+                                            <i class="fas fa-mars" style="color: #4A6FA5;"></i> Male
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input d-none" type="radio" name="gender" id="female" value="Female"
+                                               {% if data2.gender == "Female" %} checked {% endif %} required>
+                                        <label class="gender-option {% if data2.gender == 'Female' %}active{% endif %}" for="female">
+                                            <i class="fas fa-venus" style="color: #C1506D;"></i> Female
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="genderError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="form-group">
+                                <label for="dob" class="form-label">
+                                    <i class="fas fa-birthday-cake"></i>
+                                    Date of Birth <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-calendar-day"></i>
+                                    </div>
+                                    <input type="date" class="form-input" id="dob" name="dob"
+                                           value="{{ data2.dob }}" required
+                                           onchange="validateDOB(this.value)">
+                                </div>
+                                <div id="ageDisplay" class="form-help"></div>
+                                <div id="dobError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Admission Number -->
+                            <div class="form-group">
+                                <label for="adm_num" class="form-label">
+                                    <i class="fas fa-id-card"></i>
+                                    Admission Number <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-hashtag"></i>
+                                    </div>
+                                    <input type="text" class="form-input" id="adm_num" name="adm_num"
+                                           value="{{ data2.ad_num }}" required
+                                           onkeyup="validateAdmissionNumber(this.value)">
+                                </div>
+                                <div id="admNumError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Academic Information -->
+                            <h5 class="section-header mt-5">
+                                <i class="fas fa-graduation-cap"></i>
+                                Academic Information
+                            </h5>
+
+                            <!-- Course -->
+                            <div class="form-group">
+                                <label for="select2" class="form-label">
+                                    <i class="fas fa-book"></i>
+                                    Course <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <select class="form-input" id="select2" name="select2" required
+                                            onchange="validateCourse(this.value)">
+                                        <option value="" disabled>Select a course</option>
+                                        {% for i in data %}
+                                            <option value="{{ i.id }}" {% if i.id == data2.COURSE_id %} selected {% endif %}>
+                                                {{ i.course_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div id="courseError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Semester -->
+                            <div class="form-group">
+                                <label for="select" class="form-label">
+                                    <i class="fas fa-layer-group"></i>
+                                    Semester <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <select class="form-input" id="select" name="select" required
+                                            onchange="validateSemester(this.value)">
+                                        <option value="" disabled>Select semester</option>
+                                        {% for i in "123456" %}
+                                            <option value="{{ i }}" {% if data2.semester == i %} selected {% endif %}>
+                                                Semester {{ i }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div id="semesterInfo" class="form-help"></div>
+                                <div id="semesterError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column - Contact & Location -->
+                        <div class="col-md-6">
+                            <h5 class="section-header">
+                                <i class="fas fa-address-card"></i>
+                                Contact & Location
+                            </h5>
+
+                            <!-- Email Address -->
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope"></i>
+                                    Email Address <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        @
+                                    </div>
+                                    <input type="email" class="form-input" id="email" name="email"
+                                           value="{{ data2.email }}" required
+                                           onkeyup="validateEmail(this.value)">
+                                </div>
+                                <div id="emailError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Phone Number -->
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    <i class="fas fa-phone"></i>
+                                    Phone Number <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        +91
+                                    </div>
+                                    <input type="tel" pattern="[0-9]{10}" class="form-input" id="phone" name="phone"
+                                           value="{{ data2.phone }}" required placeholder="10-digit number"
+                                           maxlength="10"
+                                           onkeyup="validatePhone(this.value)">
+                                </div>
+                                <div class="form-help">
+                                    <i class="fas fa-info-circle"></i> Format: 9876543210
+                                </div>
+                                <div id="phoneError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Address Section - REORDERED with backward compatibility -->
+                            <h5 class="section-header mt-5">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Address Details
+                            </h5>
+
+                            <!-- State Dropdown (First) -->
+                            <div class="form-group">
+                                <label for="state" class="form-label">
+                                    <i class="fas fa-flag"></i>
+                                    State <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-landmark"></i>
+                                    </div>
+                                    <select class="form-input" id="state" name="state" required
+                                            onchange="validateState(this.value); loadDistricts(this.value);">
+                                        <option value="">Select State</option>
+                                        <option value="Kerala" {% if data2.state == "Kerala" %}selected{% endif %}>Kerala</option>
+                                        <option value="Other" disabled>Other (Not Available)</option>
+                                    </select>
+                                </div>
+                                <div id="stateError" class="invalid-feedback" style="display: none;"></div>
+                                <div id="stateMessage" class="district-info" style="display: {% if data2.state != 'Kerala' and data2.state %}block{% else %}none{% endif %};">
+                                    <i class="fas fa-exclamation-triangle"></i> Currently only Kerala state is supported
+                                </div>
+                            </div>
+
+                            <!-- City/District Field (Second) - Using 'city' name for backward compatibility -->
+                            <div class="form-group">
+                                <label for="city" class="form-label">
+                                    <i class="fas fa-city"></i>
+                                    City/District <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <select class="form-input" id="city" name="city" required
+                                            onchange="validateCity(this.value)">
+                                        <option value="">Select City/District</option>
+                                        <option value="Alappuzha" {% if data2.city == "Alappuzha" %}selected{% endif %}>Alappuzha</option>
+                                        <option value="Ernakulam" {% if data2.city == "Ernakulam" %}selected{% endif %}>Ernakulam</option>
+                                        <option value="Idukki" {% if data2.city == "Idukki" %}selected{% endif %}>Idukki</option>
+                                        <option value="Kannur" {% if data2.city == "Kannur" %}selected{% endif %}>Kannur</option>
+                                        <option value="Kasaragod" {% if data2.city == "Kasaragod" %}selected{% endif %}>Kasaragod</option>
+                                        <option value="Kollam" {% if data2.city == "Kollam" %}selected{% endif %}>Kollam</option>
+                                        <option value="Kottayam" {% if data2.city == "Kottayam" %}selected{% endif %}>Kottayam</option>
+                                        <option value="Kozhikode" {% if data2.city == "Kozhikode" %}selected{% endif %}>Kozhikode</option>
+                                        <option value="Malappuram" {% if data2.city == "Malappuram" %}selected{% endif %}>Malappuram</option>
+                                        <option value="Palakkad" {% if data2.city == "Palakkad" %}selected{% endif %}>Palakkad</option>
+                                        <option value="Pathanamthitta" {% if data2.city == "Pathanamthitta" %}selected{% endif %}>Pathanamthitta</option>
+                                        <option value="Thiruvananthapuram" {% if data2.city == "Thiruvananthapuram" %}selected{% endif %}>Thiruvananthapuram</option>
+                                        <option value="Thrissur" {% if data2.city == "Thrissur" %}selected{% endif %}>Thrissur</option>
+                                        <option value="Wayanad" {% if data2.city == "Wayanad" %}selected{% endif %}>Wayanad</option>
+                                    </select>
+                                </div>
+                                <div id="cityError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Place (Third) -->
+                            <div class="form-group">
+                                <label for="place" class="form-label">
+                                    <i class="fas fa-location-dot"></i>
+                                    Place <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <input type="text" class="form-input" id="place" name="place"
+                                           value="{{ data2.place }}" required
+                                           onkeyup="validatePlace(this.value)">
+                                </div>
+                                <div id="placeError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Pincode (Fourth) -->
+                            <div class="form-group">
+                                <label for="pincode" class="form-label">
+                                    <i class="fas fa-map-pin"></i>
+                                    Pincode <span class="required">*</span>
+                                </label>
+                                <div class="form-input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="fas fa-hashtag"></i>
+                                    </div>
+                                    <input type="text" pattern="[0-9]{6}" class="form-input" id="pincode" name="pincode"
+                                           value="{{ data2.pin }}" required placeholder="6-digit pincode"
+                                           maxlength="6"
+                                           onkeyup="validatePincode(this.value)">
+                                </div>
+                                <div id="pincodeError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Photo Upload -->
+                            <div class="form-group mt-5">
+                                <label class="form-label">
+                                    <i class="fas fa-camera"></i>
+                                    Profile Photo
+                                </label>
+                                <div class="photo-upload-area" id="photoUploadArea">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div style="color: var(--primary-color); margin-bottom: 0.5rem; font-weight: 500;">
+                                        Click to upload or drag and drop
+                                    </div>
+                                    <div style="color: var(--secondary-color); font-size: 0.85rem;">
+                                        PNG, JPG, JPEG up to 2MB
+                                    </div>
+                                    <input type="file" class="d-none" id="photo" name="photo" accept="image/*" onchange="validatePhoto(this)">
+                                </div>
+                                <div class="form-help">
+                                    <i class="fas fa-info-circle"></i> Leave empty to keep current photo
+                                </div>
+                                <div id="photoPreview" class="mt-3 text-center"></div>
+                                <div id="photoError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="action-buttons">
+                        <a href="/adm_view_student" class="btn-cancel">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <i class="fas fa-save"></i> Update Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize with the same CSS variables from admin homepage
+        const root = document.documentElement;
+        const cssVariables = {
+            '--primary-color': '#27374D',
+            '--secondary-color': '#526D82',
+            '--accent-color': '#9DB2BF',
+            '--light-bg': '#DDE6ED',
+            '--white': '#FFFFFF',
+            '--dark-text': '#27374D',
+            '--light-text': '#526D82',
+            '--button-color': '#9DB2BF'
+        };
+
+        // Apply CSS variables
+        Object.entries(cssVariables).forEach(([key, value]) => {
+            root.style.setProperty(key, value);
+        });
+
+        // Gender selection
+        const genderOptions = document.querySelectorAll('.gender-option');
+        genderOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                genderOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                const inputId = this.getAttribute('for');
+                document.getElementById(inputId).checked = true;
+                document.getElementById('genderError').style.display = 'none';
+            });
+        });
+
+        // Photo upload handling
+        const photoUploadArea = document.getElementById('photoUploadArea');
+        const photoInput = document.getElementById('photo');
+        const photoPreview = document.getElementById('photoPreview');
+
+        if (photoUploadArea) {
+            photoUploadArea.addEventListener('click', () => photoInput.click());
+
+            photoUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                photoUploadArea.classList.add('dragover');
+            });
+
+            photoUploadArea.addEventListener('dragleave', () => {
+                photoUploadArea.classList.remove('dragover');
+            });
+
+            photoUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                photoUploadArea.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    photoInput.files = e.dataTransfer.files;
+                    handlePhotoPreview(e.dataTransfer.files[0]);
+                }
+            });
+
+            photoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    handlePhotoPreview(this.files[0]);
+                }
+            });
+        }
+
+        // Calculate age and set semester info on load
+        const dobInput = document.getElementById('dob');
+        if (dobInput && dobInput.value) {
+            calculateAge();
+        }
+
+        const semesterSelect = document.getElementById('select');
+        if (semesterSelect && semesterSelect.value) {
+            updateSemesterInfo(semesterSelect.value);
+        }
+
+        // Initialize state validation on load
+        const stateSelect = document.getElementById('state');
+        if (stateSelect && stateSelect.value) {
+            validateState(stateSelect.value);
+            loadDistricts(stateSelect.value);
+        }
+    });
+
+    // Validation Functions from add student page
+
+    function validateName(name) {
+        const nameError = document.getElementById('nameError');
+        const nameInput = document.getElementById('name');
+        const namePattern = /^[A-Za-z\s.]+$/;
+
+        if (name && !namePattern.test(name)) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Name can only contain letters, spaces, and periods. Numbers and special characters are not allowed.';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else if (name && name.length < 2) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Name must be at least 2 characters long';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else {
+            nameError.style.display = 'none';
+            nameInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateAdmissionNumber(admNum) {
+        const admNumError = document.getElementById('admNumError');
+        const admNumInput = document.getElementById('adm_num');
+
+        if (admNum && admNum.length < 3) {
+            admNumError.style.display = 'block';
+            admNumError.textContent = 'Admission number must be at least 3 characters';
+            admNumInput.classList.add('is-invalid');
+            return false;
+        } else {
+            admNumError.style.display = 'none';
+            admNumInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateCourse(course) {
+        const courseError = document.getElementById('courseError');
+        const courseInput = document.getElementById('select2');
+
+        if (!course) {
+            courseError.style.display = 'block';
+            courseError.textContent = 'Please select a course';
+            courseInput.classList.add('is-invalid');
+            return false;
+        } else {
+            courseError.style.display = 'none';
+            courseInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateSemester(semester) {
+        const semesterError = document.getElementById('semesterError');
+        const semesterInput = document.getElementById('select');
+
+        if (!semester) {
+            semesterError.style.display = 'block';
+            semesterError.textContent = 'Please select a semester';
+            semesterInput.classList.add('is-invalid');
+            return false;
+        } else {
+            semesterError.style.display = 'none';
+            semesterInput.classList.remove('is-invalid');
+            updateSemesterInfo(semester);
+            return true;
+        }
+    }
+
+    function updateSemesterInfo(semester) {
+        const infoDiv = document.getElementById('semesterInfo');
+        if (semester === '1' || semester === '2') {
+            infoDiv.innerHTML = '<i class="fas fa-info-circle"></i> First Year Student';
+            infoDiv.style.color = '#28a745';
+        } else if (semester === '3' || semester === '4') {
+            infoDiv.innerHTML = '<i class="fas fa-info-circle"></i> Second Year Student';
+            infoDiv.style.color = '#ffc107';
+        } else if (semester === '5' || semester === '6') {
+            infoDiv.innerHTML = '<i class="fas fa-info-circle"></i> Third Year Student';
+            infoDiv.style.color = '#fd7e14';
+        } else {
+            infoDiv.innerHTML = '';
+        }
+    }
+
+    function validateEmail(email) {
+        const emailError = document.getElementById('emailError');
+        const emailInput = document.getElementById('email');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email && !emailPattern.test(email)) {
+            emailError.style.display = 'block';
+            emailError.textContent = 'Please enter a valid email address (e.g., name@domain.com)';
+            emailInput.classList.add('is-invalid');
+            return false;
+        } else {
+            emailError.style.display = 'none';
+            emailInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validatePhone(phone) {
+        const phoneError = document.getElementById('phoneError');
+        const phoneInput = document.getElementById('phone');
+        const phonePattern = /^[0-9]{10}$/;
+
+        if (phone && !phonePattern.test(phone)) {
+            phoneError.style.display = 'block';
+            phoneError.textContent = 'Phone number must be exactly 10 digits';
+            phoneInput.classList.add('is-invalid');
+            return false;
+        } else {
+            phoneError.style.display = 'none';
+            phoneInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateState(state) {
+        const stateError = document.getElementById('stateError');
+        const stateMessage = document.getElementById('stateMessage');
+        const stateInput = document.getElementById('state');
+
+        if (state === 'Other') {
+            stateMessage.style.display = 'block';
+            stateError.style.display = 'block';
+            stateError.textContent = 'Currently only Kerala state is supported. Please select Kerala.';
+            stateInput.classList.add('is-invalid');
+            return false;
+        } else if (state === 'Kerala') {
+            stateMessage.style.display = 'none';
+            stateError.style.display = 'none';
+            stateInput.classList.remove('is-invalid');
+            return true;
+        } else if (!state) {
+            stateError.style.display = 'block';
+            stateError.textContent = 'Please select a state';
+            stateInput.classList.add('is-invalid');
+            return false;
+        } else {
+            stateMessage.style.display = 'none';
+            stateError.style.display = 'none';
+            stateInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function loadDistricts(state) {
+        const citySelect = document.getElementById('city');
+        if (state !== 'Kerala') {
+            citySelect.innerHTML = '<option value="">Select City/District</option>';
+            citySelect.disabled = true;
+        } else {
+            citySelect.disabled = false;
+            const currentValue = citySelect.value;
+            citySelect.innerHTML = '<option value="">Select City/District</option>';
+            keralaDistricts.forEach(district => {
+                citySelect.innerHTML += `<option value="${district}">${district}</option>`;
+            });
+            // Try to reselect the previous value if it exists in Kerala districts
+            if (currentValue && keralaDistricts.includes(currentValue)) {
+                citySelect.value = currentValue;
+            }
+        }
+    }
+
+    function validateCity(city) {
+        const cityError = document.getElementById('cityError');
+        const cityInput = document.getElementById('city');
+
+        if (!city) {
+            cityError.style.display = 'block';
+            cityError.textContent = 'Please select a city/district';
+            cityInput.classList.add('is-invalid');
+            return false;
+        } else if (!keralaDistricts.includes(city)) {
+            cityError.style.display = 'block';
+            cityError.textContent = 'Please select a valid Kerala district';
+            cityInput.classList.add('is-invalid');
+            return false;
+        } else {
+            cityError.style.display = 'none';
+            cityInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validatePlace(place) {
+        const placeError = document.getElementById('placeError');
+        const placeInput = document.getElementById('place');
+
+        if (place && place.length < 2) {
+            placeError.style.display = 'block';
+            placeError.textContent = 'Place must be at least 2 characters';
+            placeInput.classList.add('is-invalid');
+            return false;
+        } else {
+            placeError.style.display = 'none';
+            placeInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validatePincode(pincode) {
+        const pincodeError = document.getElementById('pincodeError');
+        const pincodeInput = document.getElementById('pincode');
+        const pincodePattern = /^[0-9]{6}$/;
+
+        if (pincode && !pincodePattern.test(pincode)) {
+            pincodeError.style.display = 'block';
+            pincodeError.textContent = 'Pincode must be exactly 6 digits';
+            pincodeInput.classList.add('is-invalid');
+            return false;
+        } else {
+            pincodeError.style.display = 'none';
+            pincodeInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateDOB(dob) {
+        const dobError = document.getElementById('dobError');
+        const dobInput = document.getElementById('dob');
+
+        if (dob) {
+            const selectedDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - selectedDate.getFullYear();
+            const monthDiff = today.getMonth() - selectedDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+                age--;
+            }
+
+            const ageDisplay = document.getElementById('ageDisplay');
+            if (age < 16) {
+                dobError.style.display = 'block';
+                dobError.textContent = 'Student must be at least 16 years old';
+                dobInput.classList.add('is-invalid');
+                ageDisplay.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> Age: ${age} years (Minimum age is 16 years)`;
+                ageDisplay.style.color = '#dc3545';
+                return false;
+            } else if (age > 70) {
+                dobError.style.display = 'block';
+                dobError.textContent = 'Age cannot exceed 70 years';
+                dobInput.classList.add('is-invalid');
+                ageDisplay.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i> Age: ${age} years (Maximum age is 70 years)`;
+                ageDisplay.style.color = '#dc3545';
+                return false;
+            } else {
+                dobError.style.display = 'none';
+                dobInput.classList.remove('is-invalid');
+                ageDisplay.innerHTML = `<i class="fas fa-check-circle" style="color: #28a745;"></i> Age: ${age} years`;
+                ageDisplay.style.color = '#28a745';
+                return true;
+            }
+        }
+        return true;
+    }
+
+    function calculateAge() {
+        const dobInput = document.getElementById('dob');
+        if (dobInput && dobInput.value) {
+            validateDOB(dobInput.value);
+        }
+    }
+
+    function validatePhoto(input) {
+        const photoError = document.getElementById('photoError');
+        const photoPreview = document.getElementById('photoPreview');
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            if (file.size > 2 * 1024 * 1024) {
+                photoError.style.display = 'block';
+                photoError.textContent = 'Photo size must be less than 2MB';
+                input.value = '';
+                return false;
+            }
+
+            if (!file.type.match('image.*')) {
+                photoError.style.display = 'block';
+                photoError.textContent = 'Please upload an image file (JPEG, PNG, GIF)';
+                input.value = '';
+                return false;
+            }
+
+            photoError.style.display = 'none';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                photoPreview.innerHTML = `
+                    <img src="${e.target.result}"
+                         class="rounded-circle"
+                         style="width: 100px; height: 100px; object-fit: cover; border: 3px solid var(--accent-color);">
+                    <div class="form-help mt-2">
+                        <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                        New photo selected
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+            return true;
+        }
+        return true;
+    }
+
+    function handlePhotoPreview(file) {
+        validatePhoto({ files: [file] });
+    }
+
+    function showErrorMessage(message) {
+        const errorContainer = document.getElementById('errorMessages');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert-custom-error';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.remove()"></button>
+        `;
+        errorContainer.innerHTML = '';
+        errorContainer.appendChild(errorDiv);
+
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+
+    // Form validation on submit
+    document.getElementById('studentEditForm')?.addEventListener('submit', function(e) {
+        let isValid = true;
+        const errors = [];
+
+        // Validate name
+        const name = document.getElementById('name')?.value.trim();
+        if (!name) {
+            errors.push('Student name is required');
+            isValid = false;
+        } else if (!/^[A-Za-z\s.]+$/.test(name)) {
+            errors.push('Name can only contain letters, spaces, and periods');
+            isValid = false;
+        }
+
+        // Validate gender
+        const gender = document.querySelector('input[name="gender"]:checked');
+        if (!gender) {
+            errors.push('Please select gender');
+            isValid = false;
+        }
+
+        // Validate admission number
+        const admNum = document.getElementById('adm_num')?.value.trim();
+        if (!admNum) {
+            errors.push('Admission number is required');
+            isValid = false;
+        }
+
+        // Validate course
+        const course = document.getElementById('select2')?.value;
+        if (!course) {
+            errors.push('Please select a course');
+            isValid = false;
+        }
+
+        // Validate semester
+        const semester = document.getElementById('select')?.value;
+        if (!semester) {
+            errors.push('Please select semester');
+            isValid = false;
+        }
+
+        // Validate email
+        const email = document.getElementById('email')?.value.trim();
+        if (!email) {
+            errors.push('Email is required');
+            isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.push('Please enter a valid email address');
+            isValid = false;
+        }
+
+        // Validate phone
+        const phone = document.getElementById('phone')?.value.trim();
+        if (!phone) {
+            errors.push('Phone number is required');
+            isValid = false;
+        } else if (!/^[0-9]{10}$/.test(phone)) {
+            errors.push('Phone number must be exactly 10 digits');
+            isValid = false;
+        }
+
+        // Validate state
+        const state = document.getElementById('state')?.value;
+        if (!state) {
+            errors.push('Please select state');
+            isValid = false;
+        } else if (state !== 'Kerala') {
+            errors.push('Currently only Kerala state is supported');
+            isValid = false;
+        }
+
+        // Validate city
+        const city = document.getElementById('city')?.value;
+        if (!city) {
+            errors.push('Please select city/district');
+            isValid = false;
+        } else if (!keralaDistricts.includes(city)) {
+            errors.push('Please select a valid Kerala district');
+            isValid = false;
+        }
+
+        // Validate place
+        const place = document.getElementById('place')?.value.trim();
+        if (!place) {
+            errors.push('Place is required');
+            isValid = false;
+        }
+
+        // Validate pincode
+        const pincode = document.getElementById('pincode')?.value.trim();
+        if (!pincode) {
+            errors.push('Pincode is required');
+            isValid = false;
+        } else if (!/^[0-9]{6}$/.test(pincode)) {
+            errors.push('Pincode must be exactly 6 digits');
+            isValid = false;
+        }
+
+        // Validate DOB
+        const dob = document.getElementById('dob')?.value;
+        if (!dob) {
+            errors.push('Date of birth is required');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            errors.forEach(error => showErrorMessage(error));
+            return false;
+        } else {
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner spinner me-2"></i> Updating...';
+                submitBtn.disabled = true;
+            }
+        }
+    });
+
+    // Real-time validation
+    document.getElementById('name')?.addEventListener('input', function(e) {
+        validateName(e.target.value);
+    });
+
+    document.getElementById('adm_num')?.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^A-Za-z0-9]/g, '');
+        validateAdmissionNumber(this.value);
+    });
+
+    document.getElementById('select2')?.addEventListener('change', function(e) {
+        validateCourse(e.target.value);
+    });
+
+    document.getElementById('select')?.addEventListener('change', function(e) {
+        validateSemester(e.target.value);
+    });
+
+    document.getElementById('email')?.addEventListener('input', function(e) {
+        validateEmail(e.target.value);
+    });
+
+    document.getElementById('phone')?.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 10) {
+            this.value = this.value.slice(0, 10);
+        }
+        validatePhone(this.value);
+    });
+
+    document.getElementById('state')?.addEventListener('change', function(e) {
+        validateState(e.target.value);
+        loadDistricts(e.target.value);
+    });
+
+    document.getElementById('city')?.addEventListener('change', function(e) {
+        validateCity(e.target.value);
+    });
+
+    document.getElementById('place')?.addEventListener('input', function(e) {
+        validatePlace(e.target.value);
+    });
+
+    document.getElementById('pincode')?.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6);
+        }
+        validatePincode(this.value);
+    });
+
+    document.getElementById('dob')?.addEventListener('change', function(e) {
+        validateDOB(e.target.value);
+    });
+
+    // Add focus effects similar to admin homepage
+    const inputGroups = document.querySelectorAll('.form-input-group');
+    inputGroups.forEach(group => {
+        const input = group.querySelector('input, select');
+        if (input) {
+            input.addEventListener('focus', () => {
+                group.style.borderColor = 'var(--secondary-color)';
+                group.style.boxShadow = '0 0 0 3px rgba(82, 109, 130, 0.2)';
+            });
+
+            input.addEventListener('blur', () => {
+                if (!input.classList.contains('is-invalid')) {
+                    group.style.borderColor = 'var(--accent-color)';
+                    group.style.boxShadow = 'none';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+

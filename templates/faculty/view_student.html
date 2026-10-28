@@ -1,0 +1,1569 @@
+{#{{% extends "admin/index.html" %}}#}
+{#{{% block body %}}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>Student_name</th>#}
+{#          <th>Gender</th>#}
+{#          <th>Admission number</th>#}
+{#          <th>Date Of Birth</th>#}
+{#          <th>Email</th>#}
+{#          <th>Phone_num</th>#}
+{#          <th>Place</th>#}
+{#          <th>City</th>#}
+{#          <th>State</th>#}
+{#          <th>Pincode</th>#}
+{#          <th>Photo</th>#}
+{#          <th></th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#      {% for i in data %}#}
+{#        <!-- Sample Data Row -->#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.std_name }}</td>#}
+{#          <td>{{ i.gender }}</td>#}
+{#          <td>{{ i.ad_num }}</td>#}
+{#          <td>{{ i.dob }}</td>#}
+{#          <td>{{ i.email }}</td>#}
+{#          <td>{{ i.phone }}</td>#}
+{#          <td>{{ i.place }}</td>#}
+{#          <td>{{ i.city }}</td>#}
+{#          <td>{{ i.state }}</td>#}
+{#          <td>{{ i.pin }}</td>#}
+{#          <td><img src="{{ i.image }}" class="img-thumbnail" width="50" /></td>#}
+{#          <td><a href="/adm_edit_student/{{ i.id }}">Add mark</a> </td>#}
+{#        </tr>#}
+{#        <!-- Add more rows dynamically from backend -->#}
+{#       {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{{% endblock %}}#}
+
+{#{% extends "faculty/index.html" %}#}
+{#{% block body %}#}
+{#<div class="container mt-4">#}
+{#    <!-- Page Header -->#}
+{#    <div class="card-header mb-4">#}
+{#        <div class="card-icon">#}
+{#            <i class="fas fa-users"></i>#}
+{#        </div>#}
+{#        <h1 class="card-title">Student Management</h1>#}
+{#        <div class="ms-auto">#}
+{#            <a href="/adm_add_student" class="btn btn-custom">#}
+{#                <i class="fas fa-user-plus me-2"></i>Add New Student#}
+{#            </a>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- Information Alert -->#}
+{#    <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--secondary-color); border-color: var(--accent-color); color: var(--dark-text); border-radius: 12px;">#}
+{#        <i class="fas fa-info-circle me-2"></i>#}
+{#        Manage all registered students. View details, edit information, and assign marks as needed.#}
+{#        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>#}
+{#    </div>#}
+{##}
+{#    <!-- Stats Cards -->#}
+{#    <div class="stats-container mb-4">#}
+{#        <div class="stat-card">#}
+{#            <div class="stat-icon">#}
+{#                <i class="fas fa-users"></i>#}
+{#            </div>#}
+{#            <div class="stat-number">{{ data|length }}</div>#}
+{#            <div class="stat-label">Total Students</div>#}
+{#        </div>#}
+{##}
+{#        <div class="stat-card">#}
+{#            <div class="stat-icon">#}
+{#                <i class="fas fa-venus-mars"></i>#}
+{#            </div>#}
+{#            <div class="stat-number" id="maleCount">0</div>#}
+{#            <div class="stat-label">Male Students</div>#}
+{#        </div>#}
+{##}
+{#        <div class="stat-card">#}
+{#            <div class="stat-icon">#}
+{#                <i class="fas fa-map-marker-alt"></i>#}
+{#            </div>#}
+{#            <div class="stat-number" id="uniqueCities">0</div>#}
+{#            <div class="stat-label">Cities</div>#}
+{#        </div>#}
+{##}
+{#        <div class="stat-card">#}
+{#            <div class="stat-icon">#}
+{#                <i class="fas fa-calendar-alt"></i>#}
+{#            </div>#}
+{#            <div class="stat-number" id="thisYearCount">0</div>#}
+{#            <div class="stat-label">This Year</div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- Main Table Card -->#}
+{#    <div class="main-card">#}
+{#        <div class="card-header mb-4">#}
+{#            <div class="card-icon">#}
+{#                <i class="fas fa-table"></i>#}
+{#            </div>#}
+{#            <h2 class="card-title" style="margin: 0;">Registered Students List</h2>#}
+{#            <div class="ms-auto">#}
+{#                <button class="btn btn-custom" onclick="exportStudentsToCSV()">#}
+{#                    <i class="fas fa-download me-2"></i>Export CSV#}
+{#                </button>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <!-- Filter Options -->#}
+{#        <div class="row mb-4">#}
+{#            <div class="col-md-4">#}
+{#                <div class="input-group">#}
+{#                    <span class="input-group-text" style="background-color: var(--secondary-color); border-color: var(--accent-color);">#}
+{#                        <i class="fas fa-search"></i>#}
+{#                    </span>#}
+{#                    <input type="text" id="searchInput" class="form-control" placeholder="Search students..."#}
+{#                           style="border-color: var(--accent-color);">#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-md-4">#}
+{#                <select id="genderFilter" class="form-select" style="background-color: var(--white); border-color: var(--accent-color);">#}
+{#                    <option value="">All Genders</option>#}
+{#                    <option value="Male">Male</option>#}
+{#                    <option value="Female">Female</option>#}
+{#                    <option value="Other">Other</option>#}
+{#                </select>#}
+{#            </div>#}
+{#            <div class="col-md-4">#}
+{#                <div class="d-flex justify-content-end">#}
+{#                    <select id="cityFilter" class="form-select" style="max-width: 200px; background-color: var(--white); border-color: var(--accent-color);">#}
+{#                        <option value="">All Cities</option>#}
+{#                        <!-- Cities will be populated dynamically -->#}
+{#                    </select>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <div class="table-responsive">#}
+{#            <table id="registrationTable" class="table table-hover" style="width:100%; border-collapse: separate; border-spacing: 0;">#}
+{#                <thead>#}
+{#                    <tr style="background-color: var(--secondary-color);">#}
+{#                        <th style="border-radius: 12px 0 0 0; border: none; padding: 1rem;">#</th>#}
+{#                        <th style="border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-user me-2"></i>STUDENT INFO#}
+{#                        </th>#}
+{#                        <th style="border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-venus-mars me-2"></i>GENDER#}
+{#                        </th>#}
+{#                        <th style="border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-id-card me-2"></i>ADMISSION#}
+{#                        </th>#}
+{#                        <th style="border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-calendar me-2"></i>DOB#}
+{#                        </th>#}
+{#                        <th style="border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-envelope me-2"></i>CONTACT#}
+{#                        </th>#}
+{#                        <th style="border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-map-marker-alt me-2"></i>LOCATION#}
+{#                        </th>#}
+{#                        <th style="border-radius: 0 12px 0 0; border: none; padding: 1rem;">#}
+{#                            <i class="fas fa-cogs me-2"></i>ACTIONS#}
+{#                        </th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% if data %}#}
+{#                        {% for i in data %}#}
+{#                        <tr style="border-bottom: 2px solid var(--primary-color); transition: all 0.3s ease;">#}
+{#                            <td style="padding: 1rem; font-weight: 600; color: var(--dark-text);">#}
+{#                                {{ forloop.counter }}#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <div class="d-flex align-items-center">#}
+{#                                    <div class="student-avatar" style="width: 50px; height: 50px; background-color:#}
+{#                                        {% if i.gender == 'Male' %}#B0DB9C{% elif i.gender == 'Female' %}#E8BDE8{% else %}#CAE8BD{% endif %};#}
+{#                                        border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px; overflow: hidden;">#}
+{#                                        {% if i.image %}#}
+{#                                            <img src="{{ i.image }}" alt="{{ i.std_name }}"#}
+{#                                                 style="width: 100%; height: 100%; object-fit: cover;">#}
+{#                                        {% else %}#}
+{#                                            <i class="fas fa-user" style="color: var(--dark-text); font-size: 1.2rem;"></i>#}
+{#                                        {% endif %}#}
+{#                                    </div>#}
+{#                                    <div>#}
+{#                                        <div style="font-weight: 600; color: var(--dark-text);">{{ i.std_name }}</div>#}
+{#                                        <div style="font-size: 0.85rem; color: var(--light-text);">#}
+{#                                            <i class="fas fa-envelope me-1"></i> {{ i.email }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <span class="gender-badge" style="background-color:#}
+{#                                    {% if i.gender == 'Male' %}#B0DB9C{% elif i.gender == 'Female' %}#E8BDE8{% else %}#CAE8BD{% endif %};#}
+{#                                    color: var(--dark-text); padding: 0.4rem 0.8rem; border-radius: 20px; display: inline-block; font-weight: 600;">#}
+{#                                    <i class="fas fa-{% if i.gender == 'Male' %}mars{% elif i.gender == 'Female' %}venus{% else %}genderless{% endif %} me-1"></i>#}
+{#                                    {{ i.gender }}#}
+{#                                </span>#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <div class="admission-info">#}
+{#                                    <div style="font-weight: 600; color: var(--dark-text);">{{ i.ad_num }}</div>#}
+{#                                    <div style="font-size: 0.8rem; color: var(--light-text);">#}
+{#                                        <i class="fas fa-id-badge me-1"></i> Student ID#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <div class="dob-container">#}
+{#                                    <div class="dob-badge" style="background-color: var(--primary-color); color: var(--dark-text); padding: 0.4rem 0.8rem; border-radius: 8px; display: inline-block;">#}
+{#                                        <i class="fas fa-birthday-cake me-1"></i>#}
+{#                                        {{ i.dob }}#}
+{#                                    </div>#}
+{#                                    <div class="age mt-1" style="font-size: 0.8rem; color: var(--light-text);">#}
+{#                                        Age: <span class="student-age" data-dob="{{ i.dob }}">Calculating...</span>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <div class="contact-info">#}
+{#                                    <div style="color: var(--dark-text); font-weight: 500;">#}
+{#                                        <i class="fas fa-phone me-1"></i> {{ i.phone }}#}
+{#                                    </div>#}
+{#                                    <div class="mt-1" style="font-size: 0.85rem; color: var(--light-text); word-break: break-word;">#}
+{#                                        {{ i.email }}#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <div class="location-info">#}
+{#                                    <div style="color: var(--dark-text); font-weight: 500;">#}
+{#                                        <i class="fas fa-map-pin me-1"></i> {{ i.city }}, {{ i.state }}#}
+{#                                    </div>#}
+{#                                    <div class="mt-1" style="font-size: 0.8rem; color: var(--light-text);">#}
+{#                                        {{ i.place }} • {{ i.pin }}#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                            <td style="padding: 1rem;">#}
+{#                                <div class="btn-group" role="group">#}
+{#                                    <button type="button" class="btn btn-view" onclick="viewStudentDetails('{{ i.id }}', '{{ i.std_name }}')"#}
+{#                                            style="background-color: var(--secondary-color); color: var(--dark-text); border: none; border-radius: 8px; padding: 0.5rem 1rem; margin-right: 0.5rem;">#}
+{#                                        <i class="fas fa-eye me-1"></i>View#}
+{#                                    </button>#}
+{#                                    <a href="/adm_edit_student/{{ i.id }}" class="btn btn-edit"#}
+{#                                       style="background-color: var(--button-color); color: var(--dark-text); border: none; border-radius: 8px; padding: 0.5rem 1rem; margin-right: 0.5rem; text-decoration: none;">#}
+{#                                        <i class="fas fa-edit me-1"></i>Edit#}
+{#                                    </a>#}
+{#                                    <a href="/fac_add_internal_mark/{{ i.id }}" class="btn btn-mark"#}
+{#                                       style="background-color: #28a745; color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem; text-decoration: none;">#}
+{#                                        <i class="fas fa-star me-1"></i>Add Mark#}
+{#                                    </a>#}
+{#                                     <a href="/fac_chatt/{{ i.id }}" class="btn btn-mark"#}
+{#                                       style="background-color: #28a745; color: white; border: none; border-radius: 8px; padding: 0.5rem 1rem; text-decoration: none;">#}
+{#                                        <i class="fas fa-star me-1"></i>Chat#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                        {% endfor %}#}
+{#                    {% else %}#}
+{#                        <tr>#}
+{#                            <td colspan="8" class="text-center py-5" style="color: var(--light-text);">#}
+{#                                <div class="empty-state">#}
+{#                                    <i class="fas fa-users fa-3x mb-3" style="opacity: 0.5;"></i>#}
+{#                                    <h5>No Students Registered</h5>#}
+{#                                    <p class="mb-3">No students have been registered yet.</p>#}
+{#                                    <a href="/adm_add_student" class="btn btn-custom">#}
+{#                                        <i class="fas fa-user-plus me-2"></i>Add First Student#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                            </td>#}
+{#                        </tr>#}
+{#                    {% endif %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{##}
+{#        <!-- Summary Footer -->#}
+{#        <div class="row mt-4">#}
+{#            <div class="col-md-6">#}
+{#                <div class="summary-card" style="background-color: var(--primary-color); padding: 1.5rem; border-radius: 12px;">#}
+{#                    <h6 style="color: var(--dark-text); margin-bottom: 1rem;">#}
+{#                        <i class="fas fa-chart-pie me-2"></i>Demographic Distribution#}
+{#                    </h6>#}
+{##}
+{#                    <!-- Gender Distribution -->#}
+{#                    <div class="d-flex justify-content-between align-items-center mb-3">#}
+{#                        <div>#}
+{#                            <i class="fas fa-mars me-2" style="color: #B0DB9C;"></i>#}
+{#                            <span style="color: var(--light-text);">Male</span>#}
+{#                        </div>#}
+{#                        <div class="d-flex align-items-center">#}
+{#                            <span class="badge" style="background-color: #B0DB9C; color: var(--dark-text); margin-right: 8px;" id="maleBadge">0</span>#}
+{#                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="malePercent">0%</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="d-flex justify-content-between align-items-center mb-3">#}
+{#                        <div>#}
+{#                            <i class="fas fa-venus me-2" style="color: #E8BDE8;"></i>#}
+{#                            <span style="color: var(--light-text);">Female</span>#}
+{#                        </div>#}
+{#                        <div class="d-flex align-items-center">#}
+{#                            <span class="badge" style="background-color: #E8BDE8; color: var(--dark-text); margin-right: 8px;" id="femaleBadge">0</span>#}
+{#                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="femalePercent">0%</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <!-- Location Distribution -->#}
+{#                    <h6 style="color: var(--dark-text); margin-top: 1.5rem; margin-bottom: 1rem;">#}
+{#                        <i class="fas fa-map me-2"></i>Top Cities#}
+{#                    </h6>#}
+{#                    <div id="topCitiesList">#}
+{#                        <!-- Top cities will be populated here -->#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="col-md-6">#}
+{#                <div class="summary-card" style="background-color: var(--primary-color); padding: 1.5rem; border-radius: 12px;">#}
+{#                    <h6 style="color: var(--dark-text); margin-bottom: 1rem;">#}
+{#                        <i class="fas fa-chart-line me-2"></i>Student Statistics#}
+{#                    </h6>#}
+{##}
+{#                    <div class="d-flex justify-content-between mb-2">#}
+{#                        <span style="color: var(--light-text);">Average Age</span>#}
+{#                        <span style="color: var(--dark-text); font-weight: 600;" id="averageAge">0</span>#}
+{#                    </div>#}
+{##}
+{#                    <div class="d-flex justify-content-between mb-2">#}
+{#                        <span style="color: var(--light-text);">New This Month</span>#}
+{#                        <span style="color: var(--dark-text); font-weight: 600;" id="newThisMonth">0</span>#}
+{#                    </div>#}
+{##}
+{#                    <div class="d-flex justify-content-between">#}
+{#                        <span style="color: var(--light-text);">Active Students</span>#}
+{#                        <span style="color: var(--dark-text); font-weight: 600;" id="activeStudents">{{ data|length }}</span>#}
+{#                    </div>#}
+{##}
+{#                    <!-- Age Distribution -->#}
+{#                    <div class="mt-3">#}
+{#                        <h6 style="color: var(--dark-text); font-size: 0.9rem; margin-bottom: 0.5rem;">#}
+{#                            <i class="fas fa-user-clock me-1"></i> Age Distribution#}
+{#                        </h6>#}
+{#                        <div class="progress" style="height: 10px; background-color: var(--accent-color); border-radius: 5px;">#}
+{#                            <div class="progress-bar" role="progressbar"#}
+{#                                 style="width: 0%; background-color: var(--button-color); border-radius: 5px;"#}
+{#                                 id="ageDistributionBar"></div>#}
+{#                        </div>#}
+{#                        <div class="d-flex justify-content-between mt-1" style="font-size: 0.75rem; color: var(--light-text);">#}
+{#                            <span>15-20</span>#}
+{#                            <span>21-25</span>#}
+{#                            <span>26+</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <!-- Quick Actions -->#}
+{#                    <div class="mt-3 p-2" style="background-color: var(--secondary-color); border-radius: 8px;">#}
+{#                        <small style="color: var(--dark-text); font-weight: 500;">#}
+{#                            <i class="fas fa-bolt me-1"></i>#}
+{#                            <span id="quickActionText">Manage student records efficiently</span>#}
+{#                        </small>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Student Details Modal -->#}
+{#<div class="modal fade" id="studentModal" tabindex="-1">#}
+{#    <div class="modal-dialog modal-lg">#}
+{#        <div class="modal-content" style="border-radius: 16px; overflow: hidden;">#}
+{#            <div class="modal-header" style="background-color: var(--button-color); color: var(--dark-text);">#}
+{#                <h5 class="modal-title">#}
+{#                    <i class="fas fa-user-graduate me-2"></i>#}
+{#                    Student Details#}
+{#                </h5>#}
+{#                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                <div id="studentDetailsContent">#}
+{#                    <!-- Dynamic content will be loaded here -->#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<!-- Custom Styles for this page -->#}
+{#<style>#}
+{#    :root {#}
+{#        --primary-color: #ECFAE5;#}
+{#        --secondary-color: #DDF6D2;#}
+{#        --accent-color: #CAE8BD;#}
+{#        --button-color: #B0DB9C;#}
+{#        --dark-text: #2E4A21;#}
+{#        --light-text: #5A7C4D;#}
+{#        --white: #FFFFFF;#}
+{#        --shadow-light: rgba(0, 0, 0, 0.05);#}
+{#        --shadow-medium: rgba(0, 0, 0, 0.1);#}
+{#        --card-bg: #FFFFFF;#}
+{#    }#}
+{##}
+{#    /* Table styling */#}
+{#    #registrationTable {#}
+{#        border-radius: 12px;#}
+{#        overflow: hidden;#}
+{#        box-shadow: 0 4px 6px var(--shadow-light);#}
+{#    }#}
+{##}
+{#    #registrationTable tbody tr {#}
+{#        transition: all 0.3s ease;#}
+{#    }#}
+{##}
+{#    #registrationTable tbody tr:hover {#}
+{#        background-color: var(--primary-color) !important;#}
+{#        transform: translateY(-2px);#}
+{#        box-shadow: 0 4px 8px var(--shadow-medium);#}
+{#    }#}
+{##}
+{#    /* Button styling */#}
+{#    .btn-custom {#}
+{#        background-color: var(--button-color);#}
+{#        color: var(--dark-text);#}
+{#        border: none;#}
+{#        padding: 0.75rem 1.5rem;#}
+{#        border-radius: 10px;#}
+{#        font-weight: 600;#}
+{#        transition: all 0.3s ease;#}
+{#    }#}
+{##}
+{#    .btn-custom:hover {#}
+{#        background-color: var(--accent-color);#}
+{#        transform: translateY(-2px);#}
+{#        box-shadow: 0 4px 8px var(--shadow-medium);#}
+{#    }#}
+{##}
+{#    .btn-view:hover {#}
+{#        background-color: var(--accent-color) !important;#}
+{#        color: var(--dark-text) !important;#}
+{#    }#}
+{##}
+{#    .btn-edit:hover {#}
+{#        background-color: var(--accent-color) !important;#}
+{#        color: var(--dark-text) !important;#}
+{#    }#}
+{##}
+{#    .btn-mark:hover {#}
+{#        background-color: #218838 !important;#}
+{#        color: white !important;#}
+{#    }#}
+{##}
+{#    /* Gender badge styling */#}
+{#    .gender-badge {#}
+{#        transition: all 0.3s ease;#}
+{#        min-width: 80px;#}
+{#        text-align: center;#}
+{#    }#}
+{##}
+{#    .gender-badge:hover {#}
+{#        transform: scale(1.05);#}
+{#    }#}
+{##}
+{#    /* Avatar styling */#}
+{#    .student-avatar {#}
+{#        transition: all 0.3s ease;#}
+{#    }#}
+{##}
+{#    .student-avatar:hover {#}
+{#        transform: scale(1.1);#}
+{#    }#}
+{##}
+{#    /* Empty state */#}
+{#    .empty-state {#}
+{#        padding: 3rem 0;#}
+{#    }#}
+{##}
+{#    /* Responsive adjustments */#}
+{#    @media (max-width: 992px) {#}
+{#        .btn-group {#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            gap: 0.5rem;#}
+{#        }#}
+{##}
+{#        .btn-view, .btn-edit, .btn-mark {#}
+{#            width: 100%;#}
+{#            margin-right: 0 !important;#}
+{#            margin-bottom: 0.5rem;#}
+{#        }#}
+{##}
+{#        .summary-card {#}
+{#            margin-bottom: 1rem;#}
+{#        }#}
+{#    }#}
+{##}
+{#    @media (max-width: 768px) {#}
+{#        .card-header {#}
+{#            flex-direction: column;#}
+{#            align-items: flex-start !important;#}
+{#        }#}
+{##}
+{#        .card-header .ms-auto {#}
+{#            margin-top: 1rem;#}
+{#            width: 100%;#}
+{#        }#}
+{##}
+{#        .card-header .btn-custom {#}
+{#            width: 100%;#}
+{#        }#}
+{#    }#}
+{#</style>#}
+{##}
+{#<!-- JavaScript -->#}
+{#<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>#}
+{#<script>#}
+{#    $(document).ready(function () {#}
+{#        // Initialize DataTable#}
+{#        const table = $('#registrationTable').DataTable({#}
+{#            pageLength: 10,#}
+{#            responsive: true,#}
+{#            language: {#}
+{#                search: "<i class='fas fa-search'></i>",#}
+{#                searchPlaceholder: "Search students...",#}
+{#                lengthMenu: "Show _MENU_ entries",#}
+{#                info: "Showing _START_ to _END_ of _TOTAL_ entries",#}
+{#                paginate: {#}
+{#                    previous: '<i class="fas fa-chevron-left"></i>',#}
+{#                    next: '<i class="fas fa-chevron-right"></i>'#}
+{#                }#}
+{#            },#}
+{#            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +#}
+{#                 '<"row"<"col-sm-12"tr>>' +#}
+{#                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',#}
+{#            initComplete: function() {#}
+{#                calculateStats();#}
+{#                updateStudentAges();#}
+{#                setupFilters();#}
+{#            }#}
+{#        });#}
+{##}
+{#        // Setup filters#}
+{#        function setupFilters() {#}
+{#            // Search filter#}
+{#            $('#searchInput').on('keyup', function() {#}
+{#                table.search(this.value).draw();#}
+{#            });#}
+{##}
+{#            // Gender filter#}
+{#            $('#genderFilter').on('change', function() {#}
+{#                const gender = $(this).val();#}
+{#                $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {#}
+{#                    if (!gender) return true;#}
+{#                    const rowGender = table.row(dataIndex).data()[2]; // Gender column index#}
+{#                    return rowGender.includes(gender);#}
+{#                });#}
+{#                table.draw();#}
+{#            });#}
+{##}
+{#            // City filter - populate cities#}
+{#            const cities = new Set();#}
+{#            {% for i in data %}#}
+{#                cities.add('{{ i.city }}');#}
+{#            {% endfor %}#}
+{##}
+{#            const citySelect = $('#cityFilter');#}
+{#            Array.from(cities).sort().forEach(city => {#}
+{#                citySelect.append(`<option value="${city}">${city}</option>`);#}
+{#            });#}
+{##}
+{#            // City filter functionality#}
+{#            citySelect.on('change', function() {#}
+{#                const city = $(this).val();#}
+{#                $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {#}
+{#                    if (!city) return true;#}
+{#                    const rowData = table.row(dataIndex).data();#}
+{#                    const locationText = rowData[6]; // Location column index#}
+{#                    return locationText.includes(city);#}
+{#                });#}
+{#                table.draw();#}
+{#            });#}
+{#        }#}
+{##}
+{#        // Calculate student ages#}
+{#        function updateStudentAges() {#}
+{#            $('.student-age').each(function() {#}
+{#                const dobStr = $(this).data('dob');#}
+{#                if (!dobStr) {#}
+{#                    $(this).text('N/A');#}
+{#                    return;#}
+{#                }#}
+{##}
+{#                try {#}
+{#                    const dob = new Date(dobStr);#}
+{#                    const today = new Date();#}
+{#                    let age = today.getFullYear() - dob.getFullYear();#}
+{#                    const m = today.getMonth() - dob.getMonth();#}
+{##}
+{#                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {#}
+{#                        age--;#}
+{#                    }#}
+{##}
+{#                    $(this).text(age + ' years');#}
+{#                } catch(e) {#}
+{#                    $(this).text('N/A');#}
+{#                }#}
+{#            });#}
+{#        }#}
+{##}
+{#        // Calculate statistics#}
+{#        function calculateStats() {#}
+{#            const totalStudents = {{ data|length }};#}
+{#            const currentYear = new Date().getFullYear();#}
+{#            const currentMonth = new Date().getMonth();#}
+{##}
+{#            let maleCount = 0;#}
+{#            let femaleCount = 0;#}
+{#            let otherCount = 0;#}
+{#            let uniqueCities = new Set();#}
+{#            let thisYearCount = 0;#}
+{#            let ageSum = 0;#}
+{#            let ageCount = 0;#}
+{#            let age15_20 = 0;#}
+{#            let age21_25 = 0;#}
+{#            let age26Plus = 0;#}
+{#            const cityCounts = {};#}
+{##}
+{#            {% for i in data %}#}
+{#                // Gender count#}
+{#                const gender = '{{ i.gender }}';#}
+{#                if (gender === 'Male') maleCount++;#}
+{#                else if (gender === 'Female') femaleCount++;#}
+{#                else otherCount++;#}
+{##}
+{#                // Unique cities#}
+{#                const city = '{{ i.city }}';#}
+{#                uniqueCities.add(city);#}
+{##}
+{#                // City frequency#}
+{#                if (!cityCounts[city]) cityCounts[city] = 0;#}
+{#                cityCounts[city]++;#}
+{##}
+{#                // This year count (assuming dob is available)#}
+{#                try {#}
+{#                    const dob = new Date('{{ i.dob }}');#}
+{#                    if (dob.getFullYear() === currentYear) {#}
+{#                        thisYearCount++;#}
+{#                    }#}
+{##}
+{#                    // Calculate age for average#}
+{#                    const today = new Date();#}
+{#                    let age = today.getFullYear() - dob.getFullYear();#}
+{#                    const m = today.getMonth() - dob.getMonth();#}
+{##}
+{#                    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {#}
+{#                        age--;#}
+{#                    }#}
+{##}
+{#                    ageSum += age;#}
+{#                    ageCount++;#}
+{##}
+{#                    // Age distribution#}
+{#                    if (age >= 15 && age <= 20) age15_20++;#}
+{#                    else if (age >= 21 && age <= 25) age21_25++;#}
+{#                    else if (age > 25) age26Plus++;#}
+{##}
+{#                } catch(e) {#}
+{#                    // Skip if date is invalid#}
+{#                }#}
+{#            {% endfor %}#}
+{##}
+{#            // Update stats#}
+{#            $('#maleCount').text(maleCount);#}
+{#            $('#uniqueCities').text(uniqueCities.size);#}
+{#            $('#thisYearCount').text(thisYearCount);#}
+{##}
+{#            // Update gender distribution#}
+{#            $('#maleBadge').text(maleCount);#}
+{#            $('#femaleBadge').text(femaleCount);#}
+{##}
+{#            const malePercent = totalStudents > 0 ? ((maleCount / totalStudents) * 100).toFixed(1) : 0;#}
+{#            const femalePercent = totalStudents > 0 ? ((femaleCount / totalStudents) * 100).toFixed(1) : 0;#}
+{##}
+{#            $('#malePercent').text(malePercent + '%');#}
+{#            $('#femalePercent').text(femalePercent + '%');#}
+{##}
+{#            // Update average age#}
+{#            const averageAge = ageCount > 0 ? (ageSum / ageCount).toFixed(1) : 0;#}
+{#            $('#averageAge').text(averageAge + ' years');#}
+{##}
+{#            // Update age distribution bar#}
+{#            const totalAges = age15_20 + age21_25 + age26Plus;#}
+{#            if (totalAges > 0) {#}
+{#                const age15_20Percent = (age15_20 / totalAges) * 100;#}
+{#                const age21_25Percent = (age21_25 / totalAges) * 100;#}
+{#                // Bar shows proportion of young students (15-25)#}
+{#                const youngPercent = age15_20Percent + age21_25Percent;#}
+{#                $('#ageDistributionBar').css('width', youngPercent + '%');#}
+{#            }#}
+{##}
+{#            // Update top cities list#}
+{#            const topCities = Object.entries(cityCounts)#}
+{#                .sort((a, b) => b[1] - a[1])#}
+{#                .slice(0, 3);#}
+{##}
+{#            const topCitiesList = $('#topCitiesList');#}
+{#            topCitiesList.empty();#}
+{##}
+{#            if (topCities.length > 0) {#}
+{#                topCities.forEach(([city, count]) => {#}
+{#                    const percent = ((count / totalStudents) * 100).toFixed(1);#}
+{#                    topCitiesList.append(`#}
+{#                        <div class="d-flex justify-content-between align-items-center mb-2">#}
+{#                            <div>#}
+{#                                <i class="fas fa-city me-2" style="color: var(--accent-color);"></i>#}
+{#                                <span style="color: var(--light-text);">${city}</span>#}
+{#                            </div>#}
+{#                            <div class="d-flex align-items-center">#}
+{#                                <span class="badge" style="background-color: var(--button-color); color: var(--dark-text); margin-right: 8px;">${count}</span>#}
+{#                                <span style="color: var(--dark-text); font-size: 0.85rem;">${percent}%</span>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    `);#}
+{#                });#}
+{#            } else {#}
+{#                topCitiesList.html('<p style="color: var(--light-text); font-size: 0.9rem;">No city data available</p>');#}
+{#            }#}
+{##}
+{#            // Set new this month (simplified - using registration date would be better)#}
+{#            $('#newThisMonth').text(thisYearCount); // Simplified for now#}
+{##}
+{#            // Set quick action text#}
+{#            let actionText = '';#}
+{#            if (totalStudents === 0) {#}
+{#                actionText = 'Add your first student to get started';#}
+{#            } else if (maleCount > femaleCount) {#}
+{#                actionText = 'Majority male students. Consider gender balance initiatives.';#}
+{#            } else if (femaleCount > maleCount) {#}
+{#                actionText = 'Majority female students. Consider gender balance initiatives.';#}
+{#            } else {#}
+{#                actionText = 'Good gender balance maintained.';#}
+{#            }#}
+{#            $('#quickActionText').text(actionText);#}
+{#        }#}
+{#    });#}
+{##}
+{#    function viewStudentDetails(studentId, studentName) {#}
+{#        // Create detailed view modal#}
+{#        const modalContent = `#}
+{#            <div class="student-details">#}
+{#                <div class="text-center mb-4">#}
+{#                    <div class="student-avatar-large mx-auto"#}
+{#                         style="width: 100px; height: 100px; background-color: var(--accent-color);#}
+{#                                border-radius: 50%; display: flex; align-items: center; justify-content: center;#}
+{#                                margin-bottom: 1rem; overflow: hidden;">#}
+{#                        <!-- Avatar would be loaded from student data -->#}
+{#                        <i class="fas fa-user-graduate fa-3x" style="color: var(--dark-text);"></i>#}
+{#                    </div>#}
+{#                    <h4 style="color: var(--dark-text);">${studentName}</h4>#}
+{#                    <p style="color: var(--light-text);">Student ID: ${studentId}</p>#}
+{#                </div>#}
+{##}
+{#                <div class="row">#}
+{#                    <div class="col-md-6">#}
+{#                        <div class="detail-card" style="background-color: var(--primary-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">#}
+{#                            <h6 style="color: var(--dark-text);"><i class="fas fa-info-circle me-2"></i>Basic Information</h6>#}
+{#                            <p style="color: var(--light-text); margin-bottom: 0.5rem;">#}
+{#                                <strong>Admission No:</strong> <span id="detailAdNum">Loading...</span>#}
+{#                            </p>#}
+{#                            <p style="color: var(--light-text); margin-bottom: 0.5rem;">#}
+{#                                <strong>Date of Birth:</strong> <span id="detailDOB">Loading...</span>#}
+{#                            </p>#}
+{#                            <p style="color: var(--light-text); margin-bottom: 0;">#}
+{#                                <strong>Gender:</strong> <span id="detailGender">Loading...</span>#}
+{#                            </p>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="col-md-6">#}
+{#                        <div class="detail-card" style="background-color: var(--primary-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">#}
+{#                            <h6 style="color: var(--dark-text);"><i class="fas fa-address-book me-2"></i>Contact Information</h6>#}
+{#                            <p style="color: var(--light-text); margin-bottom: 0.5rem;">#}
+{#                                <strong>Email:</strong> <span id="detailEmail">Loading...</span>#}
+{#                            </p>#}
+{#                            <p style="color: var(--light-text); margin-bottom: 0.5rem;">#}
+{#                                <strong>Phone:</strong> <span id="detailPhone">Loading...</span>#}
+{#                            </p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <div class="detail-card" style="background-color: var(--primary-color); padding: 1rem; border-radius: 8px;">#}
+{#                    <h6 style="color: var(--dark-text);"><i class="fas fa-map-marker-alt me-2"></i>Address</h6>#}
+{#                    <p style="color: var(--light-text); margin-bottom: 0.5rem;">#}
+{#                        <strong>Address:</strong> <span id="detailAddress">Loading...</span>#}
+{#                    </p>#}
+{#                    <p style="color: var(--light-text); margin-bottom: 0.5rem;">#}
+{#                        <strong>City/State:</strong> <span id="detailCityState">Loading...</span>#}
+{#                    </p>#}
+{#                    <p style="color: var(--light-text); margin-bottom: 0;">#}
+{#                        <strong>Pincode:</strong> <span id="detailPin">Loading...</span>#}
+{#                    </p>#}
+{#                </div>#}
+{##}
+{#                <div class="mt-3 text-center">#}
+{#                    <a href="/adm_edit_student/${studentId}" class="btn btn-custom me-2">#}
+{#                        <i class="fas fa-edit me-1"></i>Edit Student#}
+{#                    </a>#}
+{#                    <a href="/adm_edit_student/${studentId}" class="btn" style="background-color: #28a745; color: white;">#}
+{#                        <i class="fas fa-star me-1"></i>Add Marks#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{#        `;#}
+{##}
+{#        // Set modal content#}
+{#        $('#studentDetailsContent').html(modalContent);#}
+{##}
+{#        // In a real application, you would fetch student details via AJAX#}
+{#        // For now, we'll use the data from the table row#}
+{#        const row = $(`tr:has(a[href="/adm_edit_student/${studentId}"])`);#}
+{#        if (row.length) {#}
+{#            const cells = row.find('td');#}
+{##}
+{#            // Extract data from the row (this is simplified - in real app, use AJAX)#}
+{#            $('#detailAdNum').text(row.find('.admission-info div:first').text());#}
+{#            $('#detailDOB').text(row.find('.dob-badge').text().replace('🎂 ', ''));#}
+{#            $('#detailGender').text(row.find('.gender-badge').text().replace(/[♀♂]/g, '').trim());#}
+{#            $('#detailEmail').text(row.find('.contact-info div:last').text());#}
+{#            $('#detailPhone').text(row.find('.contact-info div:first').text().replace('📱 ', ''));#}
+{#            $('#detailAddress').text(row.find('.location-info div:last').text().split('•')[0].trim());#}
+{#            $('#detailCityState').text(row.find('.location-info div:first').text().replace('📍 ', ''));#}
+{#            $('#detailPin').text(row.find('.location-info div:last').text().split('•')[1]?.trim() || 'N/A');#}
+{#        }#}
+{##}
+{#        // Show modal#}
+{#        const modal = new bootstrap.Modal(document.getElementById('studentModal'));#}
+{#        modal.show();#}
+{#    }#}
+{##}
+{#    function exportStudentsToCSV() {#}
+{#        let csv = [];#}
+{#        let rows = document.querySelectorAll("#registrationTable tr");#}
+{##}
+{#        for (let i = 0; i < rows.length; i++) {#}
+{#            let row = [], cols = rows[i].querySelectorAll("td, th");#}
+{##}
+{#            for (let j = 0; j < cols.length; j++) {#}
+{#                // Extract clean text#}
+{#                let text = cols[j].innerText.replace(/\n/g, ' ').trim();#}
+{##}
+{#                // Clean up special columns#}
+{#                if (j === 1) { // Student info column#}
+{#                    text = text.split('\n')[0]; // Get just the name#}
+{#                } else if (j === 6) { // Location column#}
+{#                    text = text.replace(/\s+/g, ' ').trim();#}
+{#                }#}
+{##}
+{#                row.push(`"${text}"`);#}
+{#            }#}
+{##}
+{#            csv.push(row.join(","));#}
+{#        }#}
+{##}
+{#        // Download CSV file#}
+{#        let csvContent = "data:text/csv;charset=utf-8," + csv.join("\n");#}
+{#        let encodedUri = encodeURI(csvContent);#}
+{#        let link = document.createElement("a");#}
+{#        link.setAttribute("href", encodedUri);#}
+{#        link.setAttribute("download", `students_${new Date().toISOString().slice(0,10)}.csv`);#}
+{#        document.body.appendChild(link);#}
+{#        link.click();#}
+{#        document.body.removeChild(link);#}
+{#    }#}
+{#</script>#}
+{#{% endblock %}#}
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="card-header mb-4">
+        <div class="card-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h1 class="card-title">Student Management</h1>
+    </div>
+
+    <!-- Information Alert -->
+    <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--dark-text); border-radius: 12px;">
+        <i class="fas fa-info-circle me-2"></i>
+        View student details and communicate with students through chat.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Stats Cards - 1x3 layout (removed semesters box) -->
+    <div class="stats-container mb-4" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-number">{{ data|length }}</div>
+            <div class="stat-label">Total Students</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-number" id="uniqueCourses">0</div>
+            <div class="stat-label">Courses</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="stat-number" id="availableChats">0</div>
+            <div class="stat-label">Active Chats</div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="main-card">
+        <div class="card-header mb-4">
+            <div class="card-icon">
+                <i class="fas fa-table"></i>
+            </div>
+            <h2 class="card-title" style="margin: 0;">Student Directory</h2>
+        </div>
+
+        <!-- Single Search Bar - Redesigned to match other pages -->
+        <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+            <!-- Search Bar - Left Side -->
+            <div class="search-wrapper flex-grow-1" style="min-width: 300px; max-width: 450px; background-color: var(--white); border-radius: 12px; border: 2px solid var(--accent-color); overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-light);">
+                <div class="d-flex align-items-center">
+                    <div class="search-icon px-3" style="color: var(--secondary-color);">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input type="text" id="searchInput" class="form-control border-0"
+                           placeholder="Search by student name, email, course or semester..."
+                           style="padding: 0.875rem 0; background-color: transparent; color: var(--dark-text); font-weight: 500; box-shadow: none;">
+                    <button class="btn btn-link text-decoration-none px-3" onclick="clearSearch()"
+                            style="color: var(--secondary-color); font-weight: 500; white-space: nowrap;">
+                        <i class="fas fa-times me-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter and Sort - Right Side -->
+            <div class="d-flex gap-3 flex-wrap justify-content-end">
+                <!-- Course Filter Dropdown -->
+                <div class="filter-wrapper" style="position: relative; width: 220px;">
+                    <select id="courseFilter" class="form-select"
+                            style="background-color: var(--white); border: 2px solid var(--accent-color); border-radius: 12px; padding: 0.875rem 1rem; color: var(--dark-text); font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-light); width: 100%; appearance: none;">
+                        <option value="">📚 All Courses</option>
+                        <!-- Courses will be populated dynamically -->
+                    </select>
+                    <div class="filter-arrow" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--secondary-color);">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- Semester Filter Dropdown -->
+                <div class="sort-wrapper" style="position: relative; width: 200px;">
+                    <select id="semesterFilter" class="form-select"
+                            style="background-color: var(--white); border: 2px solid var(--accent-color); border-radius: 12px; padding: 0.875rem 1rem; color: var(--dark-text); font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-light); width: 100%; appearance: none;">
+                        <option value="">📊 All Semesters</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                    </select>
+                    <div class="sort-arrow" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--secondary-color);">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Hint -->
+        <div class="search-hint mb-3" style="font-size: 0.8rem; color: var(--light-text);">
+            <i class="fas fa-lightbulb me-1"></i> Try searching for "John", "john@example.com", "Computer Science", or "Semester 3"
+        </div>
+
+        <div class="table-responsive">
+            <table id="registrationTable" class="table table-hover" style="width:100%; border-collapse: separate; border-spacing: 0;">
+                <thead>
+                    <tr style="background-color: var(--light-bg);">
+                        <th style="border-radius: 12px 0 0 0; border: none; padding: 1rem;">#</th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-user me-2"></i>STUDENT DETAILS
+                        </th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-book me-2"></i>COURSE
+                        </th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-layer-group me-2"></i>SEMESTER
+                        </th>
+                        <th style="border-radius: 0 12px 0 0; border: none; padding: 1rem;">
+                            <i class="fas fa-comments me-2"></i>CHAT
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data %}
+                        {% for i in data %}
+                        <tr style="border-bottom: 2px solid var(--light-bg); transition: all 0.3s ease;">
+                            <td style="padding: 1rem; font-weight: 600; color: var(--dark-text);">
+                                {{ forloop.counter }}
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="d-flex align-items-center">
+                                    <div class="student-avatar" style="width: 50px; height: 50px; background-color: var(--light-bg);
+                                        border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px; overflow: hidden;">
+                                        {% if i.image %}
+                                            <img src="{{ i.image }}" alt="{{ i.std_name }}"
+                                                 style="width: 100%; height: 100%; object-fit: cover;">
+                                        {% else %}
+                                            <i class="fas fa-user-graduate" style="color: var(--dark-text); font-size: 1.2rem;"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--dark-text); font-size: 1.1rem;">{{ i.std_name }}</div>
+                                        <div style="font-size: 0.85rem; color: var(--light-text);">
+                                            <i class="fas fa-envelope me-1"></i> {{ i.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div style="color: var(--dark-text); font-weight: 500;">
+                                    <i class="fas fa-book me-2" style="color: var(--secondary-color);"></i>
+                                    {{ i.STUDENT.COURSE.course_name|default:"Not Assigned" }}
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--light-text); margin-top: 4px;">
+                                    <i class="fas fa-clock me-1"></i> Duration: {{ i.STUDENT.COURSE.duration|default:"-" }}
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div style="color: var(--dark-text); font-weight: 500;">
+                                    <i class="fas fa-layer-group me-2" style="color: var(--secondary-color);"></i>
+                                    Semester {{ i.STUDENT.semester|default:"N/A" }}
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <a href="/fac_chatt/{{ i.id }}" class="btn btn-chat"
+                                   style="background-color: var(--secondary-color); color: var(--white); border: none; border-radius: 8px; padding: 0.75rem 1.5rem; text-decoration: none; display: inline-flex; align-items: center; transition: all 0.3s ease;">
+                                    <i class="fas fa-comment-dots me-2"></i>
+                                    Chat
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5" style="color: var(--light-text);">
+                                <div class="empty-state">
+                                    <i class="fas fa-user-graduate fa-3x mb-3" style="opacity: 0.5;"></i>
+                                    <h5>No Students Assigned</h5>
+                                    <p class="mb-3">No students have been assigned to your subjects yet.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary Footer -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="summary-card" style="background-color: var(--white); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--accent-color);">
+                    <h6 style="color: var(--dark-text); margin-bottom: 1rem;">
+                        <i class="fas fa-chart-pie me-2"></i>Course Distribution
+                    </h6>
+                    <div id="courseDistribution">
+                        <!-- Course distribution will be populated here -->
+                        <div class="text-center" style="color: var(--light-text);">
+                            <i class="fas fa-spinner fa-spin me-2"></i>
+                            Loading course data...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="summary-card" style="background-color: var(--white); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--accent-color);">
+                    <h6 style="color: var(--dark-text); margin-bottom: 1rem;">
+                        <i class="fas fa-chart-line me-2"></i>Communication Stats
+                    </h6>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span style="color: var(--light-text);">
+                            <i class="fas fa-comment me-2"></i>Total Chats
+                        </span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="totalChats">0</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span style="color: var(--light-text);">
+                            <i class="fas fa-clock me-2"></i>Active Conversations
+                        </span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="activeConversations">0</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span style="color: var(--light-text);">
+                            <i class="fas fa-check-circle me-2"></i>Messages Today
+                        </span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="messagesToday">0</span>
+                    </div>
+
+                    <!-- Quick Chat Stats -->
+                    <div class="mt-3 p-2" style="background-color: var(--light-bg); border-radius: 8px;">
+                        <small style="color: var(--dark-text); font-weight: 500;">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            <span id="chatTip">Use chat to communicate with students about assignments and queries</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles for this page -->
+<style>
+    /* Using the same color variables from faculty homepage */
+    :root {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --button-color: #526D82;
+        --light-bg: #DDE6ED;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --white: #FFFFFF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --card-bg: #FFFFFF;
+    }
+
+    /* Table styling */
+    #registrationTable {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px var(--shadow-light);
+    }
+
+    #registrationTable tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    #registrationTable tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    /* Chat button styling */
+    .btn-chat {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-chat:hover {
+        background-color: var(--primary-color) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(39, 55, 77, 0.2);
+    }
+
+    .btn-chat:active {
+        transform: translateY(0);
+    }
+
+    .btn-chat::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+
+    .btn-chat:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(20, 20);
+            opacity: 0;
+        }
+    }
+
+    /* Avatar styling */
+    .student-avatar {
+        transition: all 0.3s ease;
+        border: 2px solid var(--accent-color);
+    }
+
+    .student-avatar:hover {
+        transform: scale(1.1);
+        border-color: var(--secondary-color);
+    }
+
+    /* Empty state */
+    .empty-state {
+        padding: 3rem 0;
+    }
+
+    /* Course distribution item */
+    .course-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--light-bg);
+    }
+
+    .course-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Progress bar styling */
+    .progress {
+        background-color: var(--light-bg);
+    }
+
+    .progress-bar {
+        background-color: var(--secondary-color);
+    }
+
+    /* Summary card styling */
+    .summary-card {
+        transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px var(--shadow-medium);
+    }
+
+    /* Search wrapper hover effect */
+    .search-wrapper:hover,
+    .search-wrapper:focus-within {
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 6px 15px var(--shadow-medium) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Filter dropdown hover effects */
+    .filter-wrapper select:hover,
+    .sort-wrapper select:hover,
+    .filter-wrapper select:focus,
+    .sort-wrapper select:focus {
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 6px 15px var(--shadow-medium) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Remove default arrow from select */
+    select.form-select {
+        background-image: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .btn-chat {
+            width: auto !important;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .stats-container[style*="grid-template-columns: repeat(3, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        .search-wrapper {
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }
+
+        .filter-wrapper,
+        .sort-wrapper {
+            width: calc(50% - 6px) !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .stats-container[style*="grid-template-columns: repeat(3, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .summary-card {
+            margin-bottom: 1rem;
+        }
+
+        .filter-wrapper,
+        .sort-wrapper {
+            width: 100% !important;
+        }
+
+        .d-flex.gap-3 {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .stats-container[style*="grid-template-columns: repeat(3, 1fr)"] {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-options .col-md-4 {
+            margin-bottom: 1rem;
+        }
+
+        .search-wrapper .btn-link {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+
+        .search-wrapper .px-3 {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+    }
+</style>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable with custom search disabled (we'll use our own)
+        const table = $('#registrationTable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            searching: true,
+            language: {
+                search: "",
+                searchPlaceholder: "",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ students",
+                paginate: {
+                    previous: '<i class="fas fa-chevron-left"></i>',
+                    next: '<i class="fas fa-chevron-right"></i>'
+                },
+                zeroRecords: "No matching students found",
+                emptyTable: "No students available"
+            },
+            dom: 'rt<"row mt-3"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            initComplete: function() {
+                calculateStats();
+                setupFilters();
+            }
+        });
+
+        // Custom search functionality using our single search bar
+        $('#searchInput').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+
+        // Setup filters
+        function setupFilters() {
+            // Course filter - populate courses
+            const courses = new Set();
+            const courseCounts = {};
+
+            {% for i in data %}
+                const courseName = '{{ i.STUDENT.COURSE.course_name|default:"Not Assigned" }}';
+                if (courseName) {
+                    courses.add(courseName);
+                    if (!courseCounts[courseName]) {
+                        courseCounts[courseName] = 0;
+                    }
+                    courseCounts[courseName]++;
+                }
+            {% endfor %}
+
+            const courseSelect = $('#courseFilter');
+            Array.from(courses).sort().forEach(course => {
+                const count = courseCounts[course] || 0;
+                courseSelect.append(`<option value="${course}">📚 ${course} (${count})</option>`);
+            });
+
+            // Course filter functionality
+            courseSelect.on('change', function() {
+                const course = $(this).val();
+                table.column(2).search(course).draw(); // Column 2 is course column
+            });
+
+            // Semester filter functionality
+            $('#semesterFilter').on('change', function() {
+                const semester = $(this).val();
+                if (semester) {
+                    table.column(3).search(`Semester ${semester}`).draw(); // Column 3 is semester column
+                } else {
+                    table.column(3).search('').draw();
+                }
+            });
+        }
+
+        // Calculate statistics
+        function calculateStats() {
+            const totalStudents = {{ data|length }};
+
+            let uniqueCourses = new Set();
+            let courseDistribution = {};
+            let totalChats = 0;
+            let activeConversations = 0;
+            let messagesToday = 0;
+
+            {% for i in data %}
+                // Course statistics
+                const courseName = '{{ i.STUDENT.COURSE.course_name|default:"Not Assigned" }}';
+                if (courseName) {
+                    uniqueCourses.add(courseName);
+
+                    // Course distribution
+                    if (!courseDistribution[courseName]) {
+                        courseDistribution[courseName] = 0;
+                    }
+                    courseDistribution[courseName]++;
+                }
+
+                // Chat statistics (simulated - in real app, fetch from backend)
+                totalChats++;
+                if (Math.random() > 0.5) activeConversations++;
+                if (Math.random() > 0.7) messagesToday++;
+            {% endfor %}
+
+            // Update stats
+            $('#uniqueCourses').text(uniqueCourses.size);
+            $('#availableChats').text(totalStudents); // All students are available for chat
+            $('#totalChats').text(totalChats);
+            $('#activeConversations').text(activeConversations);
+            $('#messagesToday').text(messagesToday);
+
+            // Update course distribution
+            const courseDistributionElement = $('#courseDistribution');
+            courseDistributionElement.empty();
+
+            if (Object.keys(courseDistribution).length > 0) {
+                // Sort courses by count
+                const sortedCourses = Object.entries(courseDistribution)
+                    .sort((a, b) => b[1] - a[1]);
+
+                sortedCourses.forEach(([course, count]) => {
+                    const percentage = totalStudents > 0 ? ((count / totalStudents) * 100).toFixed(1) : 0;
+
+                    courseDistributionElement.append(`
+                        <div class="course-item">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div>
+                                    <i class="fas fa-book me-2" style="color: var(--secondary-color);"></i>
+                                    <span style="color: var(--light-text); font-weight: 500;">${course}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge me-2" style="background-color: var(--accent-color); color: var(--dark-text);">${count}</span>
+                                    <span style="color: var(--dark-text); font-size: 0.85rem;">${percentage}%</span>
+                                </div>
+                            </div>
+                            <div class="progress" style="height: 6px; background-color: var(--light-bg); border-radius: 3px;">
+                                <div class="progress-bar" role="progressbar"
+                                     style="width: ${percentage}%; background-color: var(--secondary-color); border-radius: 3px;"></div>
+                            </div>
+                        </div>
+                    `);
+                });
+            } else {
+                courseDistributionElement.html(`
+                    <div class="text-center" style="color: var(--light-text); padding: 1rem;">
+                        <i class="fas fa-book fa-2x mb-3" style="opacity: 0.5;"></i>
+                        <p>No course data available</p>
+                    </div>
+                `);
+            }
+
+            // Set chat tip based on stats
+            let chatTip = '';
+            if (totalStudents === 0) {
+                chatTip = 'No students available for chat yet';
+            } else if (activeConversations > 0) {
+                chatTip = `You have ${activeConversations} active conversation${activeConversations > 1 ? 's' : ''}. Keep the communication going!`;
+            } else {
+                chatTip = 'Start a chat with students to discuss assignments and queries';
+            }
+            $('#chatTip').text(chatTip);
+        }
+
+        // Add click animation to chat buttons
+        $(document).on('click', '.btn-chat', function(e) {
+            const $btn = $(this);
+
+            // Add loading state
+            $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Opening Chat...');
+            $btn.prop('disabled', true);
+
+            // Simulate loading (in real app, remove this and let the page load)
+            setTimeout(() => {
+                $btn.html('<i class="fas fa-comment-dots me-2"></i>Chat');
+                $btn.prop('disabled', false);
+            }, 1000);
+        });
+    });
+
+    function clearSearch() {
+        $('#searchInput').val('');
+        const table = $('#registrationTable').DataTable();
+        table.search('').draw();
+    }
+</script>
+{% endblock %}
+
+

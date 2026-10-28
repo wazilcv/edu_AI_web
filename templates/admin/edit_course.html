@@ -1,0 +1,552 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Update course</title>#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{# #}
+{#</head>#}
+{#<body>#}
+{#  <div class="container">#}
+{#    <h2 class="mb-4">Update Course</h2>#}
+{#    <form method="post" action="/adm_edit_course_post/{{ data.id }}">#}
+{#      <div class="row mb-3">#}
+{#        <label for="name" class="col-sm-4 ">Course name</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="name" name="name" value="{{ data.course_name }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Duration</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="duration" name="duration" value="{{ data.duration }}" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{##}
+{#      <div class="row mb-3">#}
+{#        <div class="offset-sm-4 col-sm-8">#}
+{#          <button type="submit" class="btn btn-primary">UPDATE</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </form>#}
+{#  </div>#}
+{#  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "admin/index.html" %}
+
+{% block page_title %}
+    Edit Course
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-1" style="color: var(--primary-color); font-weight: 600;">Edit Course</h4>
+                    <p class="mb-0" style="color: var(--secondary-color);">Update course information</p>
+                </div>
+                <a href="/adm_view_course" class="btn" style="background-color: var(--accent-color); color: var(--primary-color); font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-arrow-left"></i> Back to Courses
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Messages Container -->
+    <div id="errorMessages"></div>
+
+    <!-- Main Content Card -->
+    <div class="main-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <h1 class="card-title">Update Course Details</h1>
+        </div>
+
+        <div class="card-body">
+            <!-- Course Info Card -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div style="background-color: var(--light-bg); border-radius: 16px; padding: 2rem; border: 2px solid var(--accent-color);">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 style="color: var(--primary-color); font-weight: 700; margin-bottom: 0.5rem;">Current Course Information</h5>
+                                <div class="d-flex align-items-center gap-4">
+                                    <div style="background-color: var(--secondary-color); color: var(--white); padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600;">
+                                        <i class="fas fa-book me-2"></i> {{ data.course_name }}
+                                    </div>
+                                    <div style="background-color: var(--accent-color); color: var(--primary-color); padding: 0.5rem 1rem; border-radius: 10px; font-weight: 600;">
+                                        <i class="fas fa-clock me-2"></i> {{ data.duration }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div style="color: var(--secondary-color); font-size: 0.9rem;">
+                                    <i class="fas fa-info-circle me-1"></i> Course ID: COUR{{ data.id|stringformat:"04d" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div style="background-color: var(--white); border-radius: 20px; padding: 2.5rem; border: 2px solid var(--accent-color); box-shadow: 0 8px 25px var(--shadow-light);">
+                        <h4 class="mb-4" style="color: var(--primary-color); font-weight: 700; display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-edit" style="color: var(--secondary-color);"></i>
+                            Edit Course Form
+                        </h4>
+
+                        <form method="post" action="/adm_edit_course_post/{{ data.id }}" id="editCourseForm">
+                            {% csrf_token %}
+
+                            <!-- Course Name Field -->
+                            <div class="form-group mb-4">
+                                <label for="name" class="form-label" style="color: var(--primary-color); font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-book" style="color: var(--secondary-color);"></i>
+                                    Course Name <span style="color: var(--danger-color);">*</span>
+                                </label>
+                                <div class="input-group" style="border: 2px solid var(--accent-color); border-radius: 12px; overflow: hidden; transition: all 0.3s ease;">
+                                    <span class="input-group-text" style="background-color: var(--light-bg); color: var(--primary-color); border: none; padding: 1rem 1.25rem;">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="{{ data.course_name }}" required
+                                           style="border: none; padding: 1rem; color: var(--primary-color); font-weight: 500; background-color: var(--white);"
+                                           onkeyup="validateCourseName(this.value)">
+                                </div>
+                                <div class="form-text" style="color: var(--secondary-color); margin-top: 0.5rem; font-size: 0.85rem;">
+                                    <i class="fas fa-lightbulb me-1"></i> Enter the full name of the course. Only letters, spaces, and periods are allowed.
+                                </div>
+                                <div id="nameError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Duration Field -->
+                            <div class="form-group mb-5">
+                                <label for="duration" class="form-label" style="color: var(--primary-color); font-weight: 600; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-clock" style="color: var(--secondary-color);"></i>
+                                    Course Duration <span style="color: var(--danger-color);">*</span>
+                                </label>
+                                <div class="input-group" style="border: 2px solid var(--accent-color); border-radius: 12px; overflow: hidden; transition: all 0.3s ease;">
+                                    <span class="input-group-text" style="background-color: var(--light-bg); color: var(--primary-color); border: none; padding: 1rem 1.25rem;">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="duration" name="duration"
+                                           value="{{ data.duration }}" required
+                                           style="border: none; padding: 1rem; color: var(--primary-color); font-weight: 500; background-color: var(--white);"
+                                           placeholder="e.g., 4 years, 8 semesters"
+                                           onkeyup="validateDuration(this.value)">
+                                    <button type="button" class="btn btn-outline-secondary" style="border: none; background-color: var(--light-bg); color: var(--primary-color); padding: 1rem;"
+                                            onclick="showDurationExamples()" type="button">
+                                        <i class="fas fa-question-circle"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text" style="color: var(--secondary-color); margin-top: 0.5rem; font-size: 0.85rem;">
+                                    <i class="fas fa-lightbulb me-1"></i> Specify the course duration in years or semesters (e.g., "4 years", "8 semesters").
+                                </div>
+                                <div id="durationError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <a href="/adm_view_course" class="btn w-100"
+                                       style="background-color: var(--light-bg); color: var(--primary-color); font-weight: 600; padding: 1rem; border-radius: 12px; border: 2px solid var(--accent-color); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease;">
+                                        <i class="fas fa-times"></i>
+                                        Cancel
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn w-100"
+                                            style="background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%); color: var(--white); font-weight: 700; padding: 1rem; border-radius: 12px; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease;">
+                                        <i class="fas fa-check-circle"></i>
+                                        Update Course
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div style="background-color: var(--light-bg); border-radius: 16px; padding: 1.5rem; border: 1px solid var(--accent-color);">
+                        <h6 style="color: var(--primary-color); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: var(--secondary-color);"></i>
+                            Important Information
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 40px; height: 40px; background-color: var(--light-bg); border: 2px solid var(--secondary-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-exclamation-triangle" style="color: var(--secondary-color);"></i>
+                                    </div>
+                                    <div>
+                                        <div style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem;">Update Carefully</div>
+                                        <div style="color: var(--secondary-color); font-size: 0.85rem;">Changes affect all enrolled students</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 40px; height: 40px; background-color: var(--light-bg); border: 2px solid var(--secondary-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+                                    </div>
+                                    <div>
+                                        <div style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem;">Validation Required</div>
+                                        <div style="color: var(--secondary-color); font-size: 0.85rem;">Ensure all fields are correctly filled</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 40px; height: 40px; background-color: var(--light-bg); border: 2px solid var(--secondary-color); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-save" style="color: var(--secondary-color);"></i>
+                                    </div>
+                                    <div>
+                                        <div style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem;">Changes are Permanent</div>
+                                        <div style="color: var(--secondary-color); font-size: 0.85rem;">Review before submitting updates</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Duration Examples Modal -->
+<div class="modal fade" id="durationExamplesModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--accent-color);">
+            <div class="modal-header" style="background-color: var(--secondary-color); color: var(--white);">
+                <h5 class="modal-title">
+                    <i class="fas fa-clock me-2"></i>
+                    Duration Format Examples
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="example-card" style="background-color: var(--light-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--accent-color);">
+                            <h6 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle me-2" style="color: var(--secondary-color);"></i>
+                                Year Format
+                            </h6>
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0; font-size: 0.9rem;">
+                                <li>"4 years"</li>
+                                <li>"3 years"</li>
+                                <li>"2 years"</li>
+                                <li>"1 year"</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="example-card" style="background-color: var(--light-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--accent-color);">
+                            <h6 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle me-2" style="color: var(--secondary-color);"></i>
+                                Semester Format
+                            </h6>
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0; font-size: 0.9rem;">
+                                <li>"8 semesters"</li>
+                                <li>"6 semesters"</li>
+                                <li>"4 semesters"</li>
+                                <li>"2 semesters"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-custom mt-3" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                    <i class="fas fa-info-circle me-2"></i>
+                    You can also use other formats like "3.5 years" or "5 trimesters"
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-custom" data-bs-dismiss="modal"
+                        style="background-color: var(--secondary-color); color: var(--white); border: none; padding: 0.6rem 1.5rem; border-radius: 8px;">
+                    <i class="fas fa-check me-1"></i> Got it
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional CSS for this page -->
+<style>
+    .form-control:focus {
+        box-shadow: none;
+        border-color: var(--secondary-color);
+    }
+
+    .input-group:focus-within {
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2) !important;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--shadow-medium);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    /* Form input styling */
+    .form-control {
+        font-size: 1rem;
+        color: var(--primary-color);
+        background-color: var(--white);
+    }
+
+    .form-control::placeholder {
+        color: var(--secondary-color);
+        opacity: 0.7;
+    }
+
+    /* Error message styling */
+    .alert-custom-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: var(--danger-color);
+        color: var(--danger-color);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .is-invalid {
+        border-color: var(--danger-color) !important;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .main-card {
+            padding: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group-text {
+            padding: 0.75rem 1rem !important;
+        }
+
+        .form-control {
+            padding: 0.75rem !important;
+        }
+
+        .btn {
+            padding: 0.75rem !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .d-flex.gap-4 {
+            flex-direction: column;
+            gap: 0.5rem !important;
+            align-items: flex-start !important;
+        }
+
+        .text-end {
+            text-align: left !important;
+            margin-top: 1rem;
+        }
+    }
+</style>
+
+<!-- JavaScript for form enhancements and validation -->
+<script>
+    // Show duration examples modal
+    function showDurationExamples() {
+        const modal = new bootstrap.Modal(document.getElementById('durationExamplesModal'));
+        modal.show();
+    }
+
+    // Validate course name (only letters, spaces, and periods)
+    function validateCourseName(name) {
+        const nameError = document.getElementById('nameError');
+        const nameInput = document.getElementById('name');
+        const namePattern = /^[A-Za-z\s.]+$/;
+
+        if (name && !namePattern.test(name)) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Course name can only contain letters, spaces, and periods. Numbers are not allowed.';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else {
+            nameError.style.display = 'none';
+            nameInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    // Validate duration format
+    function validateDuration(duration) {
+        const durationError = document.getElementById('durationError');
+        const durationInput = document.getElementById('duration');
+        const durationPattern = /^\d+(\.\d+)?\s+(years?|semesters?|trimesters?)$/i;
+
+        if (duration && !durationPattern.test(duration)) {
+            durationError.style.display = 'block';
+            durationError.textContent = 'Please enter duration in correct format like "4 years" or "8 semesters"';
+            durationInput.classList.add('is-invalid');
+            return false;
+        } else {
+            durationError.style.display = 'none';
+            durationInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    // Show error message in the error container
+    function showErrorMessage(message) {
+        const errorContainer = document.getElementById('errorMessages');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert-custom-error';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.remove()"></button>
+        `;
+        errorContainer.innerHTML = '';
+        errorContainer.appendChild(errorDiv);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add focus effects to form inputs
+        const inputs = document.querySelectorAll('input[type="text"]');
+        const inputGroups = document.querySelectorAll('.input-group');
+
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.borderColor = 'var(--secondary-color)';
+                this.parentElement.style.boxShadow = '0 0 0 3px rgba(82, 109, 130, 0.2)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.style.borderColor = 'var(--accent-color)';
+                this.parentElement.style.boxShadow = 'none';
+            });
+        });
+
+        // Form validation
+        const form = document.getElementById('editCourseForm');
+        form.addEventListener('submit', function(e) {
+            const nameInput = document.getElementById('name');
+            const durationInput = document.getElementById('duration');
+            const name = nameInput.value.trim();
+            const duration = durationInput.value.trim();
+
+            let isValid = true;
+
+            // Clear previous error states
+            document.querySelectorAll('.is-invalid').forEach(el => {
+                el.classList.remove('is-invalid');
+            });
+
+            document.querySelectorAll('.invalid-feedback').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            document.getElementById('errorMessages').innerHTML = '';
+
+            // Validate course name
+            if (!name) {
+                e.preventDefault();
+                showErrorMessage('Please enter a course name');
+                isValid = false;
+                return;
+            }
+
+            const namePattern = /^[A-Za-z\s.]+$/;
+            if (!namePattern.test(name)) {
+                e.preventDefault();
+                showErrorMessage('Course name can only contain letters, spaces, and periods. Numbers are not allowed.');
+                isValid = false;
+                return;
+            }
+
+            // Validate duration
+            if (!duration) {
+                e.preventDefault();
+                showErrorMessage('Please enter course duration');
+                isValid = false;
+                return;
+            }
+
+            const durationPattern = /^\d+(\.\d+)?\s+(years?|semesters?|trimesters?)$/i;
+            if (!durationPattern.test(duration)) {
+                e.preventDefault();
+                showErrorMessage('Please enter duration in correct format like "4 years" or "8 semesters"');
+                isValid = false;
+                return;
+            }
+
+            if (isValid) {
+                // Show updating message on button
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Updating...';
+            }
+        });
+
+        // Real-time validation on input
+        document.getElementById('name').addEventListener('input', function(e) {
+            validateCourseName(e.target.value);
+        });
+
+        document.getElementById('duration').addEventListener('input', function(e) {
+            validateDuration(e.target.value);
+        });
+
+        // Clear errors on input
+        function clearError(input) {
+            input.classList.remove('is-invalid');
+            input.parentElement.style.borderColor = 'var(--accent-color)';
+        }
+    });
+</script>
+{% endblock %}
+

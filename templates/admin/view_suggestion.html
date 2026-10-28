@@ -1,0 +1,852 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>date</th>#}
+{#          <th>Faculty_name</th>#}
+{#          <th>Suggestion</th>#}
+{##}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#      {% for i in data %}#}
+{#        <!-- Sample Data Row -->#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.date }}</td>#}
+{#          <td>{{ i.FACULTY }}</td>#}
+{#          <td>{{ i.suggestion }}</td>#}
+{##}
+{#        </tr>#}
+{#        <!-- Add more rows dynamically from backend -->#}
+{#      {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggestions Data Table - EDU AI</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- DataTables CSS -->
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --white: #FFFFFF;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --button-color: #9DB2BF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --card-bg: #FFFFFF;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+        padding: 20px 0;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+
+    /* Header Section */
+    .suggestions-header-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .suggestions-header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .suggestions-title-container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .suggestions-main-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .suggestions-subtitle {
+        font-size: 1.1rem;
+        color: var(--light-bg);
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .suggestions-icon {
+        width: 70px;
+        height: 70px;
+        background-color: var(--white);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 8px 20px var(--shadow-medium);
+    }
+
+    .suggestions-icon i {
+        font-size: 32px;
+        color: var(--accent-color);
+    }
+
+    /* Back Button */
+    .btn-back-custom {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        padding: 0.875rem 1.75rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid var(--accent-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-back-custom:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px var(--shadow-medium);
+        color: var(--primary-color);
+    }
+
+    /* Main Card */
+    .suggestions-main-card {
+        background-color: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px var(--shadow-medium);
+        padding: 2.5rem;
+        border: 1px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .suggestions-main-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* DataTable Custom Styling */
+    #registrationTable_wrapper {
+        margin-top: 1.5rem;
+    }
+
+    /* Fix for DataTable length menu positioning */
+    .dataTables_length {
+        float: left !important;
+        margin: 1rem 0 !important;
+        color: var(--secondary-color) !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+
+    .dataTables_length label {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        color: var(--secondary-color) !important;
+        font-weight: 500 !important;
+    }
+
+    .dataTables_length select {
+        width: auto !important;
+        display: inline-block !important;
+        border: 2px solid var(--accent-color) !important;
+        border-radius: 8px !important;
+        padding: 0.6rem 2rem 0.6rem 1rem !important;
+        background-color: var(--white) !important;
+        color: var(--primary-color) !important;
+        transition: all 0.3s ease !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        margin: 0 5px !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2327374D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 0.7rem center !important;
+        background-size: 16px !important;
+    }
+
+    .dataTables_length select:focus {
+        outline: none !important;
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2) !important;
+    }
+
+    .dataTables_filter {
+        float: right !important;
+        margin: 1rem 0 !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+
+    .dataTables_filter label {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        color: var(--secondary-color) !important;
+        font-weight: 500 !important;
+    }
+
+    .dataTables_filter input {
+        border: 2px solid var(--accent-color) !important;
+        border-radius: 8px !important;
+        padding: 0.6rem 1rem !important;
+        background-color: var(--white) !important;
+        color: var(--primary-color) !important;
+        transition: all 0.3s ease !important;
+        font-weight: 500 !important;
+        margin-left: 10px !important;
+        width: 250px !important;
+    }
+
+    .dataTables_filter input:focus {
+        outline: none !important;
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2) !important;
+    }
+
+    .dataTables_info {
+        float: left !important;
+        margin: 1rem 0 !important;
+        color: var(--secondary-color) !important;
+        font-weight: 500 !important;
+        clear: both !important;
+    }
+
+    .dataTables_paginate {
+        float: right !important;
+        margin: 1rem 0 !important;
+    }
+
+    .dataTables_paginate .paginate_button {
+        background-color: var(--white) !important;
+        border: 2px solid var(--accent-color) !important;
+        color: var(--primary-color) !important;
+        border-radius: 8px !important;
+        margin: 0 0.25rem !important;
+        padding: 0.6rem 1.2rem !important;
+        transition: all 0.3s ease !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        display: inline-block !important;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: var(--accent-color) !important;
+        border-color: var(--accent-color) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 8px var(--shadow-light) !important;
+        color: var(--primary-color) !important;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: var(--secondary-color) !important;
+        border-color: var(--secondary-color) !important;
+        color: var(--white) !important;
+        font-weight: 600 !important;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+    }
+
+    #registrationTable {
+        border: 1px solid var(--accent-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px var(--shadow-light);
+        width: 100% !important;
+        clear: both;
+    }
+
+    #registrationTable thead th {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent-color) !important;
+        padding: 1.2rem 1.5rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #registrationTable tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--light-bg);
+    }
+
+    #registrationTable tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-light);
+    }
+
+    #registrationTable tbody td {
+        padding: 1.2rem 1.5rem;
+        color: var(--primary-color);
+        border-bottom: 1px solid var(--light-bg);
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    #registrationTable tbody tr:nth-child(even) {
+        background-color: rgba(221, 230, 237, 0.3);
+    }
+
+    /* Date Column */
+    .date-cell {
+        color: var(--secondary-color);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .date-cell i {
+        color: var(--accent-color);
+        margin-right: 8px;
+    }
+
+    /* Faculty Column */
+    .faculty-cell {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .faculty-cell i {
+        color: var(--secondary-color);
+        margin-right: 8px;
+    }
+
+    /* Suggestion Content */
+    .suggestion-content {
+        line-height: 1.6;
+        color: var(--primary-color);
+    }
+
+    .suggestion-content i {
+        color: var(--accent-color);
+        margin-right: 8px;
+    }
+
+    .read-more {
+        color: var(--secondary-color);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .read-more:hover {
+        color: var(--primary-color);
+        text-decoration: underline;
+    }
+
+    /* Empty State */
+    .suggestions-empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .suggestions-empty-icon {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .suggestions-empty-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    .suggestions-empty-message {
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Action Buttons */
+    .action-buttons-custom {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+
+    .btn-print-custom, .btn-export-custom {
+        padding: 0.875rem 1.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    .btn-print-custom {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-print-custom:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px var(--shadow-medium);
+    }
+
+    .btn-export-custom {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-export-custom:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px var(--shadow-medium);
+    }
+
+    /* Modal Styling */
+    .suggestion-modal .modal-content {
+        border-radius: 20px;
+        border: 2px solid var(--accent-color);
+        background-color: var(--white);
+    }
+
+    .suggestion-modal .modal-header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border-radius: 18px 18px 0 0;
+        border-bottom: 2px solid var(--accent-color);
+        padding: 1.5rem;
+    }
+
+    .suggestion-modal .modal-body {
+        padding: 2rem;
+        color: var(--primary-color);
+    }
+
+    .suggestion-modal .modal-footer {
+        border-top: 1px solid var(--light-bg);
+        padding: 1.5rem;
+    }
+
+    /* Clear floats for wrapper */
+    .dataTables_wrapper:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .suggestions-main-card {
+            padding: 2rem;
+        }
+
+        #registrationTable thead th,
+        #registrationTable tbody td {
+            padding: 1rem;
+        }
+
+        #registrationTable {
+            font-size: 0.9rem;
+        }
+
+        .dataTables_filter input {
+            width: 200px !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .suggestions-header-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .suggestions-main-title {
+            font-size: 2rem;
+        }
+
+        .action-buttons-custom {
+            flex-direction: column;
+        }
+
+        .btn-print-custom, .btn-export-custom {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .dataTables_length,
+        .dataTables_filter {
+            float: none !important;
+            text-align: center !important;
+            margin: 1rem 0 !important;
+        }
+
+        .dataTables_filter input {
+            width: 100% !important;
+            margin-top: 0.5rem !important;
+            margin-left: 0 !important;
+        }
+
+        .dataTables_length label {
+            justify-content: center !important;
+        }
+
+        .dataTables_info,
+        .dataTables_paginate {
+            float: none !important;
+            text-align: center !important;
+        }
+
+        .dataTables_paginate {
+            margin-top: 1rem !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .suggestions-main-title {
+            font-size: 1.8rem;
+        }
+
+        .suggestions-subtitle {
+            font-size: 1rem;
+        }
+
+        .suggestions-main-card {
+            padding: 1.5rem;
+        }
+
+        #registrationTable {
+            font-size: 0.85rem;
+        }
+
+        .suggestions-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .suggestions-icon i {
+            font-size: 28px;
+        }
+
+        .btn-back-custom {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <!-- Back Button -->
+    <a href="/adm_home" class="btn-back-custom">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+    </a>
+
+    <!-- Header Section -->
+    <div class="suggestions-header-section">
+        <div class="suggestions-title-container">
+            <div class="suggestions-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h1 class="suggestions-main-title">Faculty Suggestions</h1>
+            <p class="suggestions-subtitle">Review and manage suggestions submitted by faculty members</p>
+        </div>
+    </div>
+
+    <!-- Stats Grid REMOVED -->
+
+    <!-- Data Table Card -->
+    <div class="suggestions-main-card">
+        <table id="registrationTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th width="15%">Date</th>
+                    <th width="25%">Faculty Name</th>
+                    <th width="55%">Suggestion</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for i in data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="date-cell">
+                        <i class="fas fa-calendar-day"></i>
+                        {{ i.date }}
+                    </td>
+                    <td class="faculty-cell">
+                        <i class="fas fa-user-tie"></i>
+                        {{ i.FACULTY.name }}
+                    </td>
+                    <td>
+                        <div class="suggestion-content">
+                            <i class="fas fa-comment-dots"></i>
+                            {{ i.suggestion|truncatechars:150 }}
+                            {% if i.suggestion|length > 150 %}
+                                <a href="#" class="read-more" data-bs-toggle="modal" data-bs-target="#suggestionModal{{ forloop.counter }}">
+                                    ... Read more
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Modal for full suggestion -->
+                <div class="modal fade suggestion-modal" id="suggestionModal{{ forloop.counter }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    Suggestion from {{ i.FACULTY.name }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <strong><i class="fas fa-calendar me-2"></i>Date:</strong>
+                                    {{ i.date }}
+                                </div>
+                                <div class="mb-3" style="color: #0c4128">
+                                    <strong><i class="fas fa-user-tie me-2"></i>Faculty:</strong>
+                                    {{ i.FACULTY.name }}
+                                </div>
+                                <div class="mt-3">
+                                    <strong><i class="fas fa-comment-dots me-2"></i>Suggestion:</strong>
+                                    <p class="mt-2 p-3 bg-light rounded">{{ i.suggestion }}</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-print-custom" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <tr>
+                    <td colspan="4">
+                        <div class="suggestions-empty-state">
+                            <div class="suggestions-empty-icon">
+                                <i class="fas fa-inbox"></i>
+                            </div>
+                            <h4 class="suggestions-empty-title">No suggestions found</h4>
+                            <p class="suggestions-empty-message">No faculty suggestions have been submitted yet.</p>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons-custom">
+        <button class="btn-print-custom" onclick="window.print()">
+            <i class="fas fa-print"></i> Print
+        </button>
+        <button class="btn-export-custom" id="exportBtn">
+            <i class="fas fa-file-export"></i> Export CSV
+        </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+        // Apply the same CSS variables as admin homepage
+        document.documentElement.style.setProperty('--primary-color', '#27374D');
+        document.documentElement.style.setProperty('--secondary-color', '#526D82');
+        document.documentElement.style.setProperty('--accent-color', '#9DB2BF');
+        document.documentElement.style.setProperty('--light-bg', '#DDE6ED');
+        document.documentElement.style.setProperty('--white', '#FFFFFF');
+
+        // Check if DataTable is already initialized
+        if ($.fn.DataTable.isDataTable('#registrationTable')) {
+            $('#registrationTable').DataTable().destroy();
+        }
+
+        // Initialize DataTable with enhanced features
+        var table = $('#registrationTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[1, 'desc']], // Sort by date descending
+            "language": {
+                "search": "Search suggestions:",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ suggestions",
+                "infoEmpty": "Showing 0 to 0 of 0 suggestions",
+                "infoFiltered": "(filtered from _MAX_ total entries)",
+                "paginate": {
+                    "previous": '<i class="fas fa-chevron-left"></i>',
+                    "next": '<i class="fas fa-chevron-right"></i>',
+                    "first": '<i class="fas fa-angle-double-left"></i>',
+                    "last": '<i class="fas fa-angle-double-right"></i>'
+                },
+                "emptyTable": "No suggestions available",
+                "zeroRecords": "No matching suggestions found"
+            },
+            "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            "drawCallback": function(settings) {
+                // Update stats after table is drawn
+                updateTableStats();
+            }
+        });
+
+        // Export CSV functionality
+        $('#exportBtn').click(function() {
+            exportTableToCSV();
+        });
+
+        // Function to export table data as CSV
+        function exportTableToCSV() {
+            var csv = [];
+            var rows = document.querySelectorAll('#registrationTable tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll('td, th');
+
+                for (var j = 0; j < cols.length; j++) {
+                    // Remove icons and extra formatting for clean CSV
+                    var text = cols[j].innerText.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
+                    row.push('"' + text + '"');
+                }
+
+                csv.push(row.join(','));
+            }
+
+            // Download CSV file
+            downloadCSV(csv.join('\n'), 'faculty_suggestions.csv');
+        }
+
+        function downloadCSV(csv, filename) {
+            var csvFile = new Blob([csv], {type: 'text/csv'});
+            var downloadLink = document.createElement('a');
+
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
+        // Update table statistics
+        function updateTableStats() {
+            var totalRows = table.rows().count();
+            var visibleRows = table.rows({search:'applied'}).count();
+
+            // You can update any custom stats here if needed
+        }
+
+        // Add custom search functionality - search across all columns
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                return true; // Allow all searches
+            }
+        );
+
+        // Tooltip initialization
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Auto-refresh data every 30 seconds (optional - comment out if not needed)
+        // setInterval(function() {
+        //     table.ajax.reload(null, false);
+        // }, 30000);
+    });
+  </script>
+</body>
+</html>
+

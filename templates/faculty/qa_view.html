@@ -1,0 +1,340 @@
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="card-header mb-4">
+        <div class="card-icon">
+            <i class="fas fa-layer-group"></i>
+        </div>
+        <h1 class="card-title">Questions Management</h1>
+
+    </div>
+
+    <!-- Information Alert -->
+    <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--dark-text); border-radius: 12px;">
+        <i class="fas fa-info-circle me-2"></i>
+        Manage question for units.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-container mb-4">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+            <div class="stat-number">{{ data|length }}</div>
+            <div class="stat-label">Total Questions</div>
+        </div>
+
+        <!-- Removed Average Rating Card -->
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="main-card">
+        <div class="card-header mb-4">
+            <div class="card-icon">
+                <i class="fas fa-table"></i>
+            </div>
+            <h2 class="card-title" style="margin: 0;">Course Units Overview</h2>
+            <div class="ms-auto">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-custom" onclick="sortByActivity()">
+                        <i class="fas fa-sort-amount-down me-2"></i>Sort by Activity
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Removed Unit Status Filter Section -->
+
+        <div class="table-responsive">
+            <table id="registrationTable" class="table table-hover" style="width:100%; border-collapse: separate; border-spacing: 0;">
+                <thead>
+                    <tr style="background-color: var(--light-bg);">
+                        <th style="border-radius: 12px 0 0 0; border: none; padding: 1rem;">#</th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-book me-2"></i>QUESTION
+                        </th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-link me-2"></i>ANSWER
+                        </th>
+                        <!-- Removed ACTIONS column header -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data %}
+                        {% for i in data %}
+                        <tr class="unit-row" data-unit-id="{{ i.id }}"
+                            style="border-bottom: 2px solid var(--light-bg); transition: all 0.3s ease;">
+                            <td style="padding: 1rem; font-weight: 600; color: var(--dark-text);">
+                                <div class="unit-number" style="width: 36px; height: 36px; background-color: var(--accent-color);
+                                     border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                    {{ forloop.counter }}
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="d-flex align-items-center">
+                                    <div class="unit-icon" style="width: 50px; height: 50px; background-color: var(--light-bg);
+                                        border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                        <i class="fas fa-book-open" style="color: var(--dark-text); font-size: 1.2rem;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: var(--dark-text); font-size: 1.1rem;">{{ i.question }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="d-flex align-items-center">
+                                    <div class="unit-icon" style="width: 50px; height: 50px; background-color: var(--light-bg);
+                                        border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                        <i class="fas fa-book-open" style="color: var(--dark-text); font-size: 1.2rem;"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: var(--dark-text); font-size: 1.1rem;">{{ i.answer }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5" style="color: var(--light-text);">
+                                <div class="empty-state">
+                                    <i class="fas fa-layer-group fa-3x mb-3" style="opacity: 0.5;"></i>
+                                    <h5>No Questions Found</h5>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary Footer - Removed -->
+    </div>
+</div>
+
+<!-- Custom Styles for this page -->
+<style>
+    /* Table styling */
+    #registrationTable {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px var(--shadow-light);
+    }
+
+    #registrationTable tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    #registrationTable tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    /* Button styling */
+    .btn-custom {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    /* Resource and Feedback buttons */
+    .btn-resource:hover {
+        background-color: var(--secondary-color) !important;
+        color: var(--white) !important;
+    }
+
+    .btn-view-resource:hover {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+    }
+
+    .btn-feedback:hover {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+    }
+
+    /* Unit number circle */
+    .unit-number {
+        transition: all 0.3s ease;
+    }
+
+    .unit-number:hover {
+        transform: scale(1.1);
+        background-color: var(--secondary-color) !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .resource-stats, .feedback-stats {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .card-header .ms-auto {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .card-header .btn-custom {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        const table = $('#registrationTable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            language: {
+                search: "<i class='fas fa-search'></i>",
+                searchPlaceholder: "Search units...",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                paginate: {
+                    previous: '<i class="fas fa-chevron-left"></i>',
+                    next: '<i class="fas fa-chevron-right"></i>'
+                }
+            },
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            initComplete: function() {
+                loadUnitStats();
+                setupHoverEffects();
+            }
+        });
+
+        // Load unit statistics (simulated - in real app, fetch from backend)
+        function loadUnitStats() {
+            const totalUnits = {{ data|length }};
+
+            // Simulate fetching stats for each unit
+            let totalLinks = 0;
+            let totalFeedback = 0;
+            let unitsWithResources = 0;
+            let unitsWithFeedback = 0;
+
+            {% for i in data %}
+                // Simulate random data for demo
+                const unitLinks = Math.floor(Math.random() * 10);
+                const unitFeedback = Math.floor(Math.random() * 20);
+
+                // Update row data
+                $(`[data-unit-links="{{ i.id }}"]`).text(unitLinks);
+                $(`[data-unit-feedback="{{ i.id }}"]`).text(unitFeedback);
+
+                // Update statistics
+                totalLinks += unitLinks;
+                totalFeedback += unitFeedback;
+
+                if (unitLinks > 0) unitsWithResources++;
+                if (unitFeedback > 0) unitsWithFeedback++;
+            {% endfor %}
+
+            // Update stats cards
+            $('#totalLinks').text(totalLinks);
+            $('#totalFeedback').text(totalFeedback);
+        }
+
+        // Setup hover effects
+        function setupHoverEffects() {
+            $('.unit-row').hover(
+                function() {
+                    $(this).find('.unit-number').css({
+                        'transform': 'scale(1.1)',
+                        'background-color': 'var(--secondary-color)'
+                    });
+                },
+                function() {
+                    $(this).find('.unit-number').css({
+                        'transform': 'scale(1)',
+                        'background-color': 'var(--accent-color)'
+                    });
+                }
+            );
+        }
+    });
+
+    function sortByActivity() {
+        const table = $('#registrationTable').DataTable();
+
+        table.rows().every(function() {
+            const row = this.node();
+            const $row = $(row);
+            const links = parseInt($row.find('[data-unit-links]').text()) || 0;
+            const feedback = parseInt($row.find('[data-unit-feedback]').text()) || 0;
+            const activityScore = links * 2 + feedback;
+
+            // Store score as data attribute for sorting
+            $row.data('activity-score', activityScore);
+        });
+
+        // Custom sorting by activity score
+        $.fn.dataTable.ext.order['activity-score'] = function(settings, col) {
+            return this.api().column(col, {order:'index'}).nodes().map(function(td, i) {
+                return $(td).parent().data('activity-score') || 0;
+            });
+        };
+
+        // Sort by activity score (column 0, but using custom order)
+        table.order([0, 'desc']).draw();
+
+        // Show notification
+        showNotification('Units sorted by activity level', 'success');
+    }
+
+    function showNotification(message, type) {
+        // Remove existing notifications
+        $('.custom-notification').remove();
+
+        // Create notification
+        const notification = $(`
+            <div class="custom-notification alert alert-${type === 'success' ? 'success' : 'info'}
+                 fade show" role="alert"
+                 style="position: fixed; top: 20px; right: 20px; z-index: 1050;
+                        border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                ${message}
+            </div>
+        `);
+
+        $('body').append(notification);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            notification.fadeOut(500, function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+</script>
+{% endblock %}
+

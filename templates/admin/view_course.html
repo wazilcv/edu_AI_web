@@ -1,0 +1,943 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>Course Name</th>#}
+{#          <th>Duration</th>#}
+{#          <th></th>#}
+{#          <th></th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#      {% for i in data %}#}
+{#        <!-- Sample Data Row -->#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.course_name }}</td>#}
+{#          <td>{{ i.duration }}</td>#}
+{#          <td><a href="/adm_edit_course/{{ i.id }}">Edit</a> </td>#}
+{#          <td><a href="/adm_delete_course/{{ i.id }}">Delete</a> </td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "admin/index.html" %}
+{% block body %}
+<style>
+    /* Courses Management Page Styling */
+    .courses-management-page {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --white: #FFFFFF;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --button-color: #9DB2BF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --shadow-dark: rgba(39, 55, 77, 0.15);
+        --success-color: #4CAF50;
+        --warning-color: #ff9800;
+        --danger-color: #f44336;
+        --info-color: #2196F3;
+    }
+
+    /* Courses Header */
+    .courses-header-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .courses-header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .courses-title-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .courses-main-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .courses-subtitle {
+        font-size: 1.1rem;
+        color: var(--light-bg);
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    /* Action Buttons */
+    .courses-action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-course-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.875rem 1.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid transparent;
+    }
+
+    .btn-course-add {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-course-add:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(157, 178, 191, 0.3);
+    }
+
+    .btn-course-refresh {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border: 2px solid var(--accent-color);
+    }
+
+    .btn-course-refresh:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(157, 178, 191, 0.3);
+    }
+
+    .btn-course-export {
+        background-color: transparent;
+        color: var(--light-bg);
+        border: 2px solid var(--light-bg);
+    }
+
+    .btn-course-export:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(221, 230, 237, 0.3);
+    }
+
+    /* Main Courses Card */
+    .courses-main-card {
+        background-color: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px var(--shadow-medium);
+        padding: 2.5rem;
+        border: 1px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        margin-top: 0; /* Removed extra margin since stats are removed */
+    }
+
+    .courses-main-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* DataTable Styling */
+    #registrationTable_wrapper {
+        margin-top: 1.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    #registrationTable {
+        border: 1px solid var(--accent-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px var(--shadow-light);
+        width: 100% !important;
+    }
+
+    #registrationTable thead th {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent-color) !important;
+        padding: 1.2rem 1.5rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #registrationTable tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--light-bg);
+    }
+
+    #registrationTable tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-light);
+    }
+
+    #registrationTable tbody td {
+        padding: 1.2rem 1.5rem;
+        color: var(--primary-color);
+        border-bottom: 1px solid var(--light-bg);
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    #registrationTable tbody td:first-child {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    #registrationTable tbody tr:nth-child(even) {
+        background-color: rgba(221, 230, 237, 0.3);
+    }
+
+    /* Course Badge */
+    .course-duration-badge {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Table Actions */
+    .courses-table-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+    }
+
+    .btn-course-edit, .btn-course-delete {
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 90px;
+        justify-content: center;
+        border: 2px solid transparent;
+    }
+
+    .btn-course-edit {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-course-edit:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(82, 109, 130, 0.2);
+        border-color: var(--secondary-color);
+    }
+
+    .btn-course-delete {
+        background-color: var(--white);
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+
+    .btn-course-delete:hover {
+        background-color: var(--danger-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+    }
+
+    /* DataTable Controls - Fixed length menu styling */
+    .dataTables_wrapper {
+        position: relative;
+        z-index: 1;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        float: left;
+        margin: 1rem 0;
+        color: var(--secondary-color);
+        position: relative;
+        z-index: 100;
+    }
+
+    .dataTables_wrapper .dataTables_length label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        width: auto;
+        display: inline-block;
+        border: 2px solid var(--accent-color);
+        border-radius: 8px;
+        padding: 0.6rem 2rem 0.6rem 1rem;
+        background-color: var(--white);
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        font-weight: 500;
+        cursor: pointer;
+        margin: 0 5px;
+        position: relative;
+        z-index: 1000;
+        pointer-events: auto;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2327374D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 0.7rem center;
+        background-size: 16px;
+    }
+
+    .dataTables_wrapper .dataTables_length select:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2);
+    }
+
+    .dataTables_wrapper .dataTables_length select option {
+        background-color: var(--white);
+        color: var(--primary-color);
+        padding: 10px;
+    }
+
+    .dataTables_filter {
+        float: right;
+        margin: 1rem 0;
+        position: relative;
+        z-index: 90;
+    }
+
+    .dataTables_filter label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+
+    .dataTables_filter input {
+        border: 2px solid var(--accent-color);
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        background-color: var(--white);
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        font-weight: 500;
+        margin-left: 10px;
+    }
+
+    .dataTables_filter input:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2);
+    }
+
+    .dataTables_info {
+        clear: both;
+        float: left;
+        margin: 1rem 0;
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+
+    .dataTables_paginate {
+        float: right;
+        margin: 1rem 0;
+    }
+
+    .dataTables_paginate .paginate_button {
+        background-color: var(--white) !important;
+        border: 2px solid var(--accent-color) !important;
+        color: var(--primary-color) !important;
+        border-radius: 8px !important;
+        margin: 0 0.25rem;
+        padding: 0.6rem 1.2rem !important;
+        transition: all 0.3s ease !important;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+        background-color: var(--accent-color) !important;
+        border-color: var(--accent-color) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-light);
+        color: var(--primary-color) !important;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+        background-color: var(--secondary-color) !important;
+        border-color: var(--secondary-color) !important;
+        color: var(--white) !important;
+        font-weight: 600;
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    /* Empty State */
+    .courses-empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .courses-empty-icon {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .courses-empty-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    .courses-empty-message {
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Print Button */
+    .btn-course-print {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border: 2px solid var(--accent-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-course-print:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px var(--shadow-medium);
+    }
+
+    /* Confirmation Modal */
+    .courses-confirmation-modal .modal-content {
+        border-radius: 20px;
+        border: 1px solid var(--accent-color);
+        overflow: hidden;
+        background-color: var(--white);
+    }
+
+    .courses-confirmation-modal .modal-header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border-bottom: 2px solid var(--accent-color);
+        padding: 1.5rem;
+    }
+
+    .courses-confirmation-modal .modal-body {
+        padding: 2rem;
+        color: var(--primary-color);
+    }
+
+    .courses-confirmation-modal .modal-footer {
+        border-top: 1px solid var(--light-bg);
+        padding: 1.5rem;
+    }
+
+    /* Toast Notification */
+    .courses-toast {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+    }
+
+    .courses-toast-body {
+        background-color: var(--primary-color);
+        color: var(--white);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 8px 25px var(--shadow-medium);
+        border: 1px solid var(--accent-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .courses-toast-body.success {
+        background-color: var(--success-color);
+    }
+
+    .courses-toast-body.error {
+        background-color: var(--danger-color);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .courses-main-card {
+            padding: 2rem;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .courses-main-card {
+            padding: 2rem;
+        }
+
+        #registrationTable thead th,
+        #registrationTable tbody td {
+            padding: 1rem;
+        }
+
+        .courses-table-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-course-edit, .btn-course-delete {
+            min-width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .courses-header-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .courses-main-title {
+            font-size: 2rem;
+        }
+
+        .courses-action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-course-action {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .courses-main-card {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .courses-main-title {
+            font-size: 1.8rem;
+        }
+
+        .courses-subtitle {
+            font-size: 1rem;
+        }
+
+        .courses-main-card {
+            padding: 1.5rem;
+        }
+
+        .dataTables_length,
+        .dataTables_filter {
+            float: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .dataTables_filter input {
+            width: 100% !important;
+            margin-top: 0.5rem;
+            margin-left: 0;
+        }
+
+        .dataTables_length label {
+            justify-content: center;
+        }
+
+        .dataTables_info,
+        .dataTables_paginate {
+            float: none;
+            text-align: center;
+        }
+
+        .dataTables_paginate {
+            margin-top: 1rem;
+        }
+    }
+
+    /* Print Styles */
+    @media print {
+        .courses-header-section,
+        .courses-action-buttons,
+        .dataTables_length,
+        .dataTables_filter,
+        .dataTables_paginate,
+        .courses-table-actions {
+            display: none !important;
+        }
+
+        .courses-main-card {
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+
+        #registrationTable {
+            border: 1px solid #ddd;
+        }
+    }
+
+    /* Clear floats for DataTable wrapper */
+    .dataTables_wrapper:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+
+<div class="container-fluid courses-management-page">
+    <!-- Header Section -->
+    <div class="courses-header-section">
+        <div class="courses-title-container">
+            <h1 class="courses-main-title">Course Management</h1>
+            <p class="courses-subtitle">View, edit, and manage all courses in the system</p>
+
+            <div class="courses-action-buttons">
+                <a href="/adm_add_course" class="btn-course-action btn-course-add">
+                    <i class="fas fa-plus-circle"></i>
+                    Add New Course
+                </a>
+                <button class="btn-course-action btn-course-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh List
+                </button>
+                <button class="btn-course-action btn-course-export" id="exportBtn">
+                    <i class="fas fa-file-export"></i>
+                    Export Courses
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Courses Card (Stats boxes removed) -->
+    <div class="courses-main-card">
+        {% if data %}
+            <table id="registrationTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="45%">Course Name</th>
+                        <th width="25%">Duration</th>
+                        <th width="25%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for i in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-book me-3" style="color: var(--secondary-color);"></i>
+                                <strong style="color: var(--primary-color);">{{ i.course_name }}</strong>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <span class="course-duration-badge">
+                                    <i class="fas fa-clock"></i>
+                                    {{ i.duration }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="courses-table-actions">
+                                <a href="/adm_edit_course/{{ i.id }}#home" class="btn-course-edit">
+                                    <i class="fas fa-edit"></i>
+                                    Edit
+                                </a>
+                                <a href="/adm_delete_course/{{ i.id }}" class="btn-course-delete"
+                                   onclick="return confirm('Do you want to delete?')">
+                                    <i class="fas fa-trash-alt"></i>
+                                    Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="courses-empty-state">
+                <div class="courses-empty-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h4 class="courses-empty-title">No Courses Found</h4>
+                <p class="courses-empty-message">
+                    There are no courses in the system yet. Add your first course to get started.
+                </p>
+                <a href="/adm_add_course" class="btn-course-action btn-course-add">
+                    <i class="fas fa-plus-circle"></i>
+                    Add First Course
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Print Button -->
+    {% if data %}
+    <div class="text-end mt-4">
+        <button class="btn-course-print" onclick="window.print()">
+            <i class="fas fa-print"></i>
+            Print Course List
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade courses-confirmation-modal" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-2">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the course <strong id="courseName" style="color: var(--primary-color);"></strong>?</p>
+                <p class="small" style="color: var(--danger-color);">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    This action cannot be undone. All related data will be permanently removed.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-course-action btn-course-refresh" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+                <a href="#" id="confirmDeleteBtn" class="btn-course-action btn-course-delete">
+                    <i class="fas fa-trash-alt"></i>
+                    Delete Course
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Apply the same CSS variables as admin homepage
+        document.documentElement.style.setProperty('--primary-color', '#27374D');
+        document.documentElement.style.setProperty('--secondary-color', '#526D82');
+        document.documentElement.style.setProperty('--accent-color', '#9DB2BF');
+        document.documentElement.style.setProperty('--light-bg', '#DDE6ED');
+        document.documentElement.style.setProperty('--white', '#FFFFFF');
+
+        // Initialize DataTable with fixed length menu
+        var table = $('#registrationTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[1, 'asc']],
+            "language": {
+                "search": "Search courses:",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ courses",
+                "paginate": {
+                    "previous": '<i class="fas fa-chevron-left"></i>',
+                    "next": '<i class="fas fa-chevron-right"></i>'
+                }
+            },
+            "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            "columnDefs": [
+                {
+                    "targets": [3],
+                    "orderable": false,
+                    "searchable": false
+                }
+            ],
+            "initComplete": function() {
+                // Style DataTable elements to match admin homepage
+                this.api().tables().header().to$().css({
+                    'background-color': '#27374D',
+                    'color': '#FFFFFF'
+                });
+            }
+        });
+
+        // Export functionality
+        $('#exportBtn').click(function() {
+            exportTableToCSV();
+        });
+
+        function exportTableToCSV() {
+            var csv = [];
+            var rows = document.querySelectorAll('#registrationTable tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll('td, th');
+
+                for (var j = 0; j < cols.length; j++) {
+                    var text = cols[j].innerText.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
+                    if (j !== 3) {
+                        row.push('"' + text + '"');
+                    }
+                }
+
+                csv.push(row.join(','));
+            }
+
+            downloadCSV(csv.join('\n'), 'courses_list.csv');
+        }
+
+        function downloadCSV(csv, filename) {
+            var csvFile = new Blob([csv], {type: 'text/csv'});
+            var downloadLink = document.createElement('a');
+
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            showToast('Courses exported successfully!', 'success');
+        }
+
+        // Delete confirmation with modal
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        var courseNameElement = document.getElementById('courseName');
+        var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        var currentDeleteUrl = '';
+
+        window.confirmDelete = function(courseName, deleteUrl) {
+            courseNameElement.textContent = courseName;
+            currentDeleteUrl = deleteUrl;
+            deleteModal.show();
+            return false;
+        };
+
+        confirmDeleteBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = currentDeleteUrl;
+        });
+
+        // Set up delete links
+        document.querySelectorAll('.btn-course-delete').forEach(function(link) {
+            if (!link.onclick) {
+                var courseName = link.closest('tr').querySelector('td:nth-child(2) strong').textContent;
+                var deleteUrl = link.getAttribute('href');
+                link.onclick = function(e) {
+                    e.preventDefault();
+                    window.confirmDelete(courseName, deleteUrl);
+                };
+            }
+        });
+
+        // Toast notification function
+        function showToast(message, type) {
+            var existingToasts = document.querySelectorAll('.courses-toast');
+            existingToasts.forEach(function(toast) {
+                toast.remove();
+            });
+
+            var toast = document.createElement('div');
+            toast.className = 'courses-toast';
+            toast.innerHTML = `
+                <div class="courses-toast-body ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(function() {
+                toast.remove();
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %}
+

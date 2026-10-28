@@ -1,0 +1,1408 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Form</title>#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{# #}
+{#</head>#}
+{#<body>#}
+{#  <div class="container">#}
+{#    <h2 class="mb-4">Registration Form</h2>#}
+{#    <form method="post" action="/adm_add_student_post" enctype="multipart/form-data">#}
+{#      <div class="row mb-3">#}
+{#        <label for="name" class="col-sm-4 ">Student_Name</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="name" name="name" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Course</label>#}
+{#        <div class="col-sm-8">#}
+{#          <select class="form-control" id="select2" name="select2">#}
+{#              {% for i in data %}#}
+{#                <option value="{{ i.id }}">{{ i.course_name }}</option>#}
+{#              {% endfor %}#}
+{#          </select>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Semester</label>#}
+{#        <div class="col-sm-8">#}
+{#          <select class="form-control" id="select" name="select">#}
+{#              <option>1</option>#}
+{#              <option>2</option>#}
+{#              <option>3</option>#}
+{#              <option>4</option>#}
+{#              <option>5</option>#}
+{#              <option>6</option>#}
+{#          </select>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#       <div class="row mb-3">#}
+{#        <label for="phone" class="col-sm-4 ">Admission Number</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="adm_num" name="adm_num" required>#}
+{#        </div>#}
+{#       </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label class="col-sm-4 ">Gender</label>#}
+{#        <div class="col-sm-8">#}
+{#          <div class="form-check form-check-inline">#}
+{#            <input class="form-check-input" type="radio" name="gender" id="male" value="Male" required>#}
+{#            <label class="form-check-label" for="male">Male</label>#}
+{#          </div>#}
+{#          <div class="form-check form-check-inline">#}
+{#            <input class="form-check-input" type="radio" name="gender" id="female" value="Female" required>#}
+{#            <label class="form-check-label" for="female">Female</label>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Date of Birth</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="date" class="form-control" id="dob" name="dob" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="email" class="col-sm-4 ">Email address</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="email" class="form-control" id="email" name="email" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="phone" class="col-sm-4 ">Phone Number</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="tel" pattern="[0-9]{10}" class="form-control" id="phone" name="phone" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="place" class="col-sm-4 ">Place</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="place" name="place" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="city" class="col-sm-4 ">City</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="city" name="city" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="state" class="col-sm-4 ">State</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="state" name="state" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="pincode" class="col-sm-4 ">Pincode</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" pattern="[0-9]{6}" class="form-control" id="pincode" name="pincode" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="photo" class="col-sm-4 ">Upload Photo</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <div class="offset-sm-4 col-sm-8">#}
+{#          <button type="submit" class="btn btn-primary">Register</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </form>#}
+{#  </div>#}
+{#  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+{% extends "admin/index.html" %}
+{% block body %}
+{% block page_title %}
+Add New Student
+{% endblock %}
+
+<div class="container mt-4">
+    <!-- Management Header Section - NEW -->
+    <div class="student-header-section mb-4">
+        <div class="student-title-container">
+            <h1 class="student-main-title">Student Management</h1>
+            <p class="student-subtitle">Add, edit, and manage all students in the system</p>
+
+            <div class="student-action-buttons">
+                <a href="/adm_add_student" class="btn-student-action btn-student-add">
+                    <i class="fas fa-user-graduate"></i>
+                    Add New Student
+                </a>
+                <button class="btn-student-action btn-student-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+                <a href="/adm_view_student" class="btn-student-action btn-student-view">
+                    <i class="fas fa-eye"></i>
+                    View Students
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Messages Container -->
+    <div id="errorMessages"></div>
+
+    <!-- Form Card -->
+    <div class="main-card mb-4">
+        <div class="card-header mb-4">
+            <div class="card-icon">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <h2 class="card-title" style="margin: 0;">Student Registration</h2>
+        </div>
+
+        <!-- Information Alert -->
+        <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color); border-radius: 12px;">
+            <i class="fas fa-info-circle me-2"></i>
+            Register a new student. All fields are required. Currently only Kerala state and districts are supported.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Form Container -->
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="form-card" style="background-color: var(--white); padding: 2rem; border-radius: 16px; border: 1px solid var(--accent-color);">
+                    <form method="post" action="/adm_add_student_post" enctype="multipart/form-data" id="studentForm">
+                        <div class="row">
+                            <!-- Left Column - Academic Information -->
+                            <div class="col-lg-6">
+                                <h5 class="section-title mb-3" style="color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem;">
+                                    <i class="fas fa-graduation-cap me-2"></i>Academic Information
+                                </h5>
+
+                                <!-- Student Name -->
+                                <div class="mb-4">
+                                    <label for="name" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-user me-2"></i>Student Name <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-user-circle"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="name" name="name" required
+                                               placeholder="Enter full name"
+                                               style="border-color: var(--accent-color); background-color: var(--white);"
+                                               onkeyup="validateName(this.value)">
+                                    </div>
+                                    <div id="nameError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Admission Number -->
+                                <div class="mb-4">
+                                    <label for="adm_num" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-id-card me-2"></i>Admission Number <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-hashtag"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="adm_num" name="adm_num" required
+                                               placeholder="Enter admission number"
+                                               style="border-color: var(--accent-color); background-color: var(--white);"
+                                               onkeyup="validateAdmissionNumber(this.value)">
+                                        <button type="button" class="btn btn-outline-secondary" style="border-color: var(--accent-color); color: var(--primary-color);"
+                                                onclick="generateAdmissionNumber()">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;">
+                                        Auto-generated number: <span id="autoAdmNum" style="font-weight: 600; color: var(--primary-color);">Click generate button</span>
+                                    </div>
+                                    <div id="admNumError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Course Selection -->
+                                <div class="mb-4">
+                                    <label for="select2" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-book me-2"></i>Course <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-university"></i>
+                                        </span>
+                                        <select class="form-control" id="select2" name="select2" required
+                                                style="border-color: var(--accent-color); background-color: var(--white);"
+                                                onchange="validateCourse(this.value)">
+                                            <option value="" disabled selected>Select a course</option>
+                                            {% for i in data %}
+                                                <option value="{{ i.id }}">{{ i.course_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;">
+                                        Select the course the student is enrolling in
+                                    </div>
+                                    <div id="courseError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Semester Selection -->
+                                <div class="mb-4">
+                                    <label for="select" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-calendar-alt me-2"></i>Semester <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-layer-group"></i>
+                                        </span>
+                                        <select class="form-control" id="select" name="select" required
+                                                style="border-color: var(--accent-color); background-color: var(--white);"
+                                                onchange="validateSemester(this.value)">
+                                            <option value="" disabled selected>Select semester</option>
+                                            <option value="1">Semester 1</option>
+                                            <option value="2">Semester 2</option>
+                                            <option value="3">Semester 3</option>
+                                            <option value="4">Semester 4</option>
+                                            <option value="5">Semester 5</option>
+                                            <option value="6">Semester 6</option>
+                                        </select>
+                                    </div>
+                                    <div id="semesterInfo" class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                                    <div id="semesterError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column - Personal Details -->
+                            <div class="col-lg-6">
+                                <h5 class="section-title mb-3" style="color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem;">
+                                    <i class="fas fa-user-friends me-2"></i>Personal Details
+                                </h5>
+
+                                <!-- Gender -->
+                                <div class="mb-4">
+                                    <label class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-venus-mars me-2"></i>Gender <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="gender-options d-flex gap-3">
+                                        <div class="form-check form-check-card" style="flex: 1;">
+                                            <input class="form-check-input" type="radio" name="gender" id="male" value="Male" required>
+                                            <label class="form-check-label card-label" for="male"
+                                                   style="background-color: var(--light-bg); padding: 1rem; border-radius: 8px; border: 2px solid var(--accent-color); width: 100%; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                                <i class="fas fa-mars fa-lg me-2" style="color: #4A6FA5;"></i>
+                                                <span style="color: var(--primary-color); font-weight: 500;">Male</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-card" style="flex: 1;">
+                                            <input class="form-check-input" type="radio" name="gender" id="female" value="Female" required>
+                                            <label class="form-check-label card-label" for="female"
+                                                   style="background-color: var(--light-bg); padding: 1rem; border-radius: 8px; border: 2px solid var(--accent-color); width: 100%; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                                <i class="fas fa-venus fa-lg me-2" style="color: #C1506D;"></i>
+                                                <span style="color: var(--primary-color); font-weight: 500;">Female</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div id="genderError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Date of Birth -->
+                                <div class="mb-4">
+                                    <label for="dob" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-birthday-cake me-2"></i>Date of Birth <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-calendar"></i>
+                                        </span>
+                                        <input type="date" class="form-control" id="dob" name="dob" required
+                                               style="border-color: var(--accent-color); background-color: var(--white);"
+                                               max="{{ today|date:'Y-m-d' }}"
+                                               onchange="validateDOB(this.value)">
+                                        <button type="button" class="btn btn-outline-secondary" style="border-color: var(--accent-color); color: var(--primary-color);"
+                                                onclick="calculateAge()">
+                                            <i class="fas fa-calculator"></i>
+                                        </button>
+                                    </div>
+                                    <div id="ageDisplay" class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                                    <div id="dobError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-4">
+                                    <label for="email" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-envelope me-2"></i>Email Address <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-at"></i>
+                                        </span>
+                                        <input type="email" class="form-control" id="email" name="email" required
+                                               placeholder="student@institution.edu"
+                                               style="border-color: var(--accent-color); background-color: var(--white);"
+                                               onkeyup="validateEmail(this.value)">
+                                    </div>
+                                    <div id="emailError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Phone Number -->
+                                <div class="mb-4">
+                                    <label for="phone" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-phone me-2"></i>Phone Number <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            +91
+                                        </span>
+                                        <input type="tel" pattern="[0-9]{10}" class="form-control" id="phone" name="phone" required
+                                               placeholder="10-digit mobile number"
+                                               maxlength="10"
+                                               style="border-color: var(--accent-color); background-color: var(--white);"
+                                               onkeyup="validatePhone(this.value)">
+                                    </div>
+                                    <div id="phoneError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Address Section - REORDERED with backward compatibility -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="section-title mb-3" style="color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem;">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Address Information
+                                </h5>
+                            </div>
+
+                            <!-- State Dropdown (First) -->
+                            <div class="col-md-6 mb-3">
+                                <label for="state" class="form-label" style="color: var(--primary-color); font-weight: 600;">State <span style="color: var(--danger-color);">*</span></label>
+                                <select class="form-control" id="state" name="state" required
+                                        style="border-color: var(--accent-color); background-color: var(--white);"
+                                        onchange="validateState(this.value); loadDistricts(this.value);">
+                                    <option value="">Select State</option>
+                                    <option value="Kerala" selected>Kerala</option>
+                                    <option value="Other" disabled>Other (Not Available)</option>
+                                </select>
+                                <div id="stateError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                <div id="stateMessage" style="color: var(--warning-color); font-size: 0.85rem; margin-top: 0.25rem; display: none;">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Currently only Kerala state is supported
+                                </div>
+                            </div>
+
+                            <!-- City/District Field - Using 'city' name for backward compatibility -->
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label" style="color: var(--primary-color); font-weight: 600;">City/District <span style="color: var(--danger-color);">*</span></label>
+                                <select class="form-control" id="city" name="city" required
+                                        style="border-color: var(--accent-color); background-color: var(--white);"
+                                        onchange="validateCity(this.value)">
+                                    <option value="">Select City/District</option>
+                                    <option value="Alappuzha">Alappuzha</option>
+                                    <option value="Ernakulam">Ernakulam</option>
+                                    <option value="Idukki">Idukki</option>
+                                    <option value="Kannur">Kannur</option>
+                                    <option value="Kasaragod">Kasaragod</option>
+                                    <option value="Kollam">Kollam</option>
+                                    <option value="Kottayam">Kottayam</option>
+                                    <option value="Kozhikode">Kozhikode</option>
+                                    <option value="Malappuram">Malappuram</option>
+                                    <option value="Palakkad">Palakkad</option>
+                                    <option value="Pathanamthitta">Pathanamthitta</option>
+                                    <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                                    <option value="Thrissur">Thrissur</option>
+                                    <option value="Wayanad">Wayanad</option>
+                                </select>
+                                <div id="cityError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                            </div>
+
+                            <!-- Place (Third) -->
+                            <div class="col-md-6 mb-3">
+                                <label for="place" class="form-label" style="color: var(--primary-color); font-weight: 600;">Place <span style="color: var(--danger-color);">*</span></label>
+                                <input type="text" class="form-control" id="place" name="place" required
+                                       placeholder="Street/Locality"
+                                       style="border-color: var(--accent-color); background-color: var(--white);"
+                                       onkeyup="validatePlace(this.value)">
+                                <div id="placeError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                            </div>
+
+                            <!-- Pincode (Fourth) -->
+                            <div class="col-md-6 mb-3">
+                                <label for="pincode" class="form-label" style="color: var(--primary-color); font-weight: 600;">Pincode <span style="color: var(--danger-color);">*</span></label>
+                                <input type="text" pattern="[0-9]{6}" class="form-control" id="pincode" name="pincode" required
+                                       placeholder="6-digit pincode"
+                                       maxlength="6"
+                                       style="border-color: var(--accent-color); background-color: var(--white);"
+                                       onkeyup="validatePincode(this.value)">
+                                <div id="pincodeError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Photo Upload -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="section-title mb-3" style="color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem;">
+                                    <i class="fas fa-camera me-2"></i>Student Photo <span style="color: var(--danger-color);">*</span>
+                                </h5>
+                                <div class="upload-area"
+                                     style="border: 2px dashed var(--accent-color); border-radius: 12px; padding: 2rem; text-align: center; background-color: var(--white); cursor: pointer;"
+                                     onclick="document.getElementById('photo').click()">
+                                    <i class="fas fa-cloud-upload-alt fa-2x mb-3" style="color: var(--accent-color);"></i>
+                                    <p class="mb-2" style="color: var(--primary-color); font-weight: 500;">Click to upload student photo</p>
+                                    <p class="mb-0" style="color: var(--secondary-color); font-size: 0.9rem;">JPEG, PNG or GIF (Max 2MB)</p>
+                                    <input type="file" class="form-control d-none" id="photo" name="photo" accept="image/*" required
+                                           onchange="validatePhoto(this)">
+                                </div>
+                                <div id="imagePreview" class="mt-3 text-center" style="display: none;">
+                                    <img id="preview" src="#" alt="Preview"
+                                         style="max-width: 150px; max-height: 150px; border-radius: 8px; border: 2px solid var(--accent-color);">
+                                    <button type="button" class="btn btn-sm mt-2" onclick="removeImage()"
+                                            style="background-color: #f8d7da; color: #721c24; border: none; border-radius: 6px; padding: 0.25rem 0.75rem;">
+                                        <i class="fas fa-times me-1"></i>Remove
+                                    </button>
+                                </div>
+                                <div id="photoError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <button type="submit" class="btn btn-custom w-100"
+                                        style="background-color: var(--secondary-color); color: var(--white); border: none; padding: 1rem; font-weight: 600;">
+                                    <i class="fas fa-user-plus me-2"></i>Register Student
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button type="reset" class="btn btn-outline-custom w-100" onclick="resetForm()"
+                                        style="border-color: var(--accent-color); color: var(--primary-color); padding: 1rem; font-weight: 600;">
+                                    <i class="fas fa-redo me-2"></i>Clear Form
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-center">
+                                    <a href="/adm_view_student" class="btn btn-link" style="color: var(--secondary-color); text-decoration: none;">
+                                        <i class="fas fa-eye me-1"></i> View Student List
+                                    </a>
+                                    <span class="mx-2" style="color: var(--accent-color);">|</span>
+                                    <a href="/adm_add_course" class="btn btn-link" style="color: var(--secondary-color); text-decoration: none;">
+                                        <i class="fas fa-plus-circle me-1"></i> Add Course
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Guidelines -->
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                <div class="guidelines-card" style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--accent-color);">
+                    <h6 style="color: var(--primary-color); margin-bottom: 1rem;">
+                        <i class="fas fa-lightbulb me-2"></i>Important Guidelines
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0;">
+                                <li class="mb-2">Name: Only letters and spaces allowed</li>
+                                <li class="mb-2">Admission number must be unique</li>
+                                <li class="mb-2">Email: Must be a valid email format</li>
+                                <li class="mb-2">Phone: Exactly 10 digits required</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0;">
+                                <li class="mb-2">State: Currently only Kerala supported</li>
+                                <li class="mb-2">City/District: Select from Kerala's 14 districts</li>
+                                <li class="mb-2">Pincode: Exactly 6 digits required</li>
+                                <li class="mb-2">Photo: Max 2MB, JPG/PNG format</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REMOVED: Recently Added Students Section -->
+</div>
+
+<!-- Add CSS for student management header -->
+<style>
+    /* Student Management Header Styling */
+    .student-header-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .student-header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .student-title-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .student-main-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-subtitle {
+        font-size: 1rem;
+        color: var(--light-bg);
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+    }
+
+    .student-action-buttons {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-student-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.7rem 1.4rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid transparent;
+        font-size: 0.95rem;
+    }
+
+    .btn-student-add {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-student-refresh {
+        background-color: transparent;
+        color: var(--light-bg);
+        border: 2px solid var(--light-bg);
+    }
+
+    .btn-student-view {
+        background-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    .btn-student-action:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-student-add:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    .btn-student-refresh:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+    }
+
+    .btn-student-view:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    /* Error message styling */
+    .alert-custom-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: var(--danger-color);
+        color: var(--danger-color);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .is-invalid {
+        border-color: var(--danger-color) !important;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Select dropdown styling */
+    select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2327374D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+    }
+
+    /* Form Styling */
+    .form-label {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(82, 109, 130, 0.25);
+    }
+
+    .input-group-text {
+        border-radius: 8px 0 0 8px;
+    }
+
+    /* Gender Card Styling */
+    .form-check-card .form-check-input {
+        display: none;
+    }
+
+    .form-check-card .card-label {
+        transition: all 0.3s ease;
+    }
+
+    .form-check-card .form-check-input:checked + .card-label {
+        background-color: var(--accent-color) !important;
+        border-color: var(--secondary-color) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    /* Button Styling */
+    .btn-custom {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+        background-color: var(--accent-color) !important;
+        color: var(--primary-color) !important;
+    }
+
+    .btn-outline-custom {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+        background-color: var(--light-bg);
+        transform: translateY(-2px);
+        border-color: var(--secondary-color);
+    }
+
+    /* Upload Area */
+    .upload-area {
+        transition: all 0.3s ease;
+    }
+
+    .upload-area:hover {
+        border-color: var(--secondary-color) !important;
+        background-color: var(--light-bg) !important;
+    }
+
+    /* Table Styling */
+    table {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px var(--shadow-light);
+    }
+
+    tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    tbody tr:hover {
+        background-color: var(--light-bg) !important;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 1.5rem !important;
+        }
+
+        .gender-options {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
+
+        .main-card {
+            padding: 1.5rem !important;
+        }
+
+        .btn-custom, .btn-outline-custom {
+            padding: 0.8rem !important;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+        }
+
+        .upload-area {
+            padding: 1.5rem !important;
+        }
+
+        .student-action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-student-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .guidelines-card {
+            padding: 1rem !important;
+        }
+    }
+</style>
+
+<!-- Kerala districts array for validation -->
+<script>
+    const keralaDistricts = [
+        "Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod",
+        "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad",
+        "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"
+    ];
+
+    // Image preview functionality
+    function previewImage(input) {
+        const preview = document.getElementById('preview');
+        const previewContainer = document.getElementById('imagePreview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewContainer.style.display = 'block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removeImage() {
+        document.getElementById('photo').value = '';
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('photoError').style.display = 'none';
+    }
+
+    // Calculate age from date of birth
+    function calculateAge() {
+        const dobInput = document.getElementById('dob');
+        const ageDisplay = document.getElementById('ageDisplay');
+
+        if (!dobInput.value) {
+            ageDisplay.textContent = 'Please select a date';
+            return;
+        }
+
+        const dob = new Date(dobInput.value);
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        // Check if student is at least 16 years old
+        const minAge = 16;
+        if (age < minAge) {
+            ageDisplay.innerHTML = `<i class="fas fa-exclamation-triangle me-1" style="color: #dc3545;"></i> Age: <strong>${age} years</strong> (Minimum age is ${minAge} years)`;
+            ageDisplay.style.color = '#dc3545';
+        } else {
+            ageDisplay.innerHTML = `<i class="fas fa-check-circle me-1" style="color: #28a745;"></i> Age: <strong>${age} years</strong>`;
+            ageDisplay.style.color = '#28a745';
+        }
+    }
+
+    // Generate admission number
+    function generateAdmissionNumber() {
+        const year = new Date().getFullYear().toString().slice(-2);
+        const random = Math.floor(1000 + Math.random() * 9000);
+        const admissionNumber = `ADM${year}${random}`;
+
+        document.getElementById('adm_num').value = admissionNumber;
+        document.getElementById('autoAdmNum').textContent = admissionNumber;
+        document.getElementById('admNumError').style.display = 'none';
+        document.getElementById('adm_num').classList.remove('is-invalid');
+    }
+
+    // Semester information display
+    document.getElementById('select')?.addEventListener('change', function() {
+        const semester = this.value;
+        const infoDiv = document.getElementById('semesterInfo');
+
+        if (semester === '1' || semester === '2') {
+            infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i> First Year Student';
+            infoDiv.style.color = '#28a745';
+        } else if (semester === '3' || semester === '4') {
+            infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i> Second Year Student';
+            infoDiv.style.color = '#ffc107';
+        } else if (semester === '5' || semester === '6') {
+            infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i> Third Year Student';
+            infoDiv.style.color = '#fd7e14';
+        } else {
+            infoDiv.innerHTML = '';
+        }
+    });
+
+    // Validation Functions
+    function validateName(name) {
+        const nameError = document.getElementById('nameError');
+        const nameInput = document.getElementById('name');
+        const namePattern = /^[A-Za-z\s.]+$/;
+
+        if (name && !namePattern.test(name)) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Name can only contain letters, spaces, and periods. Numbers and special characters are not allowed.';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else if (name && name.length < 2) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Name must be at least 2 characters long';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else {
+            nameError.style.display = 'none';
+            nameInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateAdmissionNumber(admNum) {
+        const admNumError = document.getElementById('admNumError');
+        const admNumInput = document.getElementById('adm_num');
+
+        if (admNum && admNum.length < 3) {
+            admNumError.style.display = 'block';
+            admNumError.textContent = 'Admission number must be at least 3 characters';
+            admNumInput.classList.add('is-invalid');
+            return false;
+        } else {
+            admNumError.style.display = 'none';
+            admNumInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateCourse(course) {
+        const courseError = document.getElementById('courseError');
+        const courseInput = document.getElementById('select2');
+
+        if (!course) {
+            courseError.style.display = 'block';
+            courseError.textContent = 'Please select a course';
+            courseInput.classList.add('is-invalid');
+            return false;
+        } else {
+            courseError.style.display = 'none';
+            courseInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateSemester(semester) {
+        const semesterError = document.getElementById('semesterError');
+        const semesterInput = document.getElementById('select');
+
+        if (!semester) {
+            semesterError.style.display = 'block';
+            semesterError.textContent = 'Please select a semester';
+            semesterInput.classList.add('is-invalid');
+            return false;
+        } else {
+            semesterError.style.display = 'none';
+            semesterInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateEmail(email) {
+        const emailError = document.getElementById('emailError');
+        const emailInput = document.getElementById('email');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email && !emailPattern.test(email)) {
+            emailError.style.display = 'block';
+            emailError.textContent = 'Please enter a valid email address (e.g., name@domain.com)';
+            emailInput.classList.add('is-invalid');
+            return false;
+        } else {
+            emailError.style.display = 'none';
+            emailInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validatePhone(phone) {
+        const phoneError = document.getElementById('phoneError');
+        const phoneInput = document.getElementById('phone');
+        const phonePattern = /^[0-9]{10}$/;
+
+        if (phone && !phonePattern.test(phone)) {
+            phoneError.style.display = 'block';
+            phoneError.textContent = 'Phone number must be exactly 10 digits';
+            phoneInput.classList.add('is-invalid');
+            return false;
+        } else {
+            phoneError.style.display = 'none';
+            phoneInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateState(state) {
+        const stateError = document.getElementById('stateError');
+        const stateMessage = document.getElementById('stateMessage');
+        const stateInput = document.getElementById('state');
+
+        if (state === 'Other') {
+            stateMessage.style.display = 'block';
+            stateError.style.display = 'block';
+            stateError.textContent = 'Currently only Kerala state is supported. Please select Kerala.';
+            stateInput.classList.add('is-invalid');
+            return false;
+        } else if (state === 'Kerala') {
+            stateMessage.style.display = 'none';
+            stateError.style.display = 'none';
+            stateInput.classList.remove('is-invalid');
+            return true;
+        } else {
+            stateMessage.style.display = 'none';
+            stateError.style.display = 'none';
+            stateInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function loadDistricts(state) {
+        const citySelect = document.getElementById('city');
+        if (state !== 'Kerala') {
+            citySelect.innerHTML = '<option value="">Select City/District</option><option value="Other" disabled>Not Available</option>';
+        } else {
+            citySelect.innerHTML = '<option value="">Select City/District</option>';
+            keralaDistricts.forEach(district => {
+                citySelect.innerHTML += `<option value="${district}">${district}</option>`;
+            });
+        }
+    }
+
+    function validateCity(city) {
+        const cityError = document.getElementById('cityError');
+        const cityInput = document.getElementById('city');
+
+        if (!city) {
+            cityError.style.display = 'block';
+            cityError.textContent = 'Please select a city/district';
+            cityInput.classList.add('is-invalid');
+            return false;
+        } else if (!keralaDistricts.includes(city)) {
+            cityError.style.display = 'block';
+            cityError.textContent = 'Please select a valid Kerala district';
+            cityInput.classList.add('is-invalid');
+            return false;
+        } else {
+            cityError.style.display = 'none';
+            cityInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validatePlace(place) {
+        const placeError = document.getElementById('placeError');
+        const placeInput = document.getElementById('place');
+
+        if (place && place.length < 2) {
+            placeError.style.display = 'block';
+            placeError.textContent = 'Place must be at least 2 characters';
+            placeInput.classList.add('is-invalid');
+            return false;
+        } else {
+            placeError.style.display = 'none';
+            placeInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validatePincode(pincode) {
+        const pincodeError = document.getElementById('pincodeError');
+        const pincodeInput = document.getElementById('pincode');
+        const pincodePattern = /^[0-9]{6}$/;
+
+        if (pincode && !pincodePattern.test(pincode)) {
+            pincodeError.style.display = 'block';
+            pincodeError.textContent = 'Pincode must be exactly 6 digits';
+            pincodeInput.classList.add('is-invalid');
+            return false;
+        } else {
+            pincodeError.style.display = 'none';
+            pincodeInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    function validateDOB(dob) {
+        const dobError = document.getElementById('dobError');
+        const dobInput = document.getElementById('dob');
+
+        if (dob) {
+            const selectedDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - selectedDate.getFullYear();
+            const monthDiff = today.getMonth() - selectedDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
+                age--;
+            }
+
+            if (age < 16) {
+                dobError.style.display = 'block';
+                dobError.textContent = 'Student must be at least 16 years old';
+                dobInput.classList.add('is-invalid');
+                return false;
+            } else if (age > 70) {
+                dobError.style.display = 'block';
+                dobError.textContent = 'Age cannot exceed 70 years';
+                dobInput.classList.add('is-invalid');
+                return false;
+            } else {
+                dobError.style.display = 'none';
+                dobInput.classList.remove('is-invalid');
+                return true;
+            }
+        }
+        return true;
+    }
+
+    function validatePhoto(input) {
+        const photoError = document.getElementById('photoError');
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            if (file.size > 2 * 1024 * 1024) {
+                photoError.style.display = 'block';
+                photoError.textContent = 'Photo size must be less than 2MB';
+                input.value = '';
+                return false;
+            }
+
+            if (!file.type.match('image.*')) {
+                photoError.style.display = 'block';
+                photoError.textContent = 'Please upload an image file (JPEG, PNG, GIF)';
+                input.value = '';
+                return false;
+            }
+
+            photoError.style.display = 'none';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview');
+                preview.src = e.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+            return true;
+        }
+        return true;
+    }
+
+    // Show error message function
+    function showErrorMessage(message) {
+        const errorContainer = document.getElementById('errorMessages');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert-custom-error';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.remove()"></button>
+        `;
+        errorContainer.innerHTML = '';
+        errorContainer.appendChild(errorDiv);
+
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+
+    // Form validation on submit
+    document.getElementById('studentForm').addEventListener('submit', function(e) {
+        let isValid = true;
+        const errors = [];
+
+        // Validate name
+        const name = document.getElementById('name').value.trim();
+        if (!name) {
+            errors.push('Student name is required');
+            isValid = false;
+        } else if (!/^[A-Za-z\s.]+$/.test(name)) {
+            errors.push('Name can only contain letters, spaces, and periods');
+            isValid = false;
+        }
+
+        // Validate admission number
+        const admNum = document.getElementById('adm_num').value.trim();
+        if (!admNum) {
+            errors.push('Admission number is required');
+            isValid = false;
+        }
+
+        // Validate course
+        const course = document.getElementById('select2').value;
+        if (!course) {
+            errors.push('Please select a course');
+            isValid = false;
+        }
+
+        // Validate semester
+        const semester = document.getElementById('select').value;
+        if (!semester) {
+            errors.push('Please select semester');
+            isValid = false;
+        }
+
+        // Validate gender
+        const gender = document.querySelector('input[name="gender"]:checked');
+        if (!gender) {
+            errors.push('Please select gender');
+            isValid = false;
+        }
+
+        // Validate email
+        const email = document.getElementById('email').value.trim();
+        if (!email) {
+            errors.push('Email is required');
+            isValid = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.push('Please enter a valid email address');
+            isValid = false;
+        }
+
+        // Validate phone
+        const phone = document.getElementById('phone').value.trim();
+        if (!phone) {
+            errors.push('Phone number is required');
+            isValid = false;
+        } else if (!/^[0-9]{10}$/.test(phone)) {
+            errors.push('Phone number must be exactly 10 digits');
+            isValid = false;
+        }
+
+        // Validate state
+        const state = document.getElementById('state').value;
+        if (!state) {
+            errors.push('Please select state');
+            isValid = false;
+        } else if (state !== 'Kerala') {
+            errors.push('Currently only Kerala state is supported');
+            isValid = false;
+        }
+
+        // Validate city
+        const city = document.getElementById('city').value;
+        if (!city) {
+            errors.push('Please select city/district');
+            isValid = false;
+        } else if (!keralaDistricts.includes(city)) {
+            errors.push('Please select a valid Kerala district');
+            isValid = false;
+        }
+
+        // Validate place
+        const place = document.getElementById('place').value.trim();
+        if (!place) {
+            errors.push('Place is required');
+            isValid = false;
+        }
+
+        // Validate pincode
+        const pincode = document.getElementById('pincode').value.trim();
+        if (!pincode) {
+            errors.push('Pincode is required');
+            isValid = false;
+        } else if (!/^[0-9]{6}$/.test(pincode)) {
+            errors.push('Pincode must be exactly 6 digits');
+            isValid = false;
+        }
+
+        // Validate photo
+        const photo = document.getElementById('photo').files[0];
+        if (!photo) {
+            errors.push('Please upload a student photo');
+            isValid = false;
+        } else if (photo.size > 2 * 1024 * 1024) {
+            errors.push('Photo size must be less than 2MB');
+            isValid = false;
+        }
+
+        // Validate DOB
+        const dob = document.getElementById('dob').value;
+        if (!dob) {
+            errors.push('Date of birth is required');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            errors.forEach(error => showErrorMessage(error));
+            return false;
+        }
+    });
+
+    // Phone number formatting
+    document.getElementById('phone').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 10) {
+            this.value = this.value.slice(0, 10);
+        }
+    });
+
+    // Pincode formatting
+    document.getElementById('pincode').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6);
+        }
+    });
+
+    // Form reset handler
+    function resetForm() {
+        document.getElementById('studentForm').reset();
+
+        // Clear image preview
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('photo').value = '';
+
+        // Clear age display
+        document.getElementById('ageDisplay').textContent = '';
+
+        // Clear semester info
+        document.getElementById('semesterInfo').innerHTML = '';
+
+        // Clear admission number info
+        document.getElementById('autoAdmNum').textContent = 'Click generate button';
+
+        // Clear all errors
+        document.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        document.getElementById('errorMessages').innerHTML = '';
+    }
+
+    // Real-time validation
+    document.getElementById('name')?.addEventListener('input', function(e) {
+        validateName(e.target.value);
+    });
+
+    document.getElementById('adm_num')?.addEventListener('input', function(e) {
+        validateAdmissionNumber(e.target.value);
+    });
+
+    document.getElementById('select2')?.addEventListener('change', function(e) {
+        validateCourse(e.target.value);
+    });
+
+    document.getElementById('select')?.addEventListener('change', function(e) {
+        validateSemester(e.target.value);
+    });
+
+    document.getElementById('email')?.addEventListener('input', function(e) {
+        validateEmail(e.target.value);
+    });
+
+    document.getElementById('phone')?.addEventListener('input', function(e) {
+        validatePhone(e.target.value);
+    });
+
+    document.getElementById('state')?.addEventListener('change', function(e) {
+        validateState(e.target.value);
+        loadDistricts(e.target.value);
+    });
+
+    document.getElementById('city')?.addEventListener('change', function(e) {
+        validateCity(e.target.value);
+    });
+
+    document.getElementById('place')?.addEventListener('input', function(e) {
+        validatePlace(e.target.value);
+    });
+
+    document.getElementById('pincode')?.addEventListener('input', function(e) {
+        validatePincode(e.target.value);
+    });
+
+    document.getElementById('dob')?.addEventListener('change', function(e) {
+        validateDOB(e.target.value);
+        calculateAge();
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set max date for DOB (16 years ago)
+        const today = new Date();
+        const minDate = new Date();
+        minDate.setFullYear(today.getFullYear() - 16);
+        document.getElementById('dob').max = minDate.toISOString().split('T')[0];
+
+        // Generate initial admission number suggestion
+        generateAdmissionNumber();
+    });
+</script>
+{% endblock %}
+

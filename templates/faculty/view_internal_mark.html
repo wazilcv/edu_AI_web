@@ -1,0 +1,1063 @@
+{#{% extends "faculty/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>STUDENT INFO</th>#}
+{#          <th>MARK</th>#}
+{#          <th>ACTION</th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#        <!-- Sample Data Row -->#}
+{#        {% for i in data %}#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.STUDENT.std_name }}</td>#}
+{#          <td>{{ i.mark }}</td>#}
+{#          <td><a href="/fac_delete_internal_mark/{{ i.id }}">Remove</a> </td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#        <!-- Add more rows dynamically from backend -->#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="card-header mb-4">
+        <div class="card-icon">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <h1 class="card-title">Student Marks Management</h1>
+    </div>
+
+    <!-- Information Alert -->
+    <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--dark-text); border-radius: 12px;">
+        <i class="fas fa-info-circle me-2"></i>
+        Manage internal marks (out of 20) for registered students. You can view and remove marks as needed.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Stats Cards - 1x4 layout -->
+    <div class="stats-container mb-4" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-number">{{ data|length }}</div>
+            <div class="stat-label">Registered Students</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="stat-number" id="averageMark">0</div>
+            <div class="stat-label">Average Mark</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="stat-number" id="highestMark">0</div>
+            <div class="stat-label">Highest Mark</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="stat-number" id="topPerformers">0</div>
+            <div class="stat-label">Top Performers</div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="main-card">
+        <div class="card-header mb-4">
+            <div class="card-icon">
+                <i class="fas fa-table"></i>
+            </div>
+            <h2 class="card-title" style="margin: 0;">Student Marks (Out of 20)</h2>
+            <div class="ms-auto">
+                <button class="btn btn-custom" onclick="exportTableToCSV()">
+                    <i class="fas fa-download me-2"></i>Export CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Redesigned Search and Filter Section - Fixed Alignment -->
+        <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+            <!-- Search Bar - Left Side -->
+            <div class="search-wrapper flex-grow-1" style="min-width: 300px; max-width: 450px; background-color: var(--white); border-radius: 12px; border: 2px solid var(--accent-color); overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-light);">
+                <div class="d-flex align-items-center">
+                    <div class="search-icon px-3" style="color: var(--secondary-color);">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input type="text" id="searchInput" class="form-control border-0"
+                           placeholder="Search by student name or ID..."
+                           style="padding: 0.875rem 0; background-color: transparent; color: var(--dark-text); font-weight: 500; box-shadow: none;">
+                    <button class="btn btn-link text-decoration-none px-3" onclick="clearSearch()"
+                            style="color: var(--secondary-color); font-weight: 500; white-space: nowrap;">
+                        <i class="fas fa-times me-1"></i>Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter and Sort - Right Side - Removed duplicate arrows -->
+            <div class="d-flex gap-3 flex-wrap justify-content-end">
+                <!-- Performance Filter Dropdown -->
+                <div class="filter-wrapper" style="position: relative; width: 220px;">
+                    <select id="performanceFilter" class="form-select"
+                            style="background-color: var(--white); border: 2px solid var(--accent-color); border-radius: 12px; padding: 0.875rem 1rem; color: var(--dark-text); font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-light); width: 100%; appearance: none;">
+                        <option value="all" class="py-2">📊 All Students</option>
+                        <option value="outstanding" class="py-2">🏆 Outstanding (18-20)</option>
+                        <option value="excellent" class="py-2">⭐ Excellent (16-17)</option>
+                        <option value="good" class="py-2">✅ Good (12-15)</option>
+                        <option value="average" class="py-2">📌 Average (8-11)</option>
+                        <option value="improvement" class="py-2">⚠️ Needs Improvement (0-7)</option>
+                    </select>
+                    <!-- Single custom arrow -->
+                    <div class="filter-arrow" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--secondary-color);">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- Sort By Dropdown -->
+                <div class="sort-wrapper" style="position: relative; width: 200px;">
+                    <select id="sortSelect" class="form-select"
+                            style="background-color: var(--white); border: 2px solid var(--accent-color); border-radius: 12px; padding: 0.875rem 1rem; color: var(--dark-text); font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--shadow-light); width: 100%; appearance: none;">
+                        <option value="name_asc">👤 Name (A-Z)</option>
+                        <option value="name_desc">👤 Name (Z-A)</option>
+                        <option value="mark_desc">📊 Mark (High-Low)</option>
+                        <option value="mark_asc">📊 Mark (Low-High)</option>
+                    </select>
+                    <!-- Single custom arrow -->
+                    <div class="sort-arrow" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--secondary-color);">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Hint -->
+        <div class="search-hint mb-3" style="font-size: 0.8rem; color: var(--light-text);">
+            <i class="fas fa-lightbulb me-1"></i> Try searching for "John" or "ID: 123"
+        </div>
+
+        <!-- Active Filters Display -->
+        <div class="active-filters mb-3" id="activeFilters" style="display: none;">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span style="color: var(--light-text); font-size: 0.9rem;">Active filters:</span>
+                <span class="filter-badge" id="activeFilterBadge" style="background-color: var(--secondary-color); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; display: inline-flex; align-items: center;">
+                    <i class="fas fa-filter me-1"></i>
+                    <span id="filterText"></span>
+                    <i class="fas fa-times ms-2" onclick="clearFilter()" style="cursor: pointer;"></i>
+                </span>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="registrationTable" class="table table-hover" style="width:100%; border-collapse: separate; border-spacing: 0;">
+                <thead>
+                    <tr style="background-color: var(--light-bg);">
+                        <th style="border-radius: 12px 0 0 0; border: none; padding: 1rem;">#</th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-user me-2"></i>STUDENT INFO
+                        </th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-star me-2"></i>MARK /20
+                        </th>
+                        <th style="border-radius: 0 12px 0 0; border: none; padding: 1rem;">
+                            <i class="fas fa-cogs me-2"></i>ACTIONS
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data %}
+                        {% for i in data %}
+                        <tr style="border-bottom: 2px solid var(--light-bg); transition: all 0.3s ease;" data-mark="{{ i.mark }}" data-name="{{ i.STUDENT.std_name }}">
+                            <td style="padding: 1rem; font-weight: 600; color: var(--dark-text);">
+                                {{ forloop.counter }}
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="d-flex align-items-center">
+                                    <div class="student-avatar" style="width: 40px; height: 40px; background-color:
+                                        {% if i.mark >= 18 %}#FFD700{% elif i.mark >= 16 %}#28a745{% elif i.mark >= 12 %}#ffc107{% elif i.mark >= 8 %}#fd7e14{% else %}#dc3545{% endif %};
+                                        border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                        <i class="fas fa-user" style="color: {% if i.mark >= 18 %}#000000{% else %}white{% endif %};"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--dark-text);">
+                                            {{ i.STUDENT.std_name }}
+                                            {% if i.mark >= 18 %}
+                                            <span class="badge" style="background-color: #FFD700; color: #000; font-size: 0.7rem; margin-left: 5px;">
+                                                <i class="fas fa-crown"></i> Top
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                        <div style="font-size: 0.85rem; color: var(--light-text);">
+                                            <i class="fas fa-id-card me-1"></i> ID: {{ i.STUDENT.id }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <!-- Mark Display with Progress Bar -->
+                                <div class="mark-container" style="max-width: 200px;">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="mark-badge" style="background-color:
+                                            {% if i.perc >= 90 %}#FFD700{% elif i.perc >= 80 %}#28a745{% elif i.perc >= 60 %}#ffc107{% elif i.perc >= 40 %}#fd7e14{% else %}#dc3545{% endif %};
+                                            color: {% if i.perc >= 90 %}#000000{% else %}white{% endif %};
+                                            padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: 700; font-size: 1.1rem; border: {% if i.perc >= 90 %}2px solid #FFA500{% else %}none{% endif %};">
+                                            {{ i.mark }}/20
+                                        </div>
+                                        <div class="percentage" style="color: var(--dark-text); font-size: 0.9rem; font-weight: 600;">
+                                            {{ i.perc}}%
+                                        </div>
+                                    </div>
+                                    <!-- Progress Bar -->
+                                    <div class="progress" style="height: 8px; background-color: var(--accent-color); border-radius: 4px; overflow: hidden;">
+                                        <div class="progress-bar" role="progressbar"
+                                             style="width: {{ i.perc}}%;
+                                                    background-color:
+                                                    {% if i.perc >= 90 %}#FFD700{% elif i.perc >= 80 %}#28a745{% elif i.perc >= 60 %}#ffc107{% elif i.perc >= 40 %}#fd7e14{% else %}#dc3545{% endif %};"
+                                             aria-valuenow="{{ i.perc}}" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                    <!-- Performance Label -->
+                                    <div class="performance-label text-end mt-1" style="font-size: 0.75rem; font-weight: 500;">
+                                        {% if i.perc >= 90 %}
+                                            <span style="color: #FF8C00; font-weight: 700;">
+                                                <i class="fas fa-crown"></i> Outstanding
+                                            </span>
+                                        {% elif i.perc >= 80 %}
+                                            <span style="color: #28a745;">Excellent</span>
+                                        {% elif i.perc >= 60 %}
+                                            <span style="color: #ffc107;">Good</span>
+                                        {% elif i.perc >= 40 %}
+                                            <span style="color: #fd7e14;">Average</span>
+                                        {% else %}
+                                            <span style="color: #dc3545;">Needs Improvement</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-view" onclick="viewStudentDetails('{{ i.STUDENT.id }}', {{ i.mark }}, '{{ i.STUDENT.std_name }}')"
+                                            style="background-color: var(--light-bg); color: var(--dark-text); border: 1px solid var(--accent-color); border-radius: 8px; padding: 0.5rem 1rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </button>
+                                    <a href="/fac_delete_internal_mark/{{ i.id }}" class="btn btn-remove"
+                                       onclick="return confirmDelete('{{ i.STUDENT.std_name }}', {{ i.mark }})"
+                                       style="background-color: #f8d7da; color: #721c24; border: none; border-radius: 8px; padding: 0.5rem 1rem; text-decoration: none;">
+                                        <i class="fas fa-trash-alt me-1"></i>Remove
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5" style="color: var(--light-text);">
+                                <i class="fas fa-inbox fa-3x mb-3" style="opacity: 0.5;"></i>
+                                <h5>No Students Registered</h5>
+                                <p class="mb-0">No student marks have been recorded yet.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary Footer -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="summary-card" style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 12px;">
+                    <h6 style="color: var(--dark-text); margin-bottom: 1rem;">
+                        <i class="fas fa-chart-pie me-2"></i>Performance Distribution (Out of 20)
+                    </h6>
+
+                    <!-- Outstanding (18-20) -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <i class="fas fa-crown me-2" style="color: #FF8C00;"></i>
+                            <span style="color: var(--light-text);">Outstanding (18-20)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge" style="background-color: #FFD700; color: #000; margin-right: 8px;" id="outstandingCount">0</span>
+                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="outstandingPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Excellent (16-17) -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <i class="fas fa-star me-2" style="color: #28a745;"></i>
+                            <span style="color: var(--light-text);">Excellent (16-17)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge" style="background-color: #28a745; color: white; margin-right: 8px;" id="excellentCount">0</span>
+                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="excellentPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Good (12-15) -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <i class="fas fa-check-circle me-2" style="color: #ffc107;"></i>
+                            <span style="color: var(--light-text);">Good (12-15)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge" style="background-color: #ffc107; color: #212529; margin-right: 8px;" id="goodCount">0</span>
+                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="goodPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Average (8-11) -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <i class="fas fa-minus-circle me-2" style="color: #fd7e14;"></i>
+                            <span style="color: var(--light-text);">Average (8-11)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge" style="background-color: #fd7e14; color: white; margin-right: 8px;" id="averageCount">0</span>
+                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="averagePercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Needs Improvement (0-7) -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-exclamation-circle me-2" style="color: #dc3545;"></i>
+                            <span style="color: var(--light-text);">Needs Improvement (0-7)</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge" style="background-color: #dc3545; color: white; margin-right: 8px;" id="improvementCount">0</span>
+                            <span style="color: var(--dark-text); font-size: 0.85rem;" id="improvementPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Performance Visualization -->
+                    <div class="mt-3">
+                        <div class="performance-visualization" style="height: 8px; border-radius: 4px; overflow: hidden; display: flex; background-color: var(--accent-color);">
+                            <div id="outstandingBar" style="background-color: #FFD700; height: 100%; width: 0%;"></div>
+                            <div id="excellentBar" style="background-color: #28a745; height: 100%; width: 0%;"></div>
+                            <div id="goodBar" style="background-color: #ffc107; height: 100%; width: 0%;"></div>
+                            <div id="averageBar" style="background-color: #fd7e14; height: 100%; width: 0%;"></div>
+                            <div id="improvementBar" style="background-color: #dc3545; height: 100%; width: 0%;"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1" style="font-size: 0.7rem; color: var(--light-text);">
+                            <span>Outstanding</span>
+                            <span>Excellent</span>
+                            <span>Good</span>
+                            <span>Average</span>
+                            <span>Needs Imp.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="summary-card" style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 12px;">
+                    <h6 style="color: var(--dark-text); margin-bottom: 1rem;">
+                        <i class="fas fa-chart-line me-2"></i>Class Performance Summary
+                    </h6>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span style="color: var(--light-text);">Class Average</span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="classAverage">0/20</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span style="color: var(--light-text);">Top Performers (≥18)</span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="topPerformersCount">0 students</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span style="color: var(--light-text);">Pass Rate (≥8)</span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="passRate">0%</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span style="color: var(--light-text);">Class Performance</span>
+                        <span style="color: var(--dark-text); font-weight: 600;" id="classPerformanceLevel">Calculating...</span>
+                    </div>
+
+                    <!-- Class Performance Meter -->
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small style="color: var(--light-text);">0</small>
+                            <small style="color: var(--light-text);">5</small>
+                            <small style="color: var(--light-text);">10</small>
+                            <small style="color: var(--light-text);">15</small>
+                            <small style="color: var(--light-text);">20</small>
+                        </div>
+                        <div class="progress" style="height: 12px; background: linear-gradient(to right, #dc3545 0%, #fd7e14 25%, #ffc107 50%, #28a745 75%, #FFD700 100%); border-radius: 6px;">
+                            <div class="progress-bar" id="classPerformanceMeter"
+                                 style="width: 0%; background-color: rgba(255,255,255,0.3); border-right: 2px solid var(--dark-text);"></div>
+                        </div>
+                        <div class="text-center mt-1">
+                            <small style="color: var(--light-text);">Class Average: <span id="classAveragePointer">0</span>/20</small>
+                        </div>
+                    </div>
+
+                    <!-- Performance Insights -->
+                    <div class="mt-3 p-2" style="background-color: var(--accent-color); border-radius: 8px;">
+                        <small style="color: var(--dark-text); font-weight: 500;">
+                            <i class="fas fa-lightbulb me-1"></i>
+                            <span id="performanceInsight">Analyzing performance data...</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles for this page -->
+<style>
+    /* Table styling */
+    #registrationTable {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px var(--shadow-light);
+    }
+
+    #registrationTable tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    #registrationTable tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    /* Highlight top performers */
+    .top-performer-row {
+        background-color: rgba(255, 215, 0, 0.1) !important;
+        border-left: 4px solid #FFD700 !important;
+    }
+
+    /* Button styling */
+    .btn-custom {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    .btn-view:hover {
+        background-color: var(--secondary-color) !important;
+        color: var(--white) !important;
+        border-color: var(--secondary-color) !important;
+    }
+
+    .btn-remove:hover {
+        background-color: #f1b0b7 !important;
+        color: #721c24 !important;
+    }
+
+    /* Mark badge styling */
+    .mark-badge {
+        transition: all 0.3s ease;
+        min-width: 70px;
+        text-align: center;
+    }
+
+    .mark-badge:hover {
+        transform: scale(1.05);
+    }
+
+    /* Progress bar styling */
+    .progress-bar {
+        transition: width 1s ease-in-out;
+    }
+
+    /* Performance colors */
+    .performance-outstanding {
+        color: #FF8C00 !important;
+        font-weight: 700;
+    }
+
+    /* Search wrapper hover effect */
+    .search-wrapper:hover,
+    .search-wrapper:focus-within {
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 6px 15px var(--shadow-medium) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Filter and sort dropdown hover effects */
+    .filter-wrapper select:hover,
+    .sort-wrapper select:hover,
+    .filter-wrapper select:focus,
+    .sort-wrapper select:focus {
+        border-color: var(--secondary-color) !important;
+        box-shadow: 0 6px 15px var(--shadow-medium) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Custom scrollbar for dropdowns */
+    select option {
+        padding: 12px;
+        font-weight: 500;
+    }
+
+    /* Remove default arrow from select */
+    select.form-select {
+        background-image: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .filter-wrapper {
+            width: 200px !important;
+        }
+        .sort-wrapper {
+            width: 180px !important;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .stats-container[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        .search-wrapper {
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }
+
+        .filter-wrapper,
+        .sort-wrapper {
+            width: calc(50% - 6px) !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-view, .btn-remove {
+            width: 100%;
+            margin-right: 0 !important;
+        }
+
+        .mark-container {
+            max-width: 100% !important;
+        }
+
+        .summary-card {
+            margin-bottom: 1rem;
+        }
+
+        .stats-container[style*="grid-template-columns: repeat(4, 1fr)"] {
+            grid-template-columns: 1fr !important;
+        }
+
+        .filter-wrapper,
+        .sort-wrapper {
+            width: 100% !important;
+        }
+
+        .d-flex.gap-3 {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .search-wrapper .btn-link {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+
+        .search-wrapper .px-3 {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        .filter-wrapper,
+        .sort-wrapper {
+            width: 100% !important;
+        }
+    }
+</style>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        const table = $('#registrationTable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            language: {
+                search: "",
+                searchPlaceholder: "",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                paginate: {
+                    previous: '<i class="fas fa-chevron-left"></i>',
+                    next: '<i class="fas fa-chevron-right"></i>'
+                },
+                zeroRecords: "No matching students found",
+                emptyTable: "No students available"
+            },
+            dom: 'rt<"row mt-3"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            initComplete: function() {
+                calculateStats();
+                highlightTopPerformers();
+            },
+            drawCallback: function() {
+                highlightTopPerformers();
+            }
+        });
+
+        // Custom search functionality
+        $('#searchInput').on('keyup', function() {
+            table.search(this.value).draw();
+
+            // Update active filter display
+            if (this.value) {
+                $('#filterText').text(`Search: "${this.value}"`);
+                $('#activeFilters').show();
+            } else if ($('#performanceFilter').val() === 'all') {
+                $('#activeFilters').hide();
+            }
+        });
+
+        // Custom sort functionality
+        $('#sortSelect').on('change', function() {
+            const value = $(this).val();
+
+            switch(value) {
+                case 'name_asc':
+                    table.order([1, 'asc']).draw();
+                    break;
+                case 'name_desc':
+                    table.order([1, 'desc']).draw();
+                    break;
+                case 'mark_desc':
+                    table.order([2, 'desc']).draw();
+                    break;
+                case 'mark_asc':
+                    table.order([2, 'asc']).draw();
+                    break;
+            }
+        });
+
+        // Performance filter
+        $('#performanceFilter').on('change', function() {
+            const filter = $(this).val();
+
+            if (filter === 'all') {
+                if ($('#searchInput').val()) {
+                    $('#filterText').text(`Search: "${$('#searchInput').val()}"`);
+                } else {
+                    $('#activeFilters').hide();
+                }
+                table.search($('#searchInput').val()).draw();
+            } else {
+                let filterText = '';
+
+                switch(filter) {
+                    case 'outstanding':
+                        filterText = 'Outstanding (18-20)';
+                        break;
+                    case 'excellent':
+                        filterText = 'Excellent (16-17)';
+                        break;
+                    case 'good':
+                        filterText = 'Good (12-15)';
+                        break;
+                    case 'average':
+                        filterText = 'Average (8-11)';
+                        break;
+                    case 'improvement':
+                        filterText = 'Needs Improvement (0-7)';
+                        break;
+                }
+
+                // Show active filter
+                if ($('#searchInput').val()) {
+                    $('#filterText').text(`Search: "${$('#searchInput').val()}" + Performance: ${filterText}`);
+                } else {
+                    $('#filterText').text(`Performance: ${filterText}`);
+                }
+                $('#activeFilters').show();
+            }
+
+            // Re-apply custom filtering
+            filterByPerformance(filter);
+        });
+
+        // Highlight rows for top performers (marks >= 18)
+        function highlightTopPerformers() {
+            $('#registrationTable tbody tr').each(function() {
+                const markText = $(this).find('.mark-badge').text();
+                const mark = parseFloat(markText.split('/')[0]);
+                if (mark >= 18) {
+                    $(this).addClass('top-performer-row');
+                } else {
+                    $(this).removeClass('top-performer-row');
+                }
+            });
+        }
+
+        // Calculate statistics for marks out of 20
+        function calculateStats() {
+            const marks = [];
+            {% for i in data %}
+                marks.push({{ i.mark }});
+            {% endfor %}
+
+            if (marks.length > 0) {
+                const totalStudents = marks.length;
+
+                // Calculate performance distribution for 20-mark system
+                const outstanding = marks.filter(m => m >= 18).length;  // 18-20 (90-100%)
+                const excellent = marks.filter(m => m >= 16 && m < 18).length;  // 16-17 (80-89%)
+                const good = marks.filter(m => m >= 12 && m < 16).length;  // 12-15 (60-79%)
+                const averageCount = marks.filter(m => m >= 8 && m < 12).length;  // 8-11 (40-59%)
+                const improvement = marks.filter(m => m < 8).length;  // 0-7 (0-39%)
+
+                // Calculate percentages
+                const outstandingPercent = ((outstanding / totalStudents) * 100).toFixed(1);
+                const excellentPercent = ((excellent / totalStudents) * 100).toFixed(1);
+                const goodPercent = ((good / totalStudents) * 100).toFixed(1);
+                const averagePercent = ((averageCount / totalStudents) * 100).toFixed(1);
+                const improvementPercent = ((improvement / totalStudents) * 100).toFixed(1);
+
+                // Update performance distribution
+                $('#outstandingCount').text(outstanding);
+                $('#excellentCount').text(excellent);
+                $('#goodCount').text(good);
+                $('#averageCount').text(averageCount);
+                $('#improvementCount').text(improvement);
+
+                $('#outstandingPercent').text(outstandingPercent + '%');
+                $('#excellentPercent').text(excellentPercent + '%');
+                $('#goodPercent').text(goodPercent + '%');
+                $('#averagePercent').text(averagePercent + '%');
+                $('#improvementPercent').text(improvementPercent + '%');
+
+                // Update visualization bars
+                $('#outstandingBar').css('width', outstandingPercent + '%');
+                $('#excellentBar').css('width', excellentPercent + '%');
+                $('#goodBar').css('width', goodPercent + '%');
+                $('#averageBar').css('width', averagePercent + '%');
+                $('#improvementBar').css('width', improvementPercent + '%');
+
+                // Calculate average (out of 20)
+                const average = marks.reduce((a, b) => a + b, 0) / totalStudents;
+                $('#averageMark').text(average.toFixed(1) + '/20');
+                $('#classAverage').text(average.toFixed(1) + '/20');
+
+                // Calculate highest (out of 20)
+                const highest = Math.max(...marks);
+                $('#highestMark').text(highest + '/20');
+
+                // Update top performers count
+                $('#topPerformers').text(outstanding);
+                $('#topPerformersCount').text(outstanding + ' student' + (outstanding !== 1 ? 's' : ''));
+
+                // Calculate pass rate (≥8 out of 20)
+                const passCount = marks.filter(m => m >= 8).length;
+                const passRate = (passCount / totalStudents) * 100;
+                $('#passRate').text(passRate.toFixed(1) + '%');
+
+                // Update class performance meter
+                const classAveragePercentage = (average / 20) * 100;
+                $('#classPerformanceMeter').css('width', classAveragePercentage + '%');
+                $('#classAveragePointer').text(average.toFixed(1));
+
+                // Determine class performance level
+                let performanceLevel = '';
+                let performanceInsight = '';
+
+                if (average >= 18) {
+                    performanceLevel = 'Outstanding';
+                    performanceInsight = 'Exceptional class performance! Consider advanced challenges.';
+                } else if (average >= 16) {
+                    performanceLevel = 'Excellent';
+                    performanceInsight = 'Great results! Students are performing very well.';
+                } else if (average >= 12) {
+                    performanceLevel = 'Good';
+                    performanceInsight = 'Solid performance. Focus on bridging minor gaps.';
+                } else if (average >= 8) {
+                    performanceLevel = 'Average';
+                    performanceInsight = 'Room for improvement. Consider targeted support.';
+                } else {
+                    performanceLevel = 'Needs Attention';
+                    performanceInsight = 'Requires immediate intervention and support.';
+                }
+
+                $('#classPerformanceLevel').text(performanceLevel);
+                $('#performanceInsight').text(performanceInsight);
+
+            } else {
+                // No data available
+                $('#classAverage').text('N/A');
+                $('#passRate').text('N/A');
+                $('#topPerformersCount').text('0 students');
+                $('#classPerformanceLevel').text('No Data');
+                $('#performanceInsight').text('No student data available for analysis.');
+            }
+        }
+
+        // Add custom filter for searching by performance
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                var selectedCategory = $('#performanceFilter').val();
+                if (!selectedCategory || selectedCategory === 'all') return true;
+
+                // Extract mark from the third column (index 2)
+                var row = table.row(dataIndex).node();
+                var markText = $(row).find('.mark-badge').text();
+                var mark = parseFloat(markText.split('/')[0]);
+
+                switch(selectedCategory) {
+                    case 'outstanding': return mark >= 18;
+                    case 'excellent': return mark >= 16 && mark < 18;
+                    case 'good': return mark >= 12 && mark < 16;
+                    case 'average': return mark >= 8 && mark < 12;
+                    case 'improvement': return mark < 8;
+                    default: return true;
+                }
+            }
+        );
+    });
+
+    function viewStudentDetails(studentId, mark, studentName) {
+        // Calculate percentage for out of 20
+        const percentage = (mark / 20) * 100;
+        let performanceLevel = '';
+        let performanceColor = '';
+        let icon = '';
+
+        if (mark >= 18) {
+            performanceLevel = 'Outstanding';
+            performanceColor = '#FFD700';
+            icon = 'crown';
+        } else if (mark >= 16) {
+            performanceLevel = 'Excellent';
+            performanceColor = '#28a745';
+            icon = 'star';
+        } else if (mark >= 12) {
+            performanceLevel = 'Good';
+            performanceColor = '#ffc107';
+            icon = 'check-circle';
+        } else if (mark >= 8) {
+            performanceLevel = 'Average';
+            performanceColor = '#fd7e14';
+            icon = 'minus-circle';
+        } else {
+            performanceLevel = 'Needs Improvement';
+            performanceColor = '#dc3545';
+            icon = 'exclamation-circle';
+        }
+
+        // Create modal content
+        const modalContent = `
+            <div class="modal fade" id="studentModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
+                        <div class="modal-header" style="background-color: ${performanceColor}; color: ${mark >= 18 ? '#000000' : 'white'};">
+                            <h5 class="modal-title">
+                                <i class="fas fa-${icon} me-2"></i>
+                                Student Details
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center mb-4">
+                                <div class="student-avatar-large mx-auto"
+                                     style="width: 80px; height: 80px; background-color: ${performanceColor};
+                                            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                                            margin-bottom: 1rem;">
+                                    <i class="fas fa-user fa-2x" style="color: ${mark >= 18 ? '#000000' : 'white'};"></i>
+                                </div>
+                                <h5 style="color: var(--dark-text);">${studentName}</h5>
+                                <p style="color: var(--light-text);">Student ID: ${studentId}</p>
+                            </div>
+
+                            <div class="performance-card" style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                                <h6 style="color: var(--dark-text); margin-bottom: 1rem;">Performance Details</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div style="color: var(--light-text); font-size: 0.9rem;">Mark</div>
+                                        <div style="font-size: 2rem; font-weight: 700; color: ${performanceColor};">${mark}/20</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div style="color: var(--light-text); font-size: 0.9rem;">Percentage</div>
+                                        <div style="font-size: 2rem; font-weight: 700; color: ${performanceColor};">${percentage.toFixed(1)}%</div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <small style="color: var(--light-text);">Performance Level</small>
+                                        <small style="color: ${performanceColor}; font-weight: 600;">${performanceLevel}</small>
+                                    </div>
+                                    <div class="progress" style="height: 10px; background-color: var(--accent-color); border-radius: 5px;">
+                                        <div class="progress-bar" style="width: ${percentage}%; background-color: ${performanceColor};"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="performance-insight" style="background-color: var(--accent-color); padding: 1rem; border-radius: 8px;">
+                                <small style="color: var(--dark-text);">
+                                    <i class="fas fa-lightbulb me-1"></i>
+                                    ${mark >= 18 ?
+                                        'Outstanding performance! This student demonstrates exceptional understanding.' :
+                                      mark >= 16 ?
+                                        'Excellent work! Student shows strong grasp of the material.' :
+                                      mark >= 12 ?
+                                        'Good performance. Student understands core concepts well.' :
+                                      mark >= 8 ?
+                                        'Average performance. Additional support may be beneficial.' :
+                                        'Needs improvement. Consider additional support and guidance.'}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remove existing modal if any
+        $('#studentModal').remove();
+        $('body').append(modalContent);
+
+        // Show the modal
+        const studentModal = new bootstrap.Modal(document.getElementById('studentModal'));
+        studentModal.show();
+    }
+
+    function confirmDelete(studentName, mark) {
+        const percentage = (mark / 20) * 100;
+        let performanceNote = '';
+
+        if (mark >= 18) {
+            performanceNote = '\n⚠️ This is an outstanding performer!';
+        } else if (mark >= 16) {
+            performanceNote = '\n⚠️ This is an excellent performer!';
+        }
+
+        return confirm(`Are you sure you want to remove marks for ${studentName}?\n\nMark: ${mark}/20 (${percentage.toFixed(1)}%)${performanceNote}\n\nThis action cannot be undone.`);
+    }
+
+    function exportTableToCSV() {
+        let csv = [];
+        let rows = document.querySelectorAll("#registrationTable tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let row = [], cols = rows[i].querySelectorAll("td, th");
+
+            for (let j = 0; j < cols.length; j++) {
+                // Extract clean text (remove icons, buttons, and progress bars)
+                let text = cols[j].innerText.replace(/\n/g, ' ').trim();
+                // Clean up the mark column
+                if (j === 2) {
+                    text = text.split('\n')[0].trim(); // Get only the "X/20" part
+                }
+                row.push(text);
+            }
+
+            csv.push(row.join(","));
+        }
+
+        // Download CSV file
+        let csvContent = "data:text/csv;charset=utf-8," + csv.join("\n");
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `student_marks_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Performance filter function
+    function filterByPerformance(category) {
+        const table = $('#registrationTable').DataTable();
+        table.draw();
+    }
+
+    function clearSearch() {
+        $('#searchInput').val('');
+        const table = $('#registrationTable').DataTable();
+        table.search('').draw();
+
+        if ($('#performanceFilter').val() === 'all') {
+            $('#activeFilters').hide();
+        } else {
+            const filter = $('#performanceFilter').val();
+            let filterText = '';
+            switch(filter) {
+                case 'outstanding': filterText = 'Outstanding (18-20)'; break;
+                case 'excellent': filterText = 'Excellent (16-17)'; break;
+                case 'good': filterText = 'Good (12-15)'; break;
+                case 'average': filterText = 'Average (8-11)'; break;
+                case 'improvement': filterText = 'Needs Improvement (0-7)'; break;
+            }
+            $('#filterText').text(`Performance: ${filterText}`);
+        }
+    }
+
+    function clearFilter() {
+        $('#performanceFilter').val('all');
+        $('#searchInput').val('');
+        const table = $('#registrationTable').DataTable();
+        table.search('').columns().search('').draw();
+        $('#activeFilters').hide();
+    }
+</script>
+{% endblock %}
+

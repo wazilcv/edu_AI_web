@@ -1,0 +1,744 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Add subject</title>#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{# #}
+{#</head>#}
+{#<body>#}
+{#  <div class="container">#}
+{#    <h2 class="mb-4">Add Subject</h2>#}
+{#    <form method="post" action="/adm_add_subject_post">#}
+{#      <div class="row mb-3">#}
+{#        <label for="name" class="col-sm-4 ">Subject name</label>#}
+{#        <div class="col-sm-8">#}
+{#          <input type="text" class="form-control" id="name" name="name" required>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Semester</label>#}
+{#        <div class="col-sm-8">#}
+{#          <select class="form-control" id="select" name="select">#}
+{#              <option>1</option>#}
+{#              <option>2</option>#}
+{#              <option>3</option>#}
+{#              <option>4</option>#}
+{#              <option>5</option>#}
+{#              <option>6</option>#}
+{#          </select>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{#      <div class="row mb-3">#}
+{#        <label for="dob" class="col-sm-4 ">Course</label>#}
+{#        <div class="col-sm-8">#}
+{#          <select class="form-control" id="select2" name="select2">#}
+{#              {% for i in data %}#}
+{#                <option value="{{ i.id }}">{{ i.course_name }}</option>#}
+{#              {% endfor %}#}
+{#          </select>#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{##}
+{#      <div class="row mb-3">#}
+{#        <div class="offset-sm-4 col-sm-8">#}
+{#          <button type="submit" class="btn btn-primary">Register</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </form>#}
+{#  </div>#}
+{#  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+{% extends "admin/index.html" %}
+{% block body %}
+{% block page_title %}
+Add New Subject
+{% endblock %}
+
+<div class="container mt-4">
+    <!-- Management Header Section - NEW -->
+    <div class="subject-header-section mb-4">
+        <div class="subject-title-container">
+            <h1 class="subject-main-title">Subject Management</h1>
+            <p class="subject-subtitle">Add, edit, and manage all subjects in the system</p>
+
+            <div class="subject-action-buttons">
+                <a href="/adm_add_subject" class="btn-subject-action btn-subject-add">
+                    <i class="fas fa-book"></i>
+                    Add New Subject
+                </a>
+                <button class="btn-subject-action btn-subject-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+                <a href="/adm_view_subject" class="btn-subject-action btn-subject-view">
+                    <i class="fas fa-eye"></i>
+                    View Subjects
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Messages Container -->
+    <div id="errorMessages"></div>
+
+    <!-- Form Card -->
+    <div class="main-card mb-4">
+        <div class="card-header mb-4">
+            <div class="card-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <h2 class="card-title" style="margin: 0;">Add New Subject</h2>
+        </div>
+
+        <!-- Information Alert -->
+        <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color); border-radius: 12px;">
+            <i class="fas fa-info-circle me-2"></i>
+            Add a new subject to the system. Subject name should contain only letters, spaces, and periods. Subjects must be associated with a specific course and semester.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Form Container -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="form-card" style="background-color: var(--white); padding: 2rem; border-radius: 16px; border: 1px solid var(--accent-color);">
+                    <form method="post" action="/adm_add_subject_post" id="subjectForm">
+                        <div class="row">
+                            <!-- Subject Details -->
+                            <div class="col-lg-12">
+                                <!-- Subject Name -->
+                                <div class="mb-4">
+                                    <label for="name" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                        <i class="fas fa-book me-2"></i>Subject Name <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                            <i class="fas fa-pen-alt"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="name" name="name" required
+                                               placeholder="Enter subject name (e.g., Introduction to Programming)"
+                                               style="border-color: var(--accent-color); background-color: var(--white);"
+                                               onkeyup="validateSubjectName(this.value)">
+                                        <button type="button" class="btn btn-outline-secondary" style="border-color: var(--accent-color); color: var(--primary-color);"
+                                                onclick="showSubjectExamples()">
+                                            <i class="fas fa-lightbulb"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;">
+                                        Enter the complete subject name. Only letters, spaces, and periods are allowed.
+                                    </div>
+                                    <div id="nameError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                </div>
+
+                                <!-- Course and Semester Selection -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="select2" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                            <i class="fas fa-university me-2"></i>Course <span style="color: var(--danger-color);">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </span>
+                                            <select class="form-control" id="select2" name="select2" required
+                                                    style="border-color: var(--accent-color); background-color: var(--white);"
+                                                    onchange="validateCourse(this.value)">
+                                                <option value="" disabled selected>Select a course</option>
+                                                {% for i in data %}
+                                                    <option value="{{ i.id }}" data-duration="{{ i.duration }}">{{ i.course_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div id="courseInfo" class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                                        <div id="courseError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="select" class="form-label" style="color: var(--primary-color); font-weight: 600;">
+                                            <i class="fas fa-calendar-alt me-2"></i>Semester <span style="color: var(--danger-color);">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                                                <i class="fas fa-layer-group"></i>
+                                            </span>
+                                            <select class="form-control" id="select" name="select" required
+                                                    style="border-color: var(--accent-color); background-color: var(--white);"
+                                                    onchange="validateSemester(this.value)">
+                                                <option value="" disabled selected>Select semester</option>
+                                                <option value="1">Semester 1</option>
+                                                <option value="2">Semester 2</option>
+                                                <option value="3">Semester 3</option>
+                                                <option value="4">Semester 4</option>
+                                                <option value="5">Semester 5</option>
+                                                <option value="6">Semester 6</option>
+                                            </select>
+                                        </div>
+                                        <div id="semesterInfo" class="form-text" style="color: var(--secondary-color); font-size: 0.85rem; margin-top: 0.5rem;"></div>
+                                        <div id="semesterError" class="invalid-feedback" style="display: none; color: var(--danger-color); font-size: 0.85rem; margin-top: 0.25rem;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Subject Code Section REMOVED -->
+
+                                <!-- Hidden fields for core subject (default to true) -->
+                                <input type="hidden" name="isCoreSubject" value="on">
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <button type="submit" class="btn btn-custom w-100"
+                                        style="background-color: var(--secondary-color); color: var(--white); border: none; padding: 1rem; font-weight: 600;">
+                                    <i class="fas fa-plus-circle me-2"></i>Add Subject
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button type="reset" class="btn btn-outline-custom w-100" onclick="resetForm()"
+                                        style="border-color: var(--accent-color); color: var(--primary-color); padding: 1rem; font-weight: 600;">
+                                    <i class="fas fa-redo me-2"></i>Reset Form
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-center">
+                                    <a href="/adm_view_subject" class="btn btn-link" style="color: var(--secondary-color); text-decoration: none;">
+                                        <i class="fas fa-eye me-1"></i> View Subjects
+                                    </a>
+                                    <span class="mx-2" style="color: var(--accent-color);">|</span>
+                                    <a href="/adm_view_sub_allocation" class="btn btn-link" style="color: var(--secondary-color); text-decoration: none;">
+                                        <i class="fas fa-link me-1"></i> Allocate to Faculty
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Guidelines -->
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                <div class="guidelines-card" style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--accent-color);">
+                    <h6 style="color: var(--primary-color); margin-bottom: 1rem;">
+                        <i class="fas fa-lightbulb me-2"></i>Subject Creation Guidelines
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0;">
+                                <li class="mb-2">Subject names: Only letters, spaces, and periods allowed</li>
+                                <li class="mb-2">Ensure subject belongs to correct course</li>
+                                <li class="mb-2">Select appropriate semester level</li>
+                                <li>All fields marked with * are required</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0;">
+                                <li class="mb-2">Use standard subject naming conventions</li>
+                                <li class="mb-2">Consider prerequisites when adding subjects</li>
+                                <li class="mb-2">Numbers are not allowed in subject names</li>
+                                <li>Course and semester selection is mandatory</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REMOVED: Recently Added Subjects Section -->
+</div>
+
+<!-- Subject Examples Modal -->
+<div class="modal fade" id="subjectExamplesModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--accent-color);">
+            <div class="modal-header" style="background-color: var(--secondary-color); color: var(--white);">
+                <h5 class="modal-title">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Subject Naming Examples
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="example-card" style="background-color: var(--light-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--accent-color);">
+                            <h6 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                                <i class="fas fa-laptop-code me-2" style="color: var(--secondary-color);"></i>
+                                Computer Science
+                            </h6>
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0; font-size: 0.9rem;">
+                                <li>Introduction to Programming</li>
+                                <li>Data Structures and Algorithms</li>
+                                <li>Database Management Systems</li>
+                                <li>Software Engineering</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="example-card" style="background-color: var(--light-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--accent-color);">
+                            <h6 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                                <i class="fas fa-chart-line me-2" style="color: var(--secondary-color);"></i>
+                                Business Administration
+                            </h6>
+                            <ul style="color: var(--secondary-color); padding-left: 1.2rem; margin-bottom: 0; font-size: 0.9rem;">
+                                <li>Principles of Management</li>
+                                <li>Financial Accounting</li>
+                                <li>Marketing Management</li>
+                                <li>Business Statistics</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-custom mt-3" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--primary-color);">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Use clear, descriptive names that accurately represent the subject content. Only letters, spaces, and periods are allowed.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-custom" data-bs-dismiss="modal"
+                        style="background-color: var(--secondary-color); color: var(--white); border: none;">
+                    <i class="fas fa-check me-1"></i> Understood
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add CSS for subject management header -->
+<style>
+    /* Subject Management Header Styling */
+    .subject-header-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .subject-header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .subject-title-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .subject-main-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .subject-subtitle {
+        font-size: 1rem;
+        color: var(--light-bg);
+        margin-bottom: 1.5rem;
+        max-width: 600px;
+    }
+
+    .subject-action-buttons {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-subject-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.7rem 1.4rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid transparent;
+        font-size: 0.95rem;
+    }
+
+    .btn-subject-add {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-subject-refresh {
+        background-color: transparent;
+        color: var(--light-bg);
+        border: 2px solid var(--light-bg);
+    }
+
+    .btn-subject-view {
+        background-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    .btn-subject-action:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-subject-add:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    .btn-subject-refresh:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+    }
+
+    .btn-subject-view:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    /* Error message styling */
+    .alert-custom-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: var(--danger-color);
+        color: var(--danger-color);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .is-invalid {
+        border-color: var(--danger-color) !important;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    /* Form Styling */
+    .form-label {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(82, 109, 130, 0.25);
+    }
+
+    .input-group-text {
+        border-radius: 8px 0 0 8px;
+    }
+
+    /* Button Styling */
+    .btn-custom {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-outline-custom {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+        background-color: var(--light-bg);
+        transform: translateY(-2px);
+        border-color: var(--secondary-color);
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 10px;
+    }
+
+    /* Badge Styling */
+    .badge {
+        transition: all 0.3s ease;
+    }
+
+    .badge:hover {
+        transform: scale(1.05);
+    }
+
+    /* Checkbox Styling */
+    .form-check-input:checked {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    .form-check-input:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(82, 109, 130, 0.25);
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        box-shadow: 0 10px 30px var(--shadow-medium);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 1.5rem !important;
+        }
+
+        .main-card {
+            padding: 1.5rem !important;
+        }
+
+        .btn-custom, .btn-outline-custom {
+            padding: 0.8rem !important;
+        }
+
+        .guidelines-card {
+            padding: 1rem !important;
+        }
+
+        .subject-action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-subject-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+    // Show subject examples modal
+    function showSubjectExamples() {
+        const modal = new bootstrap.Modal(document.getElementById('subjectExamplesModal'));
+        modal.show();
+    }
+
+    // Validate subject name (only letters, spaces, and periods)
+    function validateSubjectName(name) {
+        const nameError = document.getElementById('nameError');
+        const nameInput = document.getElementById('name');
+        const namePattern = /^[A-Za-z\s.]+$/;
+
+        if (name && !namePattern.test(name)) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Subject name can only contain letters, spaces, and periods. Numbers are not allowed.';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else if (name && name.length < 3) {
+            nameError.style.display = 'block';
+            nameError.textContent = 'Subject name must be at least 3 characters long';
+            nameInput.classList.add('is-invalid');
+            return false;
+        } else {
+            nameError.style.display = 'none';
+            nameInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    // Validate course selection
+    function validateCourse(course) {
+        const courseError = document.getElementById('courseError');
+        const courseInput = document.getElementById('select2');
+
+        if (!course) {
+            courseError.style.display = 'block';
+            courseError.textContent = 'Please select a course';
+            courseInput.classList.add('is-invalid');
+            return false;
+        } else {
+            courseError.style.display = 'none';
+            courseInput.classList.remove('is-invalid');
+
+            // Update course info
+            const selectedOption = courseInput.options[courseInput.selectedIndex];
+            const duration = selectedOption.getAttribute('data-duration');
+            const infoDiv = document.getElementById('courseInfo');
+
+            if (duration) {
+                infoDiv.innerHTML = `<i class="fas fa-info-circle me-1"></i> Course duration: ${duration}`;
+                infoDiv.style.color = '#526D82';
+            } else {
+                infoDiv.innerHTML = '';
+            }
+            return true;
+        }
+    }
+
+    // Validate semester selection
+    function validateSemester(semester) {
+        const semesterError = document.getElementById('semesterError');
+        const semesterInput = document.getElementById('select');
+        const infoDiv = document.getElementById('semesterInfo');
+
+        if (!semester) {
+            semesterError.style.display = 'block';
+            semesterError.textContent = 'Please select a semester';
+            semesterInput.classList.add('is-invalid');
+            return false;
+        } else {
+            semesterError.style.display = 'none';
+            semesterInput.classList.remove('is-invalid');
+
+            // Update semester info
+            if (semester === '1' || semester === '2') {
+                infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i> First Year Subjects';
+                infoDiv.style.color = '#28a745';
+            } else if (semester === '3' || semester === '4') {
+                infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i> Second Year Subjects';
+                infoDiv.style.color = '#ffc107';
+            } else if (semester === '5' || semester === '6') {
+                infoDiv.innerHTML = '<i class="fas fa-info-circle me-1"></i> Third Year Subjects';
+                infoDiv.style.color = '#fd7e14';
+            } else {
+                infoDiv.innerHTML = '';
+            }
+            return true;
+        }
+    }
+
+    // Show error message in the error container
+    function showErrorMessage(message) {
+        const errorContainer = document.getElementById('errorMessages');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert-custom-error';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.remove()"></button>
+        `;
+        errorContainer.innerHTML = '';
+        errorContainer.appendChild(errorDiv);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+
+    // Form validation
+    document.getElementById('subjectForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        const course = document.getElementById('select2').value;
+        const semester = document.getElementById('select').value;
+        let isValid = true;
+
+        // Validate subject name
+        if (!name) {
+            e.preventDefault();
+            showErrorMessage('Please enter a subject name');
+            isValid = false;
+            return;
+        }
+
+        const namePattern = /^[A-Za-z\s.]+$/;
+        if (!namePattern.test(name)) {
+            e.preventDefault();
+            showErrorMessage('Subject name can only contain letters, spaces, and periods. Numbers are not allowed.');
+            isValid = false;
+            return;
+        }
+
+        if (name.length < 3) {
+            e.preventDefault();
+            showErrorMessage('Subject name must be at least 3 characters long');
+            isValid = false;
+            return;
+        }
+
+        // Validate course selection
+        if (!course) {
+            e.preventDefault();
+            showErrorMessage('Please select a course');
+            isValid = false;
+            return;
+        }
+
+        // Validate semester selection
+        if (!semester) {
+            e.preventDefault();
+            showErrorMessage('Please select a semester');
+            isValid = false;
+            return;
+        }
+
+        if (isValid) {
+            // Show success message (optional)
+            const successMsg = document.createElement('div');
+            successMsg.className = 'alert alert-success';
+            successMsg.style.cssText = 'background-color: rgba(76, 175, 80, 0.1); border-color: var(--success-color); color: var(--success-color); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;';
+            successMsg.innerHTML = '<i class="fas fa-check-circle me-2"></i>Subject added successfully!';
+            document.getElementById('errorMessages').appendChild(successMsg);
+        }
+    });
+
+    // Reset form and clear errors
+    function resetForm() {
+        document.getElementById('subjectForm').reset();
+        document.getElementById('nameError').style.display = 'none';
+        document.getElementById('courseError').style.display = 'none';
+        document.getElementById('semesterError').style.display = 'none';
+        document.getElementById('name').classList.remove('is-invalid');
+        document.getElementById('select2').classList.remove('is-invalid');
+        document.getElementById('select').classList.remove('is-invalid');
+        document.getElementById('errorMessages').innerHTML = '';
+        document.getElementById('courseInfo').innerHTML = '';
+        document.getElementById('semesterInfo').innerHTML = '';
+    }
+
+    // Real-time validation on input
+    document.getElementById('name').addEventListener('input', function(e) {
+        validateSubjectName(e.target.value);
+    });
+
+    document.getElementById('select2').addEventListener('change', function(e) {
+        validateCourse(e.target.value);
+    });
+
+    document.getElementById('select').addEventListener('change', function(e) {
+        validateSemester(e.target.value);
+    });
+</script>
+{% endblock %}
+

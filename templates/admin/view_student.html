@@ -1,0 +1,904 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>Student_name</th>#}
+{#          <th>Course</th>#}
+{#          <th>Semester</th>#}
+{#          <th>Gender</th>#}
+{#          <th>Admission number</th>#}
+{#          <th>Date Of Birth</th>#}
+{#          <th>Email</th>#}
+{#          <th>Phone_num</th>#}
+{#          <th>Place</th>#}
+{#          <th>City</th>#}
+{#          <th>State</th>#}
+{#          <th>Pincode</th>#}
+{#          <th>Photo</th>#}
+{#          <th></th>#}
+{#          <th></th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#      {% for i in data %}#}
+{#        <!-- Sample Data Row -->#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.std_name }}</td>#}
+{#          <td>{{ i.COURSE.course_name }}</td>#}
+{#          <td>{{ i.semester }}</td>#}
+{#          <td>{{ i.gender }}</td>#}
+{#          <td>{{ i.ad_num }}</td>#}
+{#          <td>{{ i.dob }}</td>#}
+{#          <td>{{ i.email }}</td>#}
+{#          <td>{{ i.phone }}</td>#}
+{#          <td>{{ i.place }}</td>#}
+{#          <td>{{ i.city }}</td>#}
+{#          <td>{{ i.state }}</td>#}
+{#          <td>{{ i.pin }}</td>#}
+{#          <td><img src="{{ i.image }}" class="img-thumbnail" width="50" /></td>#}
+{#          <td><a href="/adm_edit_student/{{ i.id }}">Edit</a> </td>#}
+{#          <td><a href="/adm_delete_student/{{ i.id }}">Delete</a> </td>#}
+{#        </tr>#}
+{#        <!-- Add more rows dynamically from backend -->#}
+{#       {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "admin/index.html" %}
+
+{% block page_title %}
+    Student Management
+{% endblock %}
+
+{% block body %}
+<style>
+    /* Student Management Page Styling */
+    .student-management-page {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --white: #FFFFFF;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --button-color: #9DB2BF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --shadow-dark: rgba(39, 55, 77, 0.15);
+        --success-color: #4CAF50;
+        --warning-color: #ff9800;
+        --danger-color: #f44336;
+    }
+
+    /* Header Section */
+    .student-header-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .student-header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .student-title-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .student-main-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-subtitle {
+        font-size: 1.1rem;
+        color: var(--light-bg);
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    /* Action Buttons */
+    .student-action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-student-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.875rem 1.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid transparent;
+    }
+
+    .btn-student-add {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-student-add:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(157, 178, 191, 0.3);
+    }
+
+    .btn-student-refresh {
+        background-color: transparent;
+        color: var(--light-bg);
+        border: 2px solid var(--light-bg);
+    }
+
+    .btn-student-refresh:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(221, 230, 237, 0.3);
+    }
+
+    /* Main Card */
+    .student-main-card {
+        background-color: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px var(--shadow-medium);
+        padding: 2.5rem;
+        border: 1px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .student-main-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* Search Bar */
+    .search-input-group-custom {
+        max-width: 100%;
+    }
+
+    .search-input-custom {
+        border: 2px solid var(--accent-color);
+        border-radius: 12px;
+        padding: 0.875rem 1.25rem;
+        background-color: var(--white);
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .search-input-custom:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2);
+    }
+
+    .search-icon-custom {
+        background-color: var(--light-bg);
+        border: 2px solid var(--accent-color);
+        border-right: none;
+        border-radius: 12px 0 0 12px;
+        color: var(--primary-color);
+        padding: 0.875rem 1.25rem;
+    }
+
+    /* Hide default DataTable search */
+    .dataTables_filter {
+        display: none !important;
+    }
+
+    /* Table Styling */
+    .student-table {
+        border: 1px solid var(--accent-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px var(--shadow-light);
+        width: 100%;
+    }
+
+    .student-table thead th {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent-color) !important;
+        padding: 1.2rem 1.5rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .student-table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--light-bg);
+    }
+
+    .student-table tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-light);
+    }
+
+    .student-table tbody td {
+        padding: 1.2rem 1.5rem;
+        color: var(--primary-color);
+        border-bottom: 1px solid var(--light-bg);
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    .student-table tbody tr:nth-child(even) {
+        background-color: rgba(221, 230, 237, 0.3);
+    }
+
+    /* Student Avatar */
+    .student-avatar-custom {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 3px solid var(--accent-color);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .student-avatar-custom img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .student-avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .gender-badge-custom {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+    }
+
+    .gender-male-custom {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .gender-female-custom {
+        background-color: #FFB6C1;
+        color: #8B4513;
+    }
+
+    /* Course Badges */
+    .course-badge-custom {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .semester-badge-custom {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+    }
+
+    /* Action Buttons */
+    .student-table-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .btn-student-edit, .btn-student-delete {
+        padding: 0.6rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-student-edit {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-student-edit:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(82, 109, 130, 0.2);
+    }
+
+    .btn-student-delete {
+        background-color: var(--danger-color);
+        color: var(--white);
+    }
+
+    .btn-student-delete:hover {
+        background-color: #d32f2f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+    }
+
+    /* Empty State */
+    .student-empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .student-empty-icon {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .student-empty-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    .student-empty-message {
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Pagination */
+    .pagination-controls-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid var(--light-bg);
+    }
+
+    .pagination-info-custom {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+    }
+
+    .page-size-dropdown-custom {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border: 2px solid var(--accent-color);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .page-size-dropdown-custom:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    /* Pagination buttons */
+    .pagination-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 1rem;
+    }
+
+    .pagination-btn {
+        background-color: var(--white);
+        border: 2px solid var(--accent-color);
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    .pagination-btn.active {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    .pagination-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .student-main-card {
+            padding: 2rem;
+        }
+
+        .student-table thead th,
+        .student-table tbody td {
+            padding: 1rem;
+        }
+
+        .student-table {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .student-header-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .student-main-title {
+            font-size: 2rem;
+        }
+
+        .student-action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-student-action {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pagination-controls-custom {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .search-input-group-custom {
+            max-width: 100%;
+        }
+
+        .student-table-actions {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .student-main-title {
+            font-size: 1.8rem;
+        }
+
+        .student-subtitle {
+            font-size: 1rem;
+        }
+
+        .student-main-card {
+            padding: 1.5rem;
+        }
+
+        .student-table {
+            font-size: 0.85rem;
+        }
+
+        .student-avatar-custom {
+            width: 40px;
+            height: 40px;
+        }
+
+        .course-badge-custom,
+        .semester-badge-custom {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
+<div class="container-fluid student-management-page">
+    <!-- Header Section -->
+    <div class="student-header-section">
+        <div class="student-title-container">
+            <h1 class="student-main-title">Student Management</h1>
+            <p class="student-subtitle">View and manage all student records</p>
+
+            <div class="student-action-buttons">
+                <a href="/adm_add_student" class="btn-student-action btn-student-add">
+                    <i class="fas fa-user-plus"></i>
+                    Add New Student
+                </a>
+                <button class="btn-student-action btn-student-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid REMOVED -->
+
+    <!-- Main Content Card -->
+    <div class="student-main-card">
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="search-input-group-custom">
+                    <div class="input-group">
+                        <span class="input-group-text search-icon-custom">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="search" class="form-control search-input-custom" id="studentSearch"
+                               placeholder="Search students by name, admission number, email, or phone...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="table-responsive">
+            <table id="studentsTable" class="table table-hover student-table">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="20%">Student</th>
+                        <th width="20%">Course & Semester</th>
+                        <th width="20%">Contact Info</th>
+                        <th width="20%">Location</th>
+                        <th width="15%" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    {% for student in data %}
+                    <tr class="student-row"
+                        data-course-id="{{ student.COURSE.id }}"
+                        data-semester="{{ student.semester }}"
+                        data-gender="{{ student.gender }}"
+                        data-search="{{ student.std_name|lower }} {{ student.ad_num|lower }} {{ student.email|lower }} {{ student.phone }} {{ student.place|lower }} {{ student.city|lower }} {{ student.state|lower }} {{ student.COURSE.course_name|lower }}">
+                        <td>{{ forloop.counter }}</td>
+
+                        <!-- Student Column -->
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar-custom position-relative me-3">
+                                    {% if student.image %}
+                                        <img src="{{ student.image }}" alt="{{ student.std_name }}">
+                                    {% else %}
+                                        <div class="student-avatar-placeholder">
+                                            {{ student.std_name|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="gender-badge-custom {% if student.gender == 'Male' %}gender-male-custom{% else %}gender-female-custom{% endif %}">
+                                        <i class="fas fa-{% if student.gender == 'Male' %}mars{% else %}venus{% endif %}"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-primary mb-1">{{ student.std_name }}</div>
+                                    <div class="text-secondary small mb-1">
+                                        <i class="fas fa-id-card me-1"></i> {{ student.ad_num }}
+                                    </div>
+                                    <div class="text-secondary small">
+                                        <i class="fas fa-birthday-cake me-1"></i> {{ student.dob }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Course & Semester Column -->
+                        <td>
+                            <div class="mb-2">
+                                <span class="course-badge-custom">
+                                    <i class="fas fa-graduation-cap"></i> {{ student.COURSE.course_name }}
+                                </span>
+                            </div>
+                            <div>
+                                <span class="semester-badge-custom">
+                                    <i class="fas fa-calendar-alt"></i> Semester {{ student.semester }}
+                                </span>
+                            </div>
+                        </td>
+
+                        <!-- Contact Info Column -->
+                        <td>
+                            <div class="fw-medium mb-2">
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ student.email|truncatechars:20 }}
+                            </div>
+                            <div class="fw-medium">
+                                <i class="fas fa-phone me-2"></i>
+                                {{ student.phone }}
+                            </div>
+                        </td>
+
+                        <!-- Location Column -->
+                        <td>
+                            <div class="fw-medium mb-1">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                {{ student.place }}
+                            </div>
+                            <div class="text-secondary small">
+                                {{ student.city }}, {{ student.state }} - {{ student.pin }}
+                            </div>
+                        </td>
+
+                        <!-- Actions Column -->
+                        <td class="text-center">
+                            <div class="student-table-actions">
+                                <a href="/adm_edit_student/{{ student.id }}#home" class="btn-student-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="/adm_delete_student/{{ student.id }}" class="btn-student-delete"
+                                   onclick="return confirm('Are you sure you want to delete student: {{ student.std_name }}?');">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="student-empty-state">
+                                <div class="student-empty-icon">
+                                    <i class="fas fa-user-slash"></i>
+                                </div>
+                                <h4 class="student-empty-title">No Students Found</h4>
+                                <p class="student-empty-message">Start by adding your first student</p>
+                                <a href="/adm_add_student" class="btn-student-action btn-student-add">
+                                    <i class="fas fa-user-plus me-2"></i> Add Student
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls-custom">
+            <div class="pagination-info-custom">
+                Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalCount">{{ data|length }}</span> students
+            </div>
+            <div>
+                <div class="dropdown">
+                    <button class="btn page-size-dropdown-custom dropdown-toggle" type="button" id="pageSizeDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-list-ol me-1"></i> Show: 10
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="pageSizeDropdown">
+                        <li><a class="dropdown-item" href="#" data-size="5">5 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="10">10 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="25">25 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="50">50 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="100">100 items</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Buttons -->
+        <div id="pagination" class="pagination-buttons"></div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Apply the same CSS variables as admin homepage
+        document.documentElement.style.setProperty('--primary-color', '#27374D');
+        document.documentElement.style.setProperty('--secondary-color', '#526D82');
+        document.documentElement.style.setProperty('--accent-color', '#9DB2BF');
+        document.documentElement.style.setProperty('--light-bg', '#DDE6ED');
+        document.documentElement.style.setProperty('--white', '#FFFFFF');
+
+        // Get all student rows
+        const studentRows = Array.from(document.querySelectorAll('.student-row'));
+        const tableBody = document.getElementById('studentTableBody');
+        const searchInput = document.getElementById('studentSearch');
+        const totalCount = {{ data|length }};
+
+        // Pagination variables
+        let currentPage = 1;
+        let pageSize = 10;
+        let filteredRows = studentRows;
+
+        // Function to filter rows based on search
+        function filterRows(searchTerm) {
+            if (!searchTerm) {
+                filteredRows = studentRows;
+            } else {
+                const searchLower = searchTerm.toLowerCase();
+                filteredRows = studentRows.filter(row => {
+                    const searchData = row.getAttribute('data-search') || '';
+                    return searchData.includes(searchLower);
+                });
+            }
+            currentPage = 1;
+            updateDisplay();
+        }
+
+        // Function to update table display with pagination
+        function updateDisplay() {
+            const start = (currentPage - 1) * pageSize;
+            const end = Math.min(start + pageSize, filteredRows.length);
+
+            // Hide all rows
+            studentRows.forEach(row => row.style.display = 'none');
+
+            // Show filtered and paginated rows
+            for (let i = start; i < end; i++) {
+                if (filteredRows[i]) {
+                    filteredRows[i].style.display = '';
+                }
+            }
+
+            // Update pagination info
+            document.getElementById('showingStart').textContent = filteredRows.length ? start + 1 : 0;
+            document.getElementById('showingEnd').textContent = end;
+            document.getElementById('totalCount').textContent = filteredRows.length;
+
+            // Update pagination buttons
+            updatePaginationButtons();
+        }
+
+        // Function to update pagination buttons
+        function updatePaginationButtons() {
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
+            let paginationHtml = '<button class="pagination-btn" onclick="changePage(1)" ' + (currentPage === 1 ? 'disabled' : '') + '><i class="fas fa-angle-double-left"></i></button>';
+            paginationHtml += '<button class="pagination-btn" onclick="changePage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? 'disabled' : '') + '><i class="fas fa-angle-left"></i></button>';
+
+            // Show page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHtml += '<button class="pagination-btn ' + (i === currentPage ? 'active' : '') + '" onclick="changePage(' + i + ')">' + i + '</button>';
+            }
+
+            paginationHtml += '<button class="pagination-btn" onclick="changePage(' + (currentPage + 1) + ')" ' + (currentPage === totalPages ? 'disabled' : '') + '><i class="fas fa-angle-right"></i></button>';
+            paginationHtml += '<button class="pagination-btn" onclick="changePage(' + totalPages + ')" ' + (currentPage === totalPages ? 'disabled' : '') + '><i class="fas fa-angle-double-right"></i></button>';
+
+            document.getElementById('pagination').innerHTML = paginationHtml;
+        }
+
+        // Function to change page
+        window.changePage = function(page) {
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                updateDisplay();
+            }
+        };
+
+        // Search input event
+        searchInput.addEventListener('input', function(e) {
+            filterRows(e.target.value);
+        });
+
+        // Page size change
+        document.querySelectorAll('[data-size]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                pageSize = parseInt(this.dataset.size);
+                currentPage = 1;
+                document.getElementById('pageSizeDropdown').innerHTML = `<i class="fas fa-list-ol me-1"></i> Show: ${pageSize}`;
+                updateDisplay();
+            });
+        });
+
+        // Add hover effects
+        studentRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.classList.add('hover-shadow');
+                const avatar = this.querySelector('.student-avatar-custom');
+                const badges = this.querySelectorAll('.course-badge-custom, .semester-badge-custom');
+                if (avatar) avatar.style.transform = 'scale(1.05)';
+                badges.forEach(badge => {
+                    badge.style.transform = 'translateY(-2px)';
+                    badge.style.boxShadow = '0 4px 8px var(--shadow-light)';
+                });
+            });
+
+            row.addEventListener('mouseleave', function() {
+                this.classList.remove('hover-shadow');
+                const avatar = this.querySelector('.student-avatar-custom');
+                const badges = this.querySelectorAll('.course-badge-custom, .semester-badge-custom');
+                if (avatar) avatar.style.transform = 'scale(1)';
+                badges.forEach(badge => {
+                    badge.style.transform = 'translateY(0)';
+                    badge.style.boxShadow = 'none';
+                });
+            });
+        });
+
+        // Initial display
+        updateDisplay();
+    });
+</script>
+{% endblock %}
+

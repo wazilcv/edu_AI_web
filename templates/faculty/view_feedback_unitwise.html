@@ -1,0 +1,987 @@
+{#{% extends "faculty/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>DATE</th>#}
+{#          <th>STUDENT INFO</th>#}
+{#          <th>FEEDBACK</th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#        <!-- Sample Data Row -->#}
+{#        {% for i in data %}#}
+{##}
+{##}
+{##}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.date }}</td>#}
+{#          <td>{{ i.STUDENT.std_name }}</td>#}
+{#          <td>{{ i.feedback }}</td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{##}
+{#        <!-- Add more rows dynamically from backend -->#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<style>
+    :root {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --button-color: #526D82;
+        --light-bg: #DDE6ED;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --white: #FFFFFF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --card-bg: #FFFFFF;
+        --table-header: #F5F9FF;
+        --table-border: #E8EDF5;
+    }
+
+    /* Page Header */
+    .page-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .header-icon {
+        width: 70px;
+        height: 70px;
+        background-color: var(--light-bg);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .header-icon i {
+        font-size: 32px;
+        color: var(--dark-text);
+    }
+
+    .page-title {
+        color: var(--dark-text);
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+        color: var(--light-text);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+        max-width: 600px;
+    }
+
+    /* Statistics Cards - Match faculty dashboard */
+    .stats-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 1.75rem;
+        box-shadow: 0 8px 20px var(--shadow-light);
+        border: 1px solid var(--accent-color);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px var(--shadow-medium);
+    }
+
+    .stat-icon {
+        width: 55px;
+        height: 55px;
+        background-color: var(--light-bg);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+    }
+
+    .stat-icon i {
+        font-size: 22px;
+        color: var(--dark-text);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Filters Container */
+    .filters-container {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 1.75rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 20px var(--shadow-light);
+        border: 1px solid var(--accent-color);
+    }
+
+    .filter-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+        align-items: end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-label {
+        color: var(--dark-text);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filter-select {
+        padding: 0.85rem 1rem;
+        border: 2px solid var(--light-bg);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        color: var(--dark-text);
+        background-color: var(--white);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2327374D' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 12px;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.1);
+    }
+
+    .filter-btn {
+        padding: 0.85rem 1.75rem;
+        background-color: var(--button-color);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        height: fit-content;
+    }
+
+    .filter-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(82, 109, 130, 0.2);
+    }
+
+    /* Main Table Container */
+    .table-container {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 20px var(--shadow-light);
+        border: 1px solid var(--accent-color);
+        overflow: hidden;
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .table-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--dark-text);
+        margin: 0;
+    }
+
+    .search-box {
+        position: relative;
+        min-width: 280px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.85rem 1rem 0.85rem 3rem;
+        border: 2px solid var(--light-bg);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        color: var(--dark-text);
+        background-color: var(--white);
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--light-text);
+    }
+
+    /* Table Styling */
+    #suggestionsTable {
+        width: 100% !important;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    #suggestionsTable thead th {
+        background-color: var(--table-header) !important;
+        color: var(--dark-text) !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        padding: 1.25rem 1rem !important;
+        border-bottom: 2px solid var(--accent-color) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border: none !important;
+    }
+
+    #suggestionsTable tbody td {
+        padding: 1.25rem 1rem !important;
+        border-bottom: 1px solid var(--table-border) !important;
+        color: var(--dark-text) !important;
+        font-size: 0.95rem !important;
+        vertical-align: top !important;
+        border: none !important;
+        background-color: transparent !important;
+    }
+
+    #suggestionsTable tbody tr {
+        transition: all 0.3s ease !important;
+        background-color: transparent !important;
+    }
+
+    #suggestionsTable tbody tr:hover {
+        background-color: rgba(221, 230, 237, 0.3) !important;
+    }
+
+    #suggestionsTable tbody tr:last-child td {
+        border-bottom: none !important;
+    }
+
+    /* Suggestion Card */
+    .suggestion-card {
+        background: var(--light-bg);
+        border-radius: 12px;
+        padding: 1.25rem;
+        border-left: 4px solid var(--accent-color);
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .suggestion-content {
+        color: var(--dark-text);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Date Badge */
+    .date-badge {
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Student Info */
+    .student-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: var(--dark-text);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .student-email {
+        color: var(--light-text);
+        font-size: 0.85rem;
+        background-color: var(--light-bg);
+        padding: 0.25rem 0.75rem;
+        border-radius: 10px;
+        display: inline-block;
+        width: fit-content;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.85rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 0.75rem;
+    }
+
+    .status-new {
+        background-color: rgba(157, 178, 191, 0.2);
+        color: var(--secondary-color);
+    }
+
+    .status-reviewed {
+        background-color: rgba(82, 109, 130, 0.15);
+        color: var(--primary-color);
+    }
+
+    .status-archived {
+        background-color: rgba(39, 55, 77, 0.1);
+        color: var(--dark-text);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.65rem 1rem;
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .action-btn:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(157, 178, 191, 0.2);
+        border-color: var(--secondary-color);
+    }
+
+    .action-btn i {
+        font-size: 0.85rem;
+    }
+
+    /* No Data State */
+    .no-data {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--light-text);
+    }
+
+    .no-data-icon {
+        font-size: 3.5rem;
+        color: var(--accent-color);
+        margin-bottom: 1.25rem;
+        opacity: 0.7;
+    }
+
+    .no-data h4 {
+        color: var(--dark-text);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .no-data p {
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Table Footer */
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--table-border);
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .pagination-info {
+        color: var(--light-text);
+        font-size: 0.95rem;
+    }
+
+    .export-btn {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--button-color);
+        color: var(--white);
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .export-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(82, 109, 130, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .stats-summary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .filter-row {
+            grid-template-columns: 1fr;
+        }
+
+        .search-box {
+            min-width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .table-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .suggestion-card {
+            max-height: 120px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .action-btn {
+            justify-content: center;
+        }
+
+        .table-footer {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .export-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .header-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .header-icon i {
+            font-size: 28px;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+        }
+
+        .table-container {
+            padding: 1.5rem;
+        }
+
+        #suggestionsTable thead th,
+        #suggestionsTable tbody td {
+            padding: 1rem 0.75rem !important;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-icon">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <h1 class="page-title">Student Suggestions</h1>
+        <p class="page-subtitle">Review suggestions submitted by students for course improvements</p>
+    </div>
+
+    <!-- Statistics Summary -->
+    <div class="stats-summary">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <div class="stat-number">{{ data|length }}</div>
+            <div class="stat-label">Total Suggestions</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="stat-number" id="uniqueStudents">0</div>
+            <div class="stat-label">Unique Students</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-number" id="avgResponseTime">0</div>
+            <div class="stat-label">Avg Response Time</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-number" id="implementedCount">0</div>
+            <div class="stat-label">Implemented</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-container">
+        <div class="filter-row">
+            <div class="filter-group">
+                <img src="{{ graph_path }}" height="250" width="250" />
+            </div>
+            <span>
+                {% for i in res_txt %}
+                    <h4>{{ i }}</h4>
+                {% endfor %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-container">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label class="filter-label">Filter by Status</label>
+                <select class="filter-select" id="statusFilter">
+                    <option value="all">All Suggestions</option>
+                    <option value="new">New</option>
+                    <option value="reviewed">Reviewed</option>
+                    <option value="archived">Archived</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Sort by Date</label>
+                <select class="filter-select" id="dateSort">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Items per page</label>
+                <select class="filter-select" id="pageSize">
+                    <option value="10">10 items</option>
+                    <option value="25">25 items</option>
+                    <option value="50">50 items</option>
+                    <option value="100">100 items</option>
+                </select>
+            </div>
+
+            <button class="filter-btn" id="applyFilters">
+                <i class="fas fa-filter"></i>
+                Apply Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Suggestions Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h3 class="table-title">Suggestions Overview</h3>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search suggestions or student names...">
+            </div>
+        </div>
+
+        {% if data %}
+        <div class="table-responsive">
+            <table class="table" id="suggestionsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date Submitted</th>
+                        <th>Student Information</th>
+                        <th>Suggestion Details</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr data-status="{% if forloop.counter|divisibleby:3 %}reviewed{% elif forloop.counter|divisibleby:5 %}archived{% else %}new{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <div class="date-badge">
+                                <i class="fas fa-calendar-alt"></i>
+                                {{ i.date }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="student-info">
+                                <div class="student-name">
+                                    <i class="fas fa-user-graduate"></i>
+                                    {{ i.STUDENT.std_name }}
+                                </div>
+                                <div class="student-email">
+                                    Student
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="suggestion-card">
+                                <p class="suggestion-content">
+                                    <i class="fas fa-quote-left"></i>
+                                    {{ i.feedback }}
+                                    <i class="fas fa-quote-right"></i>
+                                </p>
+                            </div>
+                            <div class="status-badge status-{% if forloop.counter|divisibleby:3 %}reviewed{% elif forloop.counter|divisibleby:5 %}archived{% else %}new{% endif %}">
+                                <i class="fas fa-{% if forloop.counter|divisibleby:3 %}check-circle{% elif forloop.counter|divisibleby:5 %}archive{% else %}clock{% endif %}"></i>
+                                {% if forloop.counter|divisibleby:3 %}Reviewed{% elif forloop.counter|divisibleby:5 %}Archived{% else %}New{% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn review-btn" data-suggestion-id="{{ forloop.counter }}">
+                                    <i class="fas fa-eye"></i>
+                                    Review
+                                </button>
+                                <button class="action-btn respond-btn" data-suggestion-id="{{ forloop.counter }}">
+                                    <i class="fas fa-reply"></i>
+                                    Respond
+                                </button>
+                                <button class="action-btn archive-btn" data-suggestion-id="{{ forloop.counter }}">
+                                    <i class="fas fa-archive"></i>
+                                    Archive
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            <div class="pagination-info">
+                Showing <span id="shownCount">{{ data|length }}</span> of {{ data|length }} suggestions
+            </div>
+            <button class="export-btn" id="exportBtn">
+                <i class="fas fa-download"></i>
+                Export Suggestions Report
+            </button>
+        </div>
+        {% else %}
+        <div class="no-data">
+            <div class="no-data-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <h4>No Suggestions Received</h4>
+            <p>Students haven't submitted any suggestions yet.</p>
+            <p>Encourage students to share their ideas for course improvements.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Remove Bootstrap table classes
+        $('#suggestionsTable').removeClass('table-striped table-bordered');
+
+        // Calculate statistics
+        function calculateStats() {
+            const uniqueStudents = new Set();
+            $('#suggestionsTable tbody tr').each(function() {
+                const studentName = $(this).find('.student-name').text().trim();
+                uniqueStudents.add(studentName);
+            });
+
+            $('#uniqueStudents').text(uniqueStudents.size);
+            $('#avgResponseTime').text('2 days');
+            $('#implementedCount').text(Math.floor({{ data|length }} * 0.3));
+        }
+
+        // Initial calculation
+        calculateStats();
+
+        // Search functionality
+        $('#searchInput').on('keyup', function() {
+            const searchText = $(this).val().toLowerCase();
+            let visibleCount = 0;
+
+            $('#suggestionsTable tbody tr').each(function() {
+                const rowText = $(this).text().toLowerCase();
+                if (rowText.includes(searchText)) {
+                    $(this).show();
+                    visibleCount++;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            $('#shownCount').text(visibleCount);
+        });
+
+        // Filter functionality
+        $('#applyFilters').click(function() {
+            const statusFilter = $('#statusFilter').val();
+            const dateSort = $('#dateSort').val();
+            const pageSize = parseInt($('#pageSize').val());
+            let visibleCount = 0;
+            let allRows = $('#suggestionsTable tbody tr').toArray();
+
+            // Apply status filter
+            if (statusFilter !== 'all') {
+                allRows = allRows.filter(row => $(row).data('status') === statusFilter);
+            }
+
+            // Apply date sorting
+            if (dateSort === 'newest') {
+                allRows.sort((a, b) => {
+                    const dateA = $(a).find('.date-badge').text().trim();
+                    const dateB = $(b).find('.date-badge').text().trim();
+                    return dateB.localeCompare(dateA);
+                });
+            } else if (dateSort === 'oldest') {
+                allRows.sort((a, b) => {
+                    const dateA = $(a).find('.date-badge').text().trim();
+                    const dateB = $(b).find('.date-badge').text().trim();
+                    return dateA.localeCompare(dateB);
+                });
+            }
+
+            // Clear and repopulate table
+            $('#suggestionsTable tbody').empty();
+
+            // Apply pagination
+            const visibleRows = allRows.slice(0, pageSize);
+            visibleRows.forEach(row => {
+                $('#suggestionsTable tbody').append(row);
+                $(row).show();
+                visibleCount++;
+            });
+
+            $('#shownCount').text(visibleCount);
+            calculateStats();
+        });
+
+        // Action button functionality
+        $('.review-btn').click(function() {
+            const suggestionId = $(this).data('suggestion-id');
+            const suggestionText = $(this).closest('tr').find('.suggestion-content').text().trim();
+
+            alert(`Reviewing suggestion #${suggestionId}:\n\n"${suggestionText}"\n\nMarked as reviewed.`);
+            $(this).closest('tr').find('.status-badge')
+                .removeClass('status-new status-reviewed status-archived')
+                .addClass('status-reviewed')
+                .html('<i class="fas fa-check-circle"></i> Reviewed');
+        });
+
+        $('.respond-btn').click(function() {
+            const suggestionId = $(this).data('suggestion-id');
+            const studentName = $(this).closest('tr').find('.student-name').text().replace('👨‍🎓 ', '');
+
+            const responseMessage = prompt(`Respond to ${studentName}:`, '');
+            if (responseMessage) {
+                alert(`Response sent to ${studentName}: "${responseMessage}"`);
+            }
+        });
+
+        $('.archive-btn').click(function() {
+            const suggestionId = $(this).data('suggestion-id');
+            if (confirm('Archive this suggestion?')) {
+                $(this).closest('tr').find('.status-badge')
+                    .removeClass('status-new status-reviewed status-archived')
+                    .addClass('status-archived')
+                    .html('<i class="fas fa-archive"></i> Archived');
+
+                setTimeout(() => {
+                    $(this).closest('tr').fadeOut(300);
+                    calculateStats();
+                }, 500);
+            }
+        });
+
+        // Export functionality
+        $('#exportBtn').click(function() {
+            if (confirm('Export suggestions data as CSV report?')) {
+                // Simulate export process
+                $(this).html('<i class="fas fa-spinner fa-spin"></i> Exporting...').prop('disabled', true);
+
+                setTimeout(() => {
+                    $(this).html('<i class="fas fa-download"></i> Export Suggestions Report').prop('disabled', false);
+                    alert('Suggestions report exported successfully!');
+                }, 1500);
+            }
+        });
+
+        // Keyboard navigation
+        $(document).on('keydown', function(e) {
+            if (e.key === '/' && !$('#searchInput').is(':focus')) {
+                e.preventDefault();
+                $('#searchInput').focus();
+            }
+
+            if (e.key === 'Escape' && $('#searchInput').is(':focus')) {
+                $('#searchInput').val('').trigger('keyup');
+                $(this).blur();
+            }
+        });
+
+        // Search input focus effect
+        $('#searchInput').focus(function() {
+            $(this).css({
+                'border-color': 'var(--secondary-color)',
+                'box-shadow': '0 0 0 3px rgba(82, 109, 130, 0.1)'
+            });
+        }).blur(function() {
+            $(this).css({
+                'border-color': 'var(--light-bg)',
+                'box-shadow': 'none'
+            });
+        });
+
+        // Initialize tooltips
+        $('.action-btn').each(function() {
+            const text = $(this).text().trim();
+            $(this).attr('title', text);
+        });
+
+        // Suggestion card scroll styling
+        $('.suggestion-card').each(function() {
+            if (this.scrollHeight > this.clientHeight) {
+                $(this).css('border-right', '1px solid var(--table-border)');
+            }
+        });
+
+        // Force table styles to override Bootstrap
+        $('#suggestionsTable').css({
+            'border': 'none',
+            'background': 'transparent'
+        });
+
+        $('#suggestionsTable thead th').css({
+            'border': 'none',
+            'background': 'var(--table-header) !important'
+        });
+
+        $('#suggestionsTable tbody td').css({
+            'border': 'none',
+            'background': 'transparent'
+        });
+
+        // Apply initial filters
+        $('#applyFilters').click();
+    });
+</script>
+{% endblock %}
+

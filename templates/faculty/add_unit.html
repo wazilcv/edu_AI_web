@@ -1,0 +1,510 @@
+{#{% extends "faculty/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Add Unit</title>#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">#}
+{#   #}
+{#</head>#}
+{#<body>#}
+{#    <div class="container">#}
+{#        <div class="row justify-content-center">#}
+{#            <div class="col-md-6">#}
+{#                <h2 class="text-center">Add Unit</h2>#}
+{#                <form method="post" action="/fac_add_unit_post/{{ id }}">#}
+{#                    <div class="form-group">#}
+{#                        <label for="username">Unit name</label>#}
+{#                        <input type="text" class="form-control" id="unitname" name="unitname" placeholder="Enter unit name" required>#}
+{#                    </div>#}
+{#                    <button type="submit" class="btn btn-primary btn-block">Add</button>#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>#}
+{#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<style>
+    :root {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --error-color: #D32F2F;
+        --success-color: #4CAF50;
+        --white: #FFFFFF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+    }
+
+    .form-header {
+        margin-bottom: 30px;
+    }
+
+    .form-icon {
+        width: 70px;
+        height: 70px;
+        background-color: var(--accent-color);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .form-icon i {
+        font-size: 32px;
+        color: var(--dark-text);
+    }
+
+    .form-title {
+        color: var(--dark-text);
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .form-subtitle {
+        color: var(--light-text);
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: var(--dark-text);
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .input-group-custom {
+        position: relative;
+        box-shadow: 0 4px 10px var(--shadow-light);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .input-group-custom:focus-within {
+        border-color: var(--secondary-color);
+        box-shadow: 0 4px 15px rgba(82, 109, 130, 0.3);
+    }
+
+    .input-group-prepend-custom {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        z-index: 4;
+        pointer-events: none;
+        background-color: var(--light-bg);
+    }
+
+    .input-group-prepend-custom i {
+        color: var(--dark-text);
+        font-size: 18px;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 16px 16px 16px 60px;
+        border: none;
+        background-color: var(--white);
+        color: var(--dark-text);
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control-custom:focus {
+        outline: none;
+    }
+
+    .btn-submit {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        padding: 16px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(82, 109, 130, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-submit:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(82, 109, 130, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    .error-message {
+        color: var(--error-color);
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .form-control-custom.error {
+        border-color: var(--error-color);
+    }
+
+    .input-group-custom.error {
+        border-color: var(--error-color);
+        box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
+    }
+
+    .info-box {
+        background-color: var(--light-bg);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 35px;
+        border: 1px solid var(--accent-color);
+    }
+
+    .info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .info-header i {
+        color: var(--dark-text);
+        font-size: 18px;
+        margin-right: 10px;
+    }
+
+    .info-title {
+        color: var(--dark-text);
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .info-content {
+        color: var(--dark-text);
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .info-content li {
+        margin-bottom: 5px;
+    }
+
+    .form-footer {
+        text-align: center;
+        margin-top: 30px;
+        color: var(--light-text);
+        font-size: 14px;
+    }
+
+    .unit-examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .example-chip {
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid var(--accent-color);
+    }
+
+    .example-chip:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    .char-counter {
+        font-size: 12px;
+        color: var(--light-text);
+        margin-top: 5px;
+        text-align: right;
+    }
+
+    @media (max-width: 768px) {
+        .form-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .form-icon i {
+            font-size: 28px;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+        }
+
+        .form-control-custom {
+            padding: 14px 16px 14px 55px;
+            font-size: 15px;
+        }
+
+        .btn-submit {
+            padding: 14px 20px;
+            font-size: 15px;
+        }
+
+        .unit-examples {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="form-header">
+        <div class="form-icon">
+            <i class="fas fa-layer-group"></i>
+        </div>
+        <h1 class="form-title">Add Course Unit</h1>
+        <p class="form-subtitle">Create a new unit for your subject's curriculum</p>
+    </div>
+
+    <form method="post" action="/fac_add_unit_post/{{ id }}" id="unitForm">
+        <div class="form-group">
+            <label class="form-label" for="unitname">Unit Name</label>
+            <div class="input-group-custom">
+                <div class="input-group-prepend-custom">
+                    <i class="fas fa-book"></i>
+                </div>
+                <input type="text" class="form-control-custom" id="unitname" name="unitname"
+                       placeholder="Enter unit name (e.g., 'Introduction to Programming')" required>
+            </div>
+            <div class="char-counter" id="charCounter">0/100 characters</div>
+            <div class="error-message" id="unitError">Please enter a unit name (3-100 characters)</div>
+
+            <div class="unit-examples">
+                <div class="example-chip" data-example="Introduction to Python">Introduction to Python</div>
+                <div class="example-chip" data-example="Data Structures & Algorithms">Data Structures</div>
+                <div class="example-chip" data-example="Database Management Systems">Database Systems</div>
+                <div class="example-chip" data-example="Object-Oriented Programming">OOP Concepts</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-plus-circle"></i>
+            <span>Add Unit</span>
+        </button>
+    </form>
+
+    <div class="info-box">
+        <div class="info-header">
+            <i class="fas fa-lightbulb"></i>
+            <h3 class="info-title">Best Practices for Unit Creation</h3>
+        </div>
+        <ul class="info-content">
+            <li>Use clear, descriptive names that indicate the unit's focus</li>
+            <li>Keep unit names concise (3-8 words recommended)</li>
+            <li>Organize units in logical learning sequence</li>
+            <li>Consider prerequisites when planning unit order</li>
+            <li>Include both theoretical and practical components</li>
+            <li>Review existing curriculum structure before adding new units</li>
+        </ul>
+    </div>
+
+    <div class="form-footer">
+        EDU AI Platform • Course Curriculum Management
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Character counter
+        const maxLength = 100;
+        $('#unitname').on('input', function() {
+            const currentLength = $(this).val().length;
+            $('#charCounter').text(`${currentLength}/${maxLength} characters`);
+
+            // Update color based on length
+            if (currentLength > maxLength * 0.8) {
+                $('#charCounter').css('color', 'var(--error-color)');
+            } else if (currentLength > maxLength * 0.6) {
+                $('#charCounter').css('color', 'orange');
+            } else {
+                $('#charCounter').css('color', 'var(--light-text)');
+            }
+
+            // Limit input to maxLength
+            if (currentLength > maxLength) {
+                $(this).val($(this).val().substring(0, maxLength));
+                $('#charCounter').text(`${maxLength}/${maxLength} characters`);
+            }
+
+            // Real-time validation
+            const unitName = $(this).val().trim();
+            if (unitName.length >= 3 && unitName.length <= maxLength) {
+                $(this).parent().removeClass('error');
+                $('#unitError').hide();
+            }
+        });
+
+        // Example chip click handler
+        $('.example-chip').click(function() {
+            const exampleText = $(this).data('example');
+            $('#unitname').val(exampleText).focus();
+
+            // Update character counter
+            const currentLength = exampleText.length;
+            $('#charCounter').text(`${currentLength}/${maxLength} characters`);
+
+            // Visual feedback for clicked chip
+            $('.example-chip').removeClass('selected');
+            $(this).addClass('selected');
+
+            // Remove selection after 2 seconds
+            setTimeout(() => {
+                $(this).removeClass('selected');
+            }, 2000);
+        });
+
+        // Add selected style
+        const style = document.createElement('style');
+        style.textContent = `
+            .example-chip.selected {
+                background-color: var(--secondary-color);
+                color: var(--white);
+                box-shadow: 0 4px 8px rgba(82, 109, 130, 0.3);
+                transform: scale(1.05);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Form validation
+        $('#unitForm').submit(function(e) {
+            let isValid = true;
+
+            // Validate unit name
+            const unitName = $('#unitname').val().trim();
+            if (!unitName || unitName.length < 3 || unitName.length > maxLength) {
+                $('#unitError').show();
+                $('#unitname').parent().addClass('error');
+                isValid = false;
+            } else {
+                $('#unitError').hide();
+                $('#unitname').parent().removeClass('error');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                return false;
+            }
+
+            // If validation passes, add loading state
+            const submitBtn = $(this).find('.btn-submit');
+            const originalText = submitBtn.find('span').text();
+            const originalIcon = submitBtn.find('i').attr('class');
+
+            submitBtn.prop('disabled', true);
+            submitBtn.find('span').text('Adding Unit...');
+            submitBtn.find('i').attr('class', 'fas fa-spinner fa-spin');
+
+            // The form will submit normally to your backend
+            return true;
+        });
+
+        // Input field focus effects
+        $('#unitname').focus(function() {
+            $(this).parent().addClass('focused');
+        }).blur(function() {
+            $(this).parent().removeClass('focused');
+        });
+
+        // Add focus style to input group
+        const focusStyle = document.createElement('style');
+        focusStyle.textContent = `
+            .input-group-custom.focused {
+                border-color: var(--secondary-color);
+                box-shadow: 0 4px 15px rgba(82, 109, 130, 0.3);
+            }
+        `;
+        document.head.appendChild(focusStyle);
+
+        // Auto-capitalize first letter of each word
+        $('#unitname').on('blur', function() {
+            let value = $(this).val().trim();
+            if (value) {
+                // Capitalize first letter of each word
+                value = value.toLowerCase().replace(/\b\w/g, function(char) {
+                    return char.toUpperCase();
+                });
+                $(this).val(value);
+            }
+        });
+
+        // Keyboard shortcuts for quick unit naming
+        $('#unitname').on('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        $(this).val('Introduction to ' + $(this).val());
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        $(this).val($(this).val() + ' Fundamentals');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        $(this).val('Advanced ' + $(this).val());
+                        break;
+                }
+            }
+        });
+
+        // Show placeholder hint on focus
+        $('#unitname').on('focus', function() {
+            if (!$(this).val()) {
+                $(this).attr('placeholder', 'Examples: "Web Development Basics", "Machine Learning Concepts"');
+            }
+        }).on('blur', function() {
+            if (!$(this).val()) {
+                $(this).attr('placeholder', 'Enter unit name (e.g., "Introduction to Programming")');
+            }
+        });
+    });
+</script>
+{% endblock %}

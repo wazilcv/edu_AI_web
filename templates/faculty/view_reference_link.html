@@ -1,0 +1,664 @@
+{#{% extends "faculty/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Reference Link Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Ref link</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>DATE</th>#}
+{#          <th>TITLE</th>#}
+{#          <th>LINK</th>#}
+{#          <th>ACTION</th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#        <!-- Sample Data Row -->#}
+{#        {% for i in data %}#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.date }}</td>#}
+{#          <td>{{ i.title }}</td>#}
+{#          <td><a href="{{ i.ref_link }}" target="_blank">{{ i.ref_link }}</a> </td>#}
+{#          <td><a href="/fac_delete_reference_link/{{ i.id }}">Delete</a></td>#}
+{#        </tr>#}
+{#        {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "faculty/index.html" %}
+{% block body %}
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="card-header mb-4">
+        <div class="card-icon">
+            <i class="fas fa-link"></i>
+        </div>
+        <h1 class="card-title">Reference Links Management</h1>
+        <div class="ms-auto">
+            <a href="/fac_add_reference_link" class="btn btn-custom">
+                <i class="fas fa-plus-circle me-2"></i>Add New Link
+            </a>
+        </div>
+    </div>
+
+    <!-- Information Alert -->
+    <div class="alert alert-custom alert-dismissible fade show" role="alert" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--dark-text); border-radius: 12px;">
+        <i class="fas fa-info-circle me-2"></i>
+        Manage your reference links for students. These links provide additional learning resources and materials.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Stats Cards - 3 boxes in a single row -->
+    <div class="stats-container mb-4" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-link"></i>
+            </div>
+            <div class="stat-number">{{ data|length }}</div>
+            <div class="stat-label">Total Links</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-number" id="thisMonthCount">0</div>
+            <div class="stat-label">This Month</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-external-link-alt"></i>
+            </div>
+            <div class="stat-number" id="activeLinks">0</div>
+            <div class="stat-label">Active Links</div>
+        </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="main-card">
+        <div class="card-header mb-4">
+            <div class="card-icon">
+                <i class="fas fa-table"></i>
+            </div>
+            <h2 class="card-title" style="margin: 0;">Reference Links Repository</h2>
+            <div class="ms-auto">
+                <button class="btn btn-custom" onclick="exportLinksToCSV()">
+                    <i class="fas fa-download me-2"></i>Export CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Options -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text" style="background-color: var(--light-bg); border-color: var(--accent-color);">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by title or URL..."
+                           style="border-color: var(--accent-color);">
+                    <button class="btn" onclick="clearSearch()" style="background-color: var(--accent-color); color: var(--dark-text);">
+                        Clear
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-end">
+                    <select id="sortSelect" class="form-select" style="max-width: 200px; background-color: var(--white); border-color: var(--accent-color);">
+                        <option value="date_desc">Newest First</option>
+                        <option value="date_asc">Oldest First</option>
+                        <option value="title_asc">Title A-Z</option>
+                        <option value="title_desc">Title Z-A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="registrationTable" class="table table-hover" style="width:100%; border-collapse: separate; border-spacing: 0;">
+                <thead>
+                    <tr style="background-color: var(--light-bg);">
+                        <th style="border-radius: 12px 0 0 0; border: none; padding: 1rem;">#</th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-calendar me-2"></i>DATE
+                        </th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-heading me-2"></i>TITLE
+                        </th>
+                        <th style="border: none; padding: 1rem;">
+                            <i class="fas fa-link me-2"></i>LINK
+                        </th>
+                        <th style="border-radius: 0 12px 0 0; border: none; padding: 1rem;">
+                            <i class="fas fa-cogs me-2"></i>ACTIONS
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data %}
+                        {% for i in data %}
+                        <tr style="border-bottom: 2px solid var(--light-bg); transition: all 0.3s ease;">
+                            <td style="padding: 1rem; font-weight: 600; color: var(--dark-text);">
+                                {{ forloop.counter }}
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="date-container">
+                                    <div class="date-badge" style="background-color: var(--accent-color); color: var(--dark-text); padding: 0.4rem 0.8rem; border-radius: 8px; display: inline-block;">
+                                        <i class="fas fa-calendar-day me-1"></i>
+                                        {{ i.date }}
+                                    </div>
+                                    <div class="date-age mt-1" style="font-size: 0.8rem; color: var(--light-text);">
+                                        <i class="fas fa-clock me-1"></i>
+                                        <span class="link-age" data-date="{{ i.date }}">Calculating...</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="d-flex align-items-center">
+                                    <div class="link-icon" style="width: 40px; height: 40px; background-color: var(--light-bg);
+                                        border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                        <i class="fas fa-file-alt" style="color: var(--dark-text);"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--dark-text);">{{ i.title }}</div>
+                                        <div style="font-size: 0.85rem; color: var(--light-text);">
+                                            <i class="fas fa-hashtag me-1"></i>
+                                            {% if i.category %}
+                                                {{ i.category }}
+                                            {% else %}
+                                                General
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="link-container">
+                                    <a href="{{ i.ref_link }}" target="_blank" class="link-preview"
+                                       style="color: var(--dark-text); text-decoration: none; display: block; padding: 0.8rem;
+                                              background-color: var(--light-bg); border-radius: 8px; transition: all 0.3s ease;"
+                                       onmouseover="this.style.backgroundColor='var(--secondary-color)'; this.style.color='var(--white)';"
+                                       onmouseout="this.style.backgroundColor='var(--light-bg)'; this.style.color='var(--dark-text)';">
+                                        <div class="d-flex align-items-center">
+                                            <div class="link-icon-small me-2" style="color: #28a745;">
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </div>
+                                            <div class="link-content" style="flex: 1; min-width: 0;">
+                                                <div class="link-url" style="font-size: 0.9rem; color: var(--light-text); word-break: break-all;">
+                                                    {{ i.ref_link|truncatechars:50 }}
+                                                </div>
+                                                <div class="link-domain mt-1" style="font-size: 0.75rem; color: var(--accent-color);">
+                                                    <i class="fas fa-globe me-1"></i>
+                                                    <span class="domain-name">{{ i.ref_link }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="link-action ms-2">
+                                                <i class="fas fa-external-link-square-alt" style="color: var(--secondary-color);"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <button class="btn btn-sm btn-copy mt-2" onclick="copyToClipboard('{{ i.ref_link }}', this)"
+                                            style="background-color: var(--light-bg); color: var(--dark-text); border: 1px solid var(--accent-color);
+                                                   border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.8rem;">
+                                        <i class="fas fa-copy me-1"></i>Copy URL
+                                    </button>
+                                </div>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-preview" onclick="previewLink('{{ i.ref_link }}', '{{ i.title }}')"
+                                            style="background-color: var(--light-bg); color: var(--dark-text); border: 1px solid var(--accent-color); border-radius: 8px; padding: 0.5rem 1rem; margin-right: 0.5rem;">
+                                        <i class="fas fa-eye me-1"></i>Preview
+                                    </button>
+                                    <a href="/fac_delete_reference_link/{{ i.id }}" class="btn btn-delete"
+                                       onclick="return confirmDelete('{{ i.title }}')"
+                                       style="background-color: #f8d7da; color: #721c24; border: none; border-radius: 8px; padding: 0.5rem 1rem; text-decoration: none;">
+                                        <i class="fas fa-trash-alt me-1"></i>Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5" style="color: var(--light-text);">
+                                <div class="empty-state">
+                                    <i class="fas fa-link fa-3x mb-3" style="opacity: 0.5;"></i>
+                                    <h5>No Reference Links Found</h5>
+                                    <p class="mb-3">You haven't added any reference links yet.</p>
+                                    <a href="/fac_add_reference_link" class="btn btn-custom">
+                                        <i class="fas fa-plus me-2"></i>Add Your First Link
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- REMOVED Summary Footer Section (Link Statistics and Recent Activity boxes) -->
+    </div>
+</div>
+
+<!-- Link Preview Modal -->
+<div class="modal fade" id="linkPreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
+            <div class="modal-header" style="background-color: var(--secondary-color); color: var(--white);">
+                <h5 class="modal-title">
+                    <i class="fas fa-external-link-alt me-2"></i>
+                    Link Preview
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="previewContent">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: var(--light-bg); color: var(--dark-text); border: 1px solid var(--accent-color);">
+                    <i class="fas fa-times me-1"></i>Close
+                </button>
+                <button type="button" class="btn btn-custom" id="openLinkBtn">
+                    <i class="fas fa-external-link-alt me-1"></i>Open Link
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles for this page -->
+<style>
+    /* Table styling */
+    #registrationTable {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px var(--shadow-light);
+    }
+
+    #registrationTable tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    #registrationTable tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    /* Button styling */
+    .btn-custom {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-medium);
+    }
+
+    .btn-preview:hover {
+        background-color: var(--secondary-color) !important;
+        color: var(--white) !important;
+        border-color: var(--secondary-color) !important;
+    }
+
+    .btn-delete:hover {
+        background-color: #f1b0b7 !important;
+        color: #721c24 !important;
+    }
+
+    .btn-copy:hover {
+        background-color: var(--secondary-color) !important;
+        color: var(--white) !important;
+        border-color: var(--secondary-color) !important;
+    }
+
+    /* Link styling */
+    .link-preview:hover {
+        text-decoration: none !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-light);
+    }
+
+    /* Date badge styling */
+    .date-badge {
+        transition: all 0.3s ease;
+    }
+
+    .date-badge:hover {
+        transform: scale(1.05);
+    }
+
+    /* Empty state */
+    .empty-state {
+        padding: 3rem 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .stats-container[style*="grid-template-columns: repeat(3, 1fr)"] {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-preview, .btn-delete {
+            width: 100%;
+            margin-right: 0 !important;
+        }
+
+        .link-container {
+            max-width: 100% !important;
+        }
+
+        .stats-container[style*="grid-template-columns: repeat(3, 1fr)"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        const table = $('#registrationTable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            language: {
+                search: "<i class='fas fa-search'></i>",
+                searchPlaceholder: "Search links...",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                paginate: {
+                    previous: '<i class="fas fa-chevron-left"></i>',
+                    next: '<i class="fas fa-chevron-right"></i>'
+                }
+            },
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            initComplete: function() {
+                calculateStats();
+                updateLinkAges();
+                setupSearch();
+            }
+        });
+
+        // Custom search functionality
+        function setupSearch() {
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            $('#sortSelect').on('change', function() {
+                const value = $(this).val();
+                let column, dir;
+
+                switch(value) {
+                    case 'date_desc':
+                        column = 1; // Date column
+                        dir = 'desc';
+                        break;
+                    case 'date_asc':
+                        column = 1;
+                        dir = 'asc';
+                        break;
+                    case 'title_asc':
+                        column = 2; // Title column
+                        dir = 'asc';
+                        break;
+                    case 'title_desc':
+                        column = 2;
+                        dir = 'desc';
+                        break;
+                }
+
+                table.order([column, dir]).draw();
+            });
+        }
+
+        // Calculate link ages
+        function updateLinkAges() {
+            $('.link-age').each(function() {
+                const dateStr = $(this).data('date');
+                const linkDate = new Date(dateStr);
+                const today = new Date();
+                const diffTime = Math.abs(today - linkDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                let ageText = '';
+                if (diffDays === 0) {
+                    ageText = 'Today';
+                } else if (diffDays === 1) {
+                    ageText = 'Yesterday';
+                } else if (diffDays < 7) {
+                    ageText = diffDays + ' days ago';
+                } else if (diffDays < 30) {
+                    const weeks = Math.floor(diffDays / 7);
+                    ageText = weeks + ' week' + (weeks > 1 ? 's' : '') + ' ago';
+                } else if (diffDays < 365) {
+                    const months = Math.floor(diffDays / 30);
+                    ageText = months + ' month' + (months > 1 ? 's' : '') + ' ago';
+                } else {
+                    const years = Math.floor(diffDays / 365);
+                    ageText = years + ' year' + (years > 1 ? 's' : '') + ' ago';
+                }
+
+                $(this).text(ageText);
+            });
+        }
+
+        // Calculate statistics
+        function calculateStats() {
+            const totalLinks = {{ data|length }};
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            let thisMonthCount = 0;
+
+            {% for i in data %}
+                const linkDate = new Date('{{ i.date }}');
+
+                // Count links from current month
+                if (linkDate.getMonth() === currentMonth && linkDate.getFullYear() === currentYear) {
+                    thisMonthCount++;
+                }
+            {% endfor %}
+
+            // Update stats
+            $('#thisMonthCount').text(thisMonthCount);
+            $('#activeLinks').text(totalLinks);
+        }
+
+        // Extract domain from URL (if template filter not available)
+        function extractDomain(url) {
+            try {
+                const urlObj = new URL(url);
+                return urlObj.hostname.replace('www.', '');
+            } catch(e) {
+                return url.split('/')[0];
+            }
+        }
+
+        // Update domain names
+        $('.domain-name').each(function() {
+            const url = $(this).text();
+            $(this).text(extractDomain(url));
+        });
+    });
+
+    function previewLink(url, title) {
+        // Create preview content
+        const previewContent = `
+            <div class="preview-container">
+                <div class="preview-header mb-4">
+                    <h6 style="color: var(--dark-text);">${title}</h6>
+                    <div class="url-display mt-2 p-2" style="background-color: var(--light-bg); border-radius: 8px; word-break: break-all;">
+                        <small style="color: var(--light-text);">
+                            <i class="fas fa-link me-1"></i>
+                            ${url}
+                        </small>
+                    </div>
+                </div>
+                <div class="preview-frame-container">
+                    <div class="alert alert-info" style="background-color: var(--light-bg); border-color: var(--accent-color); color: var(--dark-text);">
+                        <i class="fas fa-info-circle me-2"></i>
+                        This is a preview of the external link. Click "Open Link" to visit the website in a new tab.
+                    </div>
+                    <div class="preview-placeholder text-center py-4" style="background-color: var(--light-bg); border-radius: 8px;">
+                        <i class="fas fa-external-link-alt fa-3x mb-3" style="color: var(--accent-color); opacity: 0.7;"></i>
+                        <p style="color: var(--light-text);">External link preview</p>
+                        <button class="btn btn-custom" onclick="window.open('${url}', '_blank')">
+                            <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                        </button>
+                    </div>
+                </div>
+                <div class="link-info mt-3 p-3" style="background-color: var(--light-bg); border-radius: 8px;">
+                    <h6 style="color: var(--dark-text); font-size: 0.9rem;">
+                        <i class="fas fa-shield-alt me-1"></i>Security Information
+                    </h6>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <small style="color: var(--light-text);">Protocol:</small><br>
+                            <span style="color: var(--dark-text); font-weight: 500;">${url.startsWith('https') ? 'HTTPS (Secure)' : 'HTTP'}</span>
+                        </div>
+                        <div class="col-6">
+                            <small style="color: var(--light-text);">Domain:</small><br>
+                            <span style="color: var(--dark-text); font-weight: 500;">${extractDomain(url)}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Set modal content
+        $('#previewContent').html(previewContent);
+
+        // Set up open button
+        $('#openLinkBtn').off('click').on('click', function() {
+            window.open(url, '_blank');
+            $('#linkPreviewModal').modal('hide');
+        });
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('linkPreviewModal'));
+        modal.show();
+    }
+
+    function copyToClipboard(text, button) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = $(button).html();
+            $(button).html('<i class="fas fa-check me-1"></i>Copied!');
+            $(button).css('background-color', '#28a745');
+            $(button).css('color', 'white');
+
+            setTimeout(() => {
+                $(button).html(originalText);
+                $(button).css('background-color', '');
+                $(button).css('color', '');
+            }, 2000);
+        });
+    }
+
+    function confirmDelete(title) {
+        return confirm(`Are you sure you want to delete the reference link?\n\nTitle: ${title}\n\nThis action cannot be undone.`);
+    }
+
+    function exportLinksToCSV() {
+        let csv = [];
+        let rows = document.querySelectorAll("#registrationTable tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let row = [], cols = rows[i].querySelectorAll("td, th");
+
+            for (let j = 0; j < cols.length; j++) {
+                // Extract clean text
+                let text = cols[j].innerText.replace(/\n/g, ' ').trim();
+
+                // Clean up link column
+                if (j === 3) {
+                    // Get the actual URL from the link preview
+                    const linkElement = cols[j].querySelector('a');
+                    if (linkElement) {
+                        text = linkElement.href || text;
+                    }
+                }
+
+                row.push(`"${text}"`);
+            }
+
+            csv.push(row.join(","));
+        }
+
+        // Download CSV file
+        let csvContent = "data:text/csv;charset=utf-8," + csv.join("\n");
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `reference_links_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function clearSearch() {
+        $('#searchInput').val('');
+        const table = $('#registrationTable').DataTable();
+        table.search('').draw();
+    }
+
+    // Helper function to extract domain
+    function extractDomain(url) {
+        try {
+            const urlObj = new URL(url);
+            return urlObj.hostname.replace('www.', '');
+        } catch(e) {
+            return url;
+        }
+    }
+</script>
+{% endblock %}
+

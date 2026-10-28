@@ -1,0 +1,1009 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="utf-8">#}
+{#    <title>Reset Password - Parking Manager</title>#}
+{#    <meta content="width=device-width, initial-scale=1.0" name="viewport">#}
+{##}
+{#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
+{#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">#}
+{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">#}
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{##}
+{#    <style>#}
+{#        :root {#}
+{#            --teal: #20c997;#}
+{#            --teal-dark: #1ba87e;#}
+{#            --teal-light: #e8f8f5;#}
+{#            --teal-glow: rgba(32, 201, 151, 0.2);#}
+{#        }#}
+{##}
+{#        body {#}
+{#            font-family: 'Space Grotesk', sans-serif;#}
+{#            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);#}
+{#            color: #2c3e50;#}
+{#            min-height: 100vh;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#        }#}
+{##}
+{#        .forgot-container {#}
+{#            background: white;#}
+{#            border-radius: 25px;#}
+{#            box-shadow: 0 20px 60px rgba(0,0,0,0.1);#}
+{#            overflow: hidden;#}
+{#            border: 2px solid var(--teal-light);#}
+{#        }#}
+{##}
+{#        .forgot-header {#}
+{#            background: linear-gradient(135deg, var(--teal), var(--teal-dark));#}
+{#            padding: 3rem 2rem;#}
+{#            text-align: center;#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#        }#}
+{##}
+{#        .forgot-header::before {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            top: -50%;#}
+{#            left: -50%;#}
+{#            width: 200%;#}
+{#            height: 200%;#}
+{#            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);#}
+{#            animation: rotate 15s linear infinite;#}
+{#        }#}
+{##}
+{#        @keyframes rotate {#}
+{#            from { transform: rotate(0deg); }#}
+{#            to { transform: rotate(360deg); }#}
+{#        }#}
+{##}
+{#        .forgot-icon {#}
+{#            width: 80px;#}
+{#            height: 80px;#}
+{#            background: rgba(255,255,255,0.2);#}
+{#            border-radius: 50%;#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            margin: 0 auto 1.5rem;#}
+{#            position: relative;#}
+{#            z-index: 2;#}
+{#            border: 3px solid rgba(255,255,255,0.3);#}
+{#        }#}
+{##}
+{#        .forgot-icon i {#}
+{#            font-size: 2rem;#}
+{#            color: white;#}
+{#        }#}
+{##}
+{#        .forgot-body {#}
+{#            padding: 3rem;#}
+{#        }#}
+{##}
+{#        .input-group-modern {#}
+{#            position: relative;#}
+{#            margin-bottom: 2rem;#}
+{#        }#}
+{##}
+{#        .input-group-modern input {#}
+{#            width: 100%;#}
+{#            padding: 1rem 1rem 1rem 3rem;#}
+{#            background: white;#}
+{#            border: 2px solid #e9ecef;#}
+{#            border-radius: 10px;#}
+{#            color: #2c3e50;#}
+{#            font-size: 0.95rem;#}
+{#            transition: all 0.3s ease;#}
+{#            box-shadow: 0 3px 10px rgba(0,0,0,0.05);#}
+{#        }#}
+{##}
+{#        .input-icon {#}
+{#            position: absolute;#}
+{#            left: 1rem;#}
+{#            top: 50%;#}
+{#            transform: translateY(-50%);#}
+{#            color: var(--teal);#}
+{#            font-size: 1rem;#}
+{#            z-index: 3;#}
+{#        }#}
+{##}
+{#        .toggle-password {#}
+{#            position: absolute;#}
+{#            right: 1rem;#}
+{#            top: 50%;#}
+{#            transform: translateY(-50%);#}
+{#            cursor: pointer;#}
+{#            color: var(--teal);#}
+{#            font-size: 1.1rem;#}
+{#            z-index: 5;#}
+{#        }#}
+{##}
+{#        .btn-send {#}
+{#            background: linear-gradient(135deg, var(--teal), var(--teal-dark));#}
+{#            border: none;#}
+{#            border-radius: 15px;#}
+{#            padding: 1.2rem 2.5rem;#}
+{#            color: white;#}
+{#            font-weight: 600;#}
+{#            font-size: 1.1rem;#}
+{#            text-transform: uppercase;#}
+{#            letter-spacing: 1px;#}
+{#            width: 100%;#}
+{#            transition: all 0.4s ease;#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#            box-shadow: 0 10px 30px var(--teal-glow);#}
+{#        }#}
+{##}
+{#        .back-link {#}
+{#            text-align: center;#}
+{#            margin-top: 2rem;#}
+{#        }#}
+{##}
+{#        .back-link a {#}
+{#            color: var(--teal);#}
+{#            text-decoration: none;#}
+{#            font-weight: 500;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{##}
+{#<body>#}
+{#    <div class="container">#}
+{#        <div class="row justify-content-center">#}
+{#            <div class="col-md-6 col-lg-5">#}
+{#                <div class="forgot-container">#}
+{##}
+{#                    <div class="forgot-header">#}
+{#                        <div class="forgot-icon">#}
+{#                            <i class="fas fa-key"></i>#}
+{#                        </div>#}
+{#                        <h2 class="fw-bold text-white mb-2">Reset Password</h2>#}
+{#                        <p class="text-white opacity-90 mb-0">Enter your new password</p>#}
+{#                    </div>#}
+{##}
+{#                    <div class="forgot-body">#}
+{#                        <form id="resetForm" action="/forgotpswdpswedbuttonclick" method="post">#}
+{##}
+{#                            <div class="input-group-modern">#}
+{#                                <input type="password" name="password" id="password" placeholder="New Password" required>#}
+{#                                <span class="input-icon"><i class="fas fa-lock"></i></span>#}
+{#                                <span class="toggle-password" onclick="togglePassword('password','icon1')">#}
+{#                                    <i id="icon1" class="fas fa-eye"></i>#}
+{#                                </span>#}
+{#                            </div>#}
+{##}
+{#                            <div class="input-group-modern">#}
+{#                                <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm Password" required>#}
+{#                                <span class="input-icon"><i class="fas fa-lock"></i></span>#}
+{#                                <span class="toggle-password" onclick="togglePassword('confirmpassword','icon2')">#}
+{#                                    <i id="icon2" class="fas fa-eye"></i>#}
+{#                                </span>#}
+{#                            </div>#}
+{##}
+{#                            <button type="submit" class="btn-send">#}
+{#                                <i class="fas fa-paper-plane me-2"></i>#}
+{#                                Reset Password#}
+{#                            </button>#}
+{##}
+{#                            <div class="back-link">#}
+{#                                <a href="/">#}
+{#                                    <i class="fas fa-arrow-left me-1"></i> Back to Login#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        </form>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#<script>#}
+{#function togglePassword(fieldId, iconId) {#}
+{#    const inputField = document.getElementById(fieldId);#}
+{#    const icon = document.getElementById(iconId);#}
+{##}
+{#    if (inputField.type === "password") {#}
+{#        inputField.type = "text";#}
+{#        icon.classList.replace("fa-eye", "fa-eye-slash");#}
+{#    } else {#}
+{#        inputField.type = "password";#}
+{#        icon.classList.replace("fa-eye-slash", "fa-eye");#}
+{#    }#}
+{#}#}
+{##}
+{#// Check password match validation#}
+{#document.getElementById("resetForm").addEventListener("submit", function(e) {#}
+{#    if (document.getElementById("password").value !== document.getElementById("confirmpassword").value) {#}
+{#        e.preventDefault();#}
+{#        alert("Passwords do not match!");#}
+{#    }#}
+{#});#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Reset Password - EDU AI</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #27374D;
+            --secondary-color: #526D82;
+            --accent-color: #9DB2BF;
+            --light-bg: #DDE6ED;
+            --white: #FFFFFF;
+            --shadow-light: rgba(39, 55, 77, 0.05);
+            --shadow-medium: rgba(39, 55, 77, 0.1);
+            --error-color: #e74c3c;
+            --success-color: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            overflow: auto; /* Changed from hidden to allow scrolling if needed */
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px; /* Increased padding for top/bottom gaps */
+            position: relative;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2327374d' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 450px; /* Slightly smaller max-width */
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .reset-container {
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px var(--shadow-medium);
+            overflow: hidden;
+            border: 1px solid var(--accent-color);
+            position: relative;
+            margin-top: 30px; /* Increased top gap */
+            margin-bottom: 30px; /* Increased bottom gap */
+        }
+
+        .reset-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            z-index: 1;
+        }
+
+        .reset-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            padding: 30px 25px; /* Reduced padding */
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reset-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo i {
+            font-size: 28px;
+            color: var(--white);
+        }
+
+        .brand-logo span {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        .reset-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 20px rgba(39, 55, 77, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .reset-icon i {
+            font-size: 26px;
+            color: var(--secondary-color);
+        }
+
+        .reset-header h2 {
+            color: var(--white);
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .reset-header p {
+            color: var(--white);
+            opacity: 0.9;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .reset-body {
+            padding: 30px 25px; /* Reduced padding */
+        }
+
+        .input-group-modern {
+            position: relative;
+            margin-bottom: 20px; /* Reduced margin */
+        }
+
+        .input-group-modern input {
+            width: 100%;
+            padding: 14px 14px 14px 45px; /* Reduced padding */
+            background: var(--white);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .input-group-modern input::placeholder {
+            color: var(--accent-color);
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        .input-group-modern input:focus {
+            border-color: var(--secondary-color);
+            background: var(--white);
+            box-shadow: 0 8px 25px rgba(82, 109, 130, 0.2);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 16px;
+            z-index: 3;
+            transition: all 0.3s ease;
+        }
+
+        .input-group-modern input:focus + .input-icon {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--secondary-color);
+            font-size: 16px;
+            z-index: 5;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px; /* Reduced padding */
+            color: var(--white);
+            font-weight: 600;
+            font-size: 15px; /* Reduced font size */
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(82, 109, 130, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(82, 109, 130, 0.4);
+        }
+
+        .btn-reset:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-reset:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px; /* Reduced margin */
+        }
+
+        .back-link a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 10px 18px; /* Reduced padding */
+            border-radius: 10px;
+            background-color: var(--light-bg);
+            border: 1px solid var(--accent-color);
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            color: var(--primary-color);
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        /* Password strength indicator */
+        .password-strength {
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--success-color);
+            transition: width 0.3s ease;
+        }
+
+        .password-strength.weak .strength-bar {
+            background: var(--error-color);
+        }
+
+        .password-strength.medium .strength-bar {
+            background: #ffa500;
+        }
+
+        .password-strength.strong .strength-bar {
+            background: var(--success-color);
+        }
+
+        .reset-footer {
+            text-align: center;
+            margin-top: 25px; /* Reduced margin */
+            color: var(--secondary-color);
+            font-size: 11px; /* Smaller font */
+            padding-top: 15px; /* Reduced padding */
+            border-top: 1px solid var(--light-bg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 30px 15px; /* Adjusted padding */
+            }
+
+            .main-container {
+                max-width: 400px;
+                padding: 15px;
+            }
+
+            .reset-container {
+                margin-top: 20px; /* Adjusted for mobile */
+                margin-bottom: 20px;
+            }
+
+            .reset-header {
+                padding: 25px 20px;
+            }
+
+            .reset-body {
+                padding: 25px 20px;
+            }
+
+            .brand-logo i {
+                font-size: 26px;
+            }
+
+            .brand-logo span {
+                font-size: 22px;
+            }
+
+            .reset-header h2 {
+                font-size: 20px;
+            }
+
+            .reset-icon {
+                width: 55px;
+                height: 55px;
+            }
+
+            .reset-icon i {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 20px 10px; /* Less padding on small screens */
+            }
+
+            .main-container {
+                max-width: 350px;
+                padding: 10px;
+            }
+
+            .reset-container {
+                margin-top: 15px;
+                margin-bottom: 15px;
+                border-radius: 20px;
+            }
+
+            .reset-header {
+                padding: 20px 15px;
+            }
+
+            .reset-body {
+                padding: 20px 15px;
+            }
+
+            .brand-logo {
+                flex-direction: column;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+
+            .brand-logo i {
+                font-size: 24px;
+            }
+
+            .brand-logo span {
+                font-size: 20px;
+            }
+
+            .reset-header h2 {
+                font-size: 18px;
+            }
+
+            .reset-header p {
+                font-size: 13px;
+            }
+
+            .reset-icon {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 12px;
+            }
+
+            .reset-icon i {
+                font-size: 22px;
+            }
+
+            .input-group-modern input {
+                padding: 12px 12px 12px 40px;
+                font-size: 13px;
+            }
+
+            .input-icon {
+                left: 12px;
+                font-size: 15px;
+            }
+
+            .btn-reset {
+                padding: 14px;
+                font-size: 14px;
+            }
+
+            .toggle-password {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .main-container {
+                max-width: 320px;
+                padding: 8px;
+            }
+
+            .reset-container {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            .reset-header {
+                padding: 18px 12px;
+            }
+
+            .reset-body {
+                padding: 18px 12px;
+            }
+
+            .reset-header h2 {
+                font-size: 17px;
+            }
+
+            .input-group-modern input {
+                padding: 11px 11px 11px 38px;
+                font-size: 12px;
+            }
+
+            .btn-reset {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            body {
+                padding: 20px 15px; /* Less padding for shorter screens */
+            }
+
+            .reset-container {
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            body {
+                padding: 15px 10px;
+            }
+
+            .reset-container {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .reset-container::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .reset-container::-webkit-scrollbar-track {
+                background: var(--light-bg);
+                border-radius: 10px;
+            }
+
+            .reset-container::-webkit-scrollbar-thumb {
+                background: var(--accent-color);
+                border-radius: 10px;
+            }
+
+            .reset-header {
+                padding: 15px 12px;
+            }
+
+            .reset-body {
+                padding: 15px 12px;
+            }
+
+            .brand-logo {
+                margin-bottom: 10px;
+            }
+
+            .reset-icon {
+                width: 45px;
+                height: 45px;
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="reset-container">
+            <div class="reset-header">
+                <div class="brand-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>EDU AI</span>
+                </div>
+                <div class="reset-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h2>Reset Password</h2>
+                <p>Enter your new password for EDU AI</p>
+            </div>
+
+            <div class="reset-body">
+                <form id="resetForm" action="/forgotpswdpswedbuttonclick" method="post">
+
+                    <div class="input-group-modern">
+                        <input type="password" name="password" id="password" placeholder="New Password" required>
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
+                        <button type="button" class="toggle-password" onclick="togglePassword('password','icon1')">
+                            <i id="icon1" class="fas fa-eye"></i>
+                        </button>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar" id="strengthBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group-modern">
+                        <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm Password" required>
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirmpassword','icon2')">
+                            <i id="icon2" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn-reset">
+                        <i class="fas fa-sync-alt"></i>
+                        Reset Password
+                    </button>
+
+                    <div class="back-link">
+                        <a href="/">
+                            <i class="fas fa-arrow-left"></i> Back to Login
+                        </a>
+                    </div>
+
+                    <div class="reset-footer">
+                        <p>EDU AI Platform • Secure Password Reset</p>
+                        <p class="mt-1" style="color: var(--accent-color);">
+                            © 2024 EDU AI Platform. All rights reserved.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+function togglePassword(fieldId, iconId) {
+    const inputField = document.getElementById(fieldId);
+    const icon = document.getElementById(iconId);
+
+    if (inputField.type === "password") {
+        inputField.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        inputField.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+// Password strength checker
+document.getElementById("password").addEventListener("input", function() {
+    const password = this.value;
+    const strengthBar = document.getElementById("strengthBar");
+    const strengthContainer = document.getElementById("passwordStrength");
+
+    if (password.length === 0) {
+        strengthContainer.style.display = 'none';
+        return;
+    }
+
+    strengthContainer.style.display = 'block';
+
+    let strength = 0;
+
+    // Length check
+    if (password.length >= 8) strength += 25;
+    if (password.length >= 12) strength += 15;
+
+    // Complexity checks
+    if (/[A-Z]/.test(password)) strength += 15;
+    if (/[a-z]/.test(password)) strength += 15;
+    if (/[0-9]/.test(password)) strength += 15;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+
+    // Ensure max 100%
+    strength = Math.min(strength, 100);
+
+    // Update strength bar
+    strengthBar.style.width = strength + '%';
+
+    // Update strength class
+    strengthContainer.className = 'password-strength';
+    if (strength < 40) {
+        strengthContainer.classList.add('weak');
+    } else if (strength < 70) {
+        strengthContainer.classList.add('medium');
+    } else {
+        strengthContainer.classList.add('strong');
+    }
+});
+
+// Check password match validation
+document.getElementById("resetForm").addEventListener("submit", function(e) {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmpassword").value;
+    const submitBtn = this.querySelector('.btn-reset');
+
+    if (password !== confirmPassword) {
+        e.preventDefault();
+
+        // Show custom alert
+        const errorAlert = document.createElement('div');
+        errorAlert.className = 'alert alert-danger';
+        errorAlert.innerHTML = `
+            <div style="background: var(--error-color); color: white; padding: 12px; border-radius: 8px; text-align: center; font-size: 14px;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Passwords do not match!
+            </div>
+        `;
+
+        const form = document.getElementById("resetForm");
+        if (!form.querySelector('.alert')) {
+            form.insertBefore(errorAlert, form.firstChild);
+        }
+
+        // Add visual feedback
+        document.getElementById('password').style.borderColor = 'var(--error-color)';
+        document.getElementById('confirmpassword').style.borderColor = 'var(--error-color)';
+
+        // Remove error after 3 seconds
+        setTimeout(() => {
+            if (errorAlert.parentNode) {
+                errorAlert.parentNode.removeChild(errorAlert);
+            }
+        }, 3000);
+
+        return false;
+    }
+
+    // Password strength check
+    const strengthBar = document.getElementById("strengthBar");
+    const strength = parseInt(strengthBar.style.width) || 0;
+
+    if (strength < 40) {
+        e.preventDefault();
+        const weakAlert = document.createElement('div');
+        weakAlert.className = 'alert alert-warning';
+        weakAlert.innerHTML = `
+            <div style="background: #ffa500; color: white; padding: 12px; border-radius: 8px; text-align: center; font-size: 14px;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Password is weak! Please use a stronger password.
+            </div>
+        `;
+
+        const form = document.getElementById("resetForm");
+        if (!form.querySelector('.alert')) {
+            form.insertBefore(weakAlert, form.firstChild);
+        }
+
+        // Remove error after 3 seconds
+        setTimeout(() => {
+            if (weakAlert.parentNode) {
+                weakAlert.parentNode.removeChild(weakAlert);
+            }
+        }, 3000);
+
+        return false;
+    }
+
+    // Add loading state
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resetting Password...';
+    submitBtn.disabled = true;
+
+    // Re-enable after 5 seconds if still on same page
+    setTimeout(() => {
+        if (submitBtn.disabled) {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    }, 5000);
+});
+
+// Clear error on input
+document.getElementById('password').addEventListener('input', function() {
+    this.style.borderColor = 'var(--accent-color)';
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => alert.remove());
+});
+
+document.getElementById('confirmpassword').addEventListener('input', function() {
+    this.style.borderColor = 'var(--accent-color)';
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => alert.remove());
+});
+
+// Add keyboard shortcut (Ctrl + Enter) to submit form
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+        document.getElementById('resetForm').dispatchEvent(new Event('submit'));
+    }
+});
+</script>
+
+</body>
+</html>
+

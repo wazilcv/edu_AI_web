@@ -1,0 +1,951 @@
+{#{% extends "admin/index.html" %}#}
+{#{% block body %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <title>Registration Data Table</title>#}
+{#  <!-- Bootstrap CSS -->#}
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#  <!-- DataTables CSS -->#}
+{#  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#  <div class="container mt-5">#}
+{#    <h2 class="mb-4">Registered Users</h2>#}
+{#    <table id="registrationTable" class="table table-striped table-bordered">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>#</th>#}
+{#          <th>Faculty_name</th>#}
+{#          <th>Gender</th>#}
+{#          <th>Date Of Birth</th>#}
+{#          <th>Email</th>#}
+{#          <th>Phone_num</th>#}
+{#          <th>Place</th>#}
+{#          <th>City</th>#}
+{#          <th>State</th>#}
+{#          <th>Pincode</th>#}
+{#          <th>experience</th>#}
+{#          <th>Photo</th>#}
+{#          <th></th>#}
+{#          <th></th>#}
+{#          <th></th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#      {% for i in data %}#}
+{#        <!-- Sample Data Row -->#}
+{#        <tr>#}
+{#          <td>{{ forloop.counter }}</td>#}
+{#          <td>{{ i.name }}</td>#}
+{#          <td>{{ i.gender }}</td>#}
+{#          <td>{{ i.dob }}</td>#}
+{#          <td>{{ i.email }}</td>#}
+{#          <td>{{ i.phone }}</td>#}
+{#          <td>{{ i.place }}</td>#}
+{#          <td>{{ i.city }}</td>#}
+{#          <td>{{ i.state }}</td>#}
+{#          <td>{{ i.pin }}</td>#}
+{#          <td>{{ i.experience }}</td>#}
+{#          <td><img src="{{ i.image }}" class="img-thumbnail" width="50" /></td>#}
+{#          <td><a href="/adm_edit_faculty/{{ i.id }}">Edit</a> </td>#}
+{#          <td><a href="/adm_delete_faculty/{{ i.id }}">Delete</a> </td>#}
+{#          <td><a href="/adm_allocate_subject/{{ i.id }}">Allocate subject</a> </td>#}
+{#        </tr>#}
+{#        <!-- Add more rows dynamically from backend -->#}
+{#      {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  </div>#}
+{##}
+{#  <!-- Scripts -->#}
+{#  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>#}
+{#  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>#}
+{#  <script>#}
+{#    $(document).ready(function () {#}
+{#      $('#registrationTable').DataTable();#}
+{#    });#}
+{#  </script>#}
+{#</body>#}
+{#</html>#}
+{#{% endblock %}#}
+
+{% extends "admin/index.html" %}
+
+{% block page_title %}
+    Faculty Management
+{% endblock %}
+
+{% block body %}
+<style>
+    /* Faculty Management Page Styling */
+    .faculty-management-page {
+        --primary-color: #27374D;
+        --secondary-color: #526D82;
+        --accent-color: #9DB2BF;
+        --light-bg: #DDE6ED;
+        --white: #FFFFFF;
+        --dark-text: #27374D;
+        --light-text: #526D82;
+        --button-color: #9DB2BF;
+        --shadow-light: rgba(39, 55, 77, 0.05);
+        --shadow-medium: rgba(39, 55, 77, 0.1);
+        --shadow-dark: rgba(39, 55, 77, 0.15);
+        --success-color: #4CAF50;
+        --warning-color: #ff9800;
+        --danger-color: #f44336;
+    }
+
+    /* Header Section */
+    .faculty-header-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        border: 2px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .faculty-header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.3;
+    }
+
+    .faculty-title-container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .faculty-main-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .faculty-subtitle {
+        font-size: 1.1rem;
+        color: var(--light-bg);
+        margin-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    /* Action Buttons */
+    .faculty-action-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-faculty-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.875rem 1.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid transparent;
+    }
+
+    .btn-faculty-add {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-faculty-add:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(157, 178, 191, 0.3);
+    }
+
+    .btn-faculty-refresh {
+        background-color: transparent;
+        color: var(--light-bg);
+        border: 2px solid var(--light-bg);
+    }
+
+    .btn-faculty-refresh:hover {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(221, 230, 237, 0.3);
+    }
+
+    /* Main Card */
+    .faculty-main-card {
+        background-color: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px var(--shadow-medium);
+        padding: 2.5rem;
+        border: 1px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .faculty-main-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+    }
+
+    /* Search Bar */
+    .search-input-group-custom {
+        max-width: 100%;
+    }
+
+    .search-input-custom {
+        border: 2px solid var(--accent-color);
+        border-radius: 12px;
+        padding: 0.875rem 1.25rem;
+        background-color: var(--white);
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .search-input-custom:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2);
+    }
+
+    .search-icon-custom {
+        background-color: var(--light-bg);
+        border: 2px solid var(--accent-color);
+        border-right: none;
+        border-radius: 12px 0 0 12px;
+        color: var(--primary-color);
+        padding: 0.875rem 1.25rem;
+    }
+
+    /* Table Styling */
+    .faculty-table {
+        border: 1px solid var(--accent-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px var(--shadow-light);
+        width: 100%;
+    }
+
+    .faculty-table thead th {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent-color) !important;
+        padding: 1.2rem 1.5rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .faculty-table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--light-bg);
+    }
+
+    .faculty-table tbody tr:hover {
+        background-color: var(--light-bg) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px var(--shadow-light);
+    }
+
+    .faculty-table tbody td {
+        padding: 1.2rem 1.5rem;
+        color: var(--primary-color);
+        border-bottom: 1px solid var(--light-bg);
+        vertical-align: middle;
+        font-weight: 500;
+    }
+
+    .faculty-table tbody tr:nth-child(even) {
+        background-color: rgba(221, 230, 237, 0.3);
+    }
+
+    /* Faculty Avatar */
+    .faculty-avatar-custom {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid var(--accent-color);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .faculty-avatar-custom img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .faculty-avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 1.3rem;
+    }
+
+    .gender-badge {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+    }
+
+    .gender-male {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .gender-female {
+        background-color: #FFB6C1;
+        color: #8B4513;
+    }
+
+    /* Experience Circle */
+    .experience-circle-custom {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: var(--accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .experience-circle-inner {
+        width: 55px;
+        height: 55px;
+        background-color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .experience-circle-custom span {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    /* Experience Badges */
+    .experience-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .badge-senior {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .badge-experienced {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+    }
+
+    .badge-junior {
+        background-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    /* Action Buttons */
+    .faculty-table-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .btn-faculty-edit, .btn-faculty-allocate, .btn-faculty-delete {
+        padding: 0.6rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-faculty-edit {
+        background-color: var(--accent-color);
+        color: var(--primary-color);
+    }
+
+    .btn-faculty-edit:hover {
+        background-color: var(--secondary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(82, 109, 130, 0.2);
+    }
+
+    .btn-faculty-allocate {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-faculty-allocate:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(157, 178, 191, 0.2);
+    }
+
+    .btn-faculty-delete {
+        background-color: var(--danger-color);
+        color: var(--white);
+    }
+
+    .btn-faculty-delete:hover {
+        background-color: #d32f2f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+    }
+
+    /* Empty State */
+    .faculty-empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .faculty-empty-icon {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+        opacity: 0.7;
+    }
+
+    .faculty-empty-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+    }
+
+    .faculty-empty-message {
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Pagination */
+    .pagination-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid var(--light-bg);
+    }
+
+    .pagination-info {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+    }
+
+    .page-size-dropdown {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+        border: 2px solid var(--accent-color);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .page-size-dropdown:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .faculty-main-card {
+            padding: 2rem;
+        }
+
+        .faculty-table thead th,
+        .faculty-table tbody td {
+            padding: 1rem;
+        }
+
+        .experience-circle-custom {
+            width: 60px;
+            height: 60px;
+        }
+
+        .experience-circle-inner {
+            width: 45px;
+            height: 45px;
+        }
+
+        .experience-circle-custom span {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .faculty-header-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .faculty-main-title {
+            font-size: 2rem;
+        }
+
+        .faculty-action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-faculty-action {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pagination-controls {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .search-input-group-custom {
+            max-width: 100%;
+        }
+
+        .faculty-table {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .faculty-main-title {
+            font-size: 1.8rem;
+        }
+
+        .faculty-subtitle {
+            font-size: 1rem;
+        }
+
+        .faculty-main-card {
+            padding: 1.5rem;
+        }
+
+        .faculty-table {
+            font-size: 0.85rem;
+        }
+
+        .faculty-table-actions {
+            flex-direction: column;
+        }
+
+        .btn-faculty-edit, .btn-faculty-allocate, .btn-faculty-delete {
+            padding: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .faculty-avatar-custom {
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    /* Pagination styles */
+    .pagination {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .pagination button {
+        background-color: var(--white);
+        border: 2px solid var(--accent-color);
+        color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .pagination button:hover:not(:disabled) {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    .pagination button.active {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: var(--white);
+    }
+
+    .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="container-fluid faculty-management-page">
+    <!-- Header Section -->
+    <div class="faculty-header-section">
+        <div class="faculty-title-container">
+            <h1 class="faculty-main-title">Faculty Management</h1>
+            <p class="faculty-subtitle">View and manage all faculty members</p>
+
+            <div class="faculty-action-buttons">
+                <a href="/adm_add_faculty" class="btn-faculty-action btn-faculty-add">
+                    <i class="fas fa-user-plus"></i>
+                    Add New Faculty
+                </a>
+                <button class="btn-faculty-action btn-faculty-refresh" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="faculty-main-card">
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="search-input-group-custom">
+                    <div class="input-group">
+                        <span class="input-group-text search-icon-custom">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="search" class="form-control search-input-custom" id="facultySearch"
+                               placeholder="Search faculty by name, email, phone, or location...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Faculty Table -->
+        <div class="table-responsive">
+            <table id="facultyTable" class="table table-hover faculty-table">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="25%">Faculty Member</th>
+                        <th width="25%">Contact & Location</th>
+                        <th width="20%">Experience</th>
+                        <th width="25%" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="facultyTableBody">
+                    {% for faculty in data %}
+                    <tr class="faculty-row" data-search="{{ faculty.name|lower }} {{ faculty.email|lower }} {{ faculty.phone }} {{ faculty.place|lower }} {{ faculty.city|lower }} {{ faculty.state|lower }}">
+                        <td>{{ forloop.counter }}</td>
+
+                        <!-- Faculty Column -->
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="faculty-avatar-custom position-relative me-3">
+                                    {% if faculty.image %}
+                                        <img src="{{ faculty.image }}" alt="{{ faculty.name }}">
+                                    {% else %}
+                                        <div class="faculty-avatar-placeholder">
+                                            {{ faculty.name|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="gender-badge {% if faculty.gender == 'Male' %}gender-male{% else %}gender-female{% endif %}">
+                                        <i class="fas fa-{% if faculty.gender == 'Male' %}mars{% else %}venus{% endif %}"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-primary mb-1">{{ faculty.name }}</div>
+                                    <div class="text-secondary small mb-1">
+                                        <i class="fas fa-envelope me-1"></i> {{ faculty.email|truncatechars:25 }}
+                                    </div>
+                                    <div class="text-secondary small">
+                                        <i class="fas fa-birthday-cake me-1"></i> {{ faculty.dob }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Contact & Location Column -->
+                        <td>
+                            <div class="mb-2">
+                                <div class="fw-medium mb-1">
+                                    <i class="fas fa-phone me-2"></i>
+                                    {{ faculty.phone }}
+                                </div>
+                                <div class="fw-medium">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    {{ faculty.place }}
+                                </div>
+                            </div>
+                            <div class="bg-light rounded p-2 small">
+                                {{ faculty.city }}, {{ faculty.state }} - {{ faculty.pin }}
+                            </div>
+                        </td>
+
+                        <!-- Experience Column -->
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="experience-circle-custom me-3">
+                                    <div class="experience-circle-inner">
+                                        <span>{{ faculty.experience }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="fw-bold mb-1">{{ faculty.experience }} years</div>
+                                    <div class="text-secondary small mb-2">Teaching Experience</div>
+                                    {% if faculty.experience >= 10 %}
+                                    <span class="experience-badge badge-senior">
+                                        <i class="fas fa-award me-1"></i> Senior
+                                    </span>
+                                    {% elif faculty.experience >= 5 %}
+                                    <span class="experience-badge badge-experienced">
+                                        <i class="fas fa-star me-1"></i> Experienced
+                                    </span>
+                                    {% else %}
+                                    <span class="experience-badge badge-junior">
+                                        <i class="fas fa-seedling me-1"></i> Junior
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Actions Column -->
+                        <td class="text-center">
+                            <div class="faculty-table-actions">
+                                <a href="/adm_edit_faculty/{{ faculty.id }}#home" class="btn-faculty-edit">
+                                    <i class="fas fa-edit"></i> Edit Profile
+                                </a>
+                                <a href="/adm_allocate_subject/{{ faculty.id }}#home" class="btn-faculty-allocate">
+                                    <i class="fas fa-link"></i> Allocate Subjects
+                                </a>
+                                <a href="/adm_delete_faculty/{{ faculty.id }}" class="btn-faculty-delete"
+                                   onclick="return confirm('Are you sure you want to delete faculty: {{ faculty.name }}?');">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="faculty-empty-state">
+                                <div class="faculty-empty-icon">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <h4 class="faculty-empty-title">No Faculty Members Found</h4>
+                                <p class="faculty-empty-message">Start by adding your first faculty member</p>
+                                <a href="/adm_add_faculty" class="btn-faculty-action btn-faculty-add">
+                                    <i class="fas fa-user-plus me-2"></i> Add Faculty
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls">
+            <div class="pagination-info" id="paginationInfo">
+                Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalCount">{{ data|length }}</span> faculty members
+            </div>
+            <div>
+                <div class="dropdown">
+                    <button class="btn page-size-dropdown dropdown-toggle" type="button" id="pageSizeDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-list-ol me-1"></i> Show: 10
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="pageSizeDropdown">
+                        <li><a class="dropdown-item" href="#" data-size="5">5 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="10">10 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="25">25 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="50">50 items</a></li>
+                        <li><a class="dropdown-item" href="#" data-size="100">100 items</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Buttons -->
+        <div id="pagination" class="pagination"></div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Apply the same CSS variables as admin homepage
+        document.documentElement.style.setProperty('--primary-color', '#27374D');
+        document.documentElement.style.setProperty('--secondary-color', '#526D82');
+        document.documentElement.style.setProperty('--accent-color', '#9DB2BF');
+        document.documentElement.style.setProperty('--light-bg', '#DDE6ED');
+        document.documentElement.style.setProperty('--white', '#FFFFFF');
+
+        // Get all faculty rows
+        const facultyRows = Array.from(document.querySelectorAll('.faculty-row'));
+        const tableBody = document.getElementById('facultyTableBody');
+        const searchInput = document.getElementById('facultySearch');
+        const totalCount = {{ data|length }};
+
+        // Pagination variables
+        let currentPage = 1;
+        let pageSize = 10;
+        let filteredRows = facultyRows;
+
+        // Function to filter rows based on search
+        function filterRows(searchTerm) {
+            if (!searchTerm) {
+                filteredRows = facultyRows;
+            } else {
+                const searchLower = searchTerm.toLowerCase();
+                filteredRows = facultyRows.filter(row => {
+                    const searchData = row.getAttribute('data-search') || '';
+                    return searchData.includes(searchLower);
+                });
+            }
+            currentPage = 1;
+            updateDisplay();
+        }
+
+        // Function to update table display with pagination
+        function updateDisplay() {
+            const start = (currentPage - 1) * pageSize;
+            const end = Math.min(start + pageSize, filteredRows.length);
+
+            // Hide all rows
+            facultyRows.forEach(row => row.style.display = 'none');
+
+            // Show filtered and paginated rows
+            for (let i = start; i < end; i++) {
+                if (filteredRows[i]) {
+                    filteredRows[i].style.display = '';
+                }
+            }
+
+            // Update pagination info
+            document.getElementById('showingStart').textContent = filteredRows.length ? start + 1 : 0;
+            document.getElementById('showingEnd').textContent = end;
+            document.getElementById('totalCount').textContent = filteredRows.length;
+
+            // Update pagination buttons
+            updatePaginationButtons();
+        }
+
+        // Function to update pagination buttons
+        function updatePaginationButtons() {
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
+            let paginationHtml = '<button onclick="changePage(1)" ' + (currentPage === 1 ? 'disabled' : '') + '><i class="fas fa-angle-double-left"></i></button>';
+            paginationHtml += '<button onclick="changePage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? 'disabled' : '') + '><i class="fas fa-angle-left"></i></button>';
+
+            // Show page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHtml += '<button onclick="changePage(' + i + ')" class="' + (i === currentPage ? 'active' : '') + '">' + i + '</button>';
+            }
+
+            paginationHtml += '<button onclick="changePage(' + (currentPage + 1) + ')" ' + (currentPage === totalPages ? 'disabled' : '') + '><i class="fas fa-angle-right"></i></button>';
+            paginationHtml += '<button onclick="changePage(' + totalPages + ')" ' + (currentPage === totalPages ? 'disabled' : '') + '><i class="fas fa-angle-double-right"></i></button>';
+
+            document.getElementById('pagination').innerHTML = paginationHtml;
+        }
+
+        // Function to change page
+        window.changePage = function(page) {
+            const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                updateDisplay();
+            }
+        };
+
+        // Search input event
+        searchInput.addEventListener('input', function(e) {
+            filterRows(e.target.value);
+        });
+
+        // Page size change
+        document.querySelectorAll('[data-size]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                pageSize = parseInt(this.dataset.size);
+                currentPage = 1;
+                document.getElementById('pageSizeDropdown').innerHTML = `<i class="fas fa-list-ol me-1"></i> Show: ${pageSize}`;
+                updateDisplay();
+            });
+        });
+
+        // Add hover effects
+        facultyRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.classList.add('hover-shadow');
+                const avatar = this.querySelector('.faculty-avatar-custom');
+                const circle = this.querySelector('.experience-circle-custom');
+                if (avatar) avatar.style.transform = 'scale(1.05)';
+                if (circle) circle.style.transform = 'scale(1.05)';
+            });
+
+            row.addEventListener('mouseleave', function() {
+                this.classList.remove('hover-shadow');
+                const avatar = this.querySelector('.faculty-avatar-custom');
+                const circle = this.querySelector('.experience-circle-custom');
+                if (avatar) avatar.style.transform = 'scale(1)';
+                if (circle) circle.style.transform = 'scale(1)';
+            });
+        });
+
+        // Initial display
+        updateDisplay();
+    });
+</script>
+{% endblock %}
+
+
